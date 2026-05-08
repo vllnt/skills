@@ -43,10 +43,14 @@ CI gates that block the merge:
 | Job | Trigger | Action |
 |-----|---------|--------|
 | `canary` | every push to `main` (except `chore(release):`) | tag + GitHub prerelease `v<latest-stable>-canary.<sha7>` |
-| `release-dispatch` | `workflow_dispatch` | creates tag `vX.Y.Z` at `main` HEAD only — no commits pushed |
-| `release-from-tag` | any `v*.*.*` tag push | creates GitHub Release from `CHANGELOG.md` section, cleans canaries |
+| `release-dispatch` | `workflow_dispatch` | tag `vX.Y.Z` at `main` HEAD **and** create GitHub Release **and** clean canaries — all in one job |
+| `release-from-tag` | any `v*.*.*` tag push | idempotent fallback for manually-pushed tags (skips if Release exists) |
 
-`release-dispatch` deliberately pushes only the tag — branch protection stays intact and no PAT or bypass actor is needed (mirrors `vllnt/ui`'s pattern).
+`release-dispatch` does everything in one job because tags pushed via `GITHUB_TOKEN` don't cascade-trigger another workflow run (a GitHub Actions safety rule). Doing tag + release + cleanup atomically removes that dependency.
+
+`release-from-tag` is kept only for the case where a maintainer pushes a tag from a local machine (e.g., from a PAT-authenticated environment). Those pushes do trigger workflows; the idempotency guard prevents double-publishing if both fire.
+
+No PAT or Rulesets bypass actor is needed (mirrors `vllnt/ui`'s pattern).
 
 ## Cutting a Release
 

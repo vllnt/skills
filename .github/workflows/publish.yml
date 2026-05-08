@@ -15,6 +15,10 @@ permissions:
   contents: write
 
 jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  # Canary: every push to main (except chore(release): commits) gets a
+  # versioned prerelease so agents can pin a specific main build.
+  # ─────────────────────────────────────────────────────────────────────────
   canary:
     name: Canary Release
     if: |
@@ -48,8 +52,16 @@ jobs:
             --notes "Canary release from \`${GITHUB_SHA::7}\` on main." \
             --prerelease
 
+  # ─────────────────────────────────────────────────────────────────────────
+  # Stable release via workflow_dispatch — tag main HEAD + create the
+  # GitHub Release + clean canaries IN THE SAME JOB.
+  #
+  # This is required because tags pushed by GITHUB_TOKEN don't cascade-
+  # trigger another workflow run (GitHub safety rule). Doing everything
+  # in one job removes that dependency.
+  # ─────────────────────────────────────────────────────────────────────────
   release-dispatch:
-    name: Tag Release (workflow_dispatch)
+    name: Tag + Publish Release (workflow_dispatch)
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -69,7 +81,7 @@ jobs:
             }
           ' CHANGELOG.md)
           if [ -z "$ver" ]; then
-            echo "::error::No dated version section in CHANGELOG.md. Open a release PR that promotes [Unreleased] -> [x.y.z] first."
+            echo "::error::No dated version section in CHANGELOG.md. Open a release PR (scripts/release-prep.sh) first."
             exit 1
           fi
           echo "version=$ver" >> "$GITHUB_OUTPUT"
@@ -77,10 +89,25 @@ jobs:
 
       - name: Guard against retag
         run: |
-          if git rev-parse "${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
-            echo "::error::Tag ${{ steps.version.outputs.tag }} already exists. Land a release PR with a new version section before dispatching."
+          tag="${{ steps.version.outputs.tag }}"
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+            echo "::error::Tag $tag already exists. Land a release PR with a new version section before dispatching."
             exit 1
           fi
+
+      - name: Extract release notes from CHANGELOG.md
+        id: notes
+        run: |
+          ver="${{ steps.version.outputs.version }}"
+          body=$(awk "/^## \\[${ver}\\]/{found=1; next} /^## \\[/{if(found) exit} found{print}" CHANGELOG.md)
+          if [ -z "$body" ]; then
+            body="Release ${ver}"
+          fi
+          {
+            echo "body<<NOTES_EOF"
+            echo "$body"
+            echo "NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create + push tag
         env:
@@ -92,8 +119,36 @@ jobs:
           git tag -a "$tag" -m "$tag"
           git push origin "$tag"
 
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${{ steps.version.outputs.tag }}"
+          cat <<'NOTES_EOF' > /tmp/release-notes.md
+          ${{ steps.notes.outputs.body }}
+          NOTES_EOF
+          gh release create "$tag" \
+            --title "$tag" \
+            --notes-file /tmp/release-notes.md \
+            --latest
+
+      - name: Clean up canary tags & releases behind this stable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for tag in $(git tag --list 'v*-canary.*'); do
+            gh release delete "$tag" --yes --cleanup-tag 2>/dev/null \
+              || git push origin ":refs/tags/$tag" 2>/dev/null \
+              || true
+          done
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Fallback: a tag manually pushed from a local machine (e.g., maintainer
+  # using a PAT) won't be picked up by release-dispatch. Keep this job
+  # idempotent — skip if a Release already exists for the tag.
+  # ─────────────────────────────────────────────────────────────────────────
   release-from-tag:
-    name: Publish Release (tag push)
+    name: Publish Release (manual tag push)
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'canary')
     runs-on: ubuntu-latest
     steps:
@@ -109,22 +164,35 @@ jobs:
           echo "tag=$tag"     >> "$GITHUB_OUTPUT"
           echo "version=$ver" >> "$GITHUB_OUTPUT"
 
+      - name: Skip if Release already exists (idempotency guard)
+        id: exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "Release ${{ steps.version.outputs.tag }} already exists — skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Extract changelog section
+        if: steps.exists.outputs.skip == 'false'
         id: changelog
         run: |
           ver="${{ steps.version.outputs.version }}"
           notes=$(awk "/^## \\[${ver}\\]/{found=1; next} /^## \\[/{if(found) exit} found{print}" CHANGELOG.md)
           if [ -z "$notes" ]; then
-            echo "::warning::No CHANGELOG section for ${ver} — using fallback"
             notes="Release ${ver}"
           fi
           {
-            echo "body<<CHANGELOG_EOF"
+            echo "body<<NOTES_EOF"
             echo "$notes"
-            echo "CHANGELOG_EOF"
+            echo "NOTES_EOF"
           } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
+        if: steps.exists.outputs.skip == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -138,6 +206,7 @@ jobs:
             --latest
 
       - name: Clean up canary tags & releases
+        if: steps.exists.outputs.skip == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
