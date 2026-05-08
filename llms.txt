@@ -1,0 +1,29 @@
+# vllnt/skills
+
+> Open-source agent skills published by vllnt. Reusable capabilities for any AI coding agent, distributed via skills.sh. Sibling of bntvllnt/agent-skills, progressive migration target for the vllnt org.
+
+This repository hosts agent skills as self-contained Markdown folders (`<skill>/SKILL.md` with YAML frontmatter, plus optional `README.md`, `EXAMPLE.md`, and `references/`). Skills are agent-agnostic — compatible with Claude Code, OpenCode, Cursor, Windsurf, and any runtime that loads skills from Markdown directories. No build step required.
+
+## Docs
+
+- [README](README.md): Project overview, available skills, installation
+- [Contributing](CONTRIBUTING.md): How to contribute, skill structure conventions, PR guidelines
+- [Releasing](RELEASING.md): Agent-friendly release flow (changelog, version bump, tag, auto-publish)
+- [Changelog](CHANGELOG.md): Version history and release notes
+
+## Skills
+
+- [regulatory-guard](regulatory-guard/SKILL.md): Audit a website or web app for strict compliance with applicable legislation across privacy (GDPR / CCPA / ePrivacy), accessibility (WCAG 2.2 AA / ADA / EAA), consumer & e-commerce (DSA / DMA / CCPA-sale / CAN-SPAM), and AI / content (EU AI Act / copyright / DMCA). Produces tiered findings with evidence and remediation.
+
+## Tooling
+
+- [scripts/validate-frontmatter.sh](scripts/validate-frontmatter.sh): Pre-commit + CI validator for skill SKILL.md frontmatter
+- [scripts/changelog-add.sh](scripts/changelog-add.sh): Idempotent helper to append entries under [Unreleased]
+- [scripts/release.sh](scripts/release.sh): Non-interactive release script — bumps version, promotes [Unreleased], tags, pushes
+- [scripts/install-hooks.sh](scripts/install-hooks.sh): Activate project-managed git hooks (`.githooks/`)
+
+## Optional
+
+- [Security Policy](SECURITY.md): Vulnerability reporting via GitHub Security Advisories
+- [Code of Conduct](CODE_OF_CONDUCT.md): Contributor Covenant 2.1
+- [License](LICENSE): MIT License

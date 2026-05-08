@@ -1,0 +1,55 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    if: "!contains(github.ref, 'canary')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: version
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          ver="${tag#v}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+
+      - name: Extract changelog section
+        id: changelog
+        run: |
+          ver="${{ steps.version.outputs.version }}"
+          notes=$(awk "/^## \\[${ver}\\]/{found=1; next} /^## \\[/{if(found) exit} found{print}" CHANGELOG.md)
+          if [ -z "$notes" ]; then
+            echo "::warning::No CHANGELOG section for ${ver} — using fallback"
+            notes="Release ${ver}"
+          fi
+          {
+            echo "body<<CHANGELOG_EOF"
+            echo "$notes"
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${{ steps.version.outputs.tag }}"
+          cat <<'NOTES_EOF' > /tmp/release-notes.md
+          ${{ steps.changelog.outputs.body }}
+          NOTES_EOF
+          gh release create "$tag" \
+            --title "$tag" \
+            --notes-file /tmp/release-notes.md \
+            --latest

@@ -1,0 +1,1623 @@
+# vllnt/skills
+
+> Open-source agent skills published by vllnt. Reusable capabilities for any AI coding agent, distributed via skills.sh. Sibling of bntvllnt/agent-skills, progressive migration target for the vllnt org.
+
+This repository hosts agent skills as self-contained Markdown folders (`<skill>/SKILL.md` with YAML frontmatter, plus optional `README.md`, `EXAMPLE.md`, and `references/`). Skills are agent-agnostic — compatible with Claude Code, OpenCode, Cursor, Windsurf, and any runtime that loads skills from Markdown directories. No build step required.
+
+## Docs
+
+### README
+Source: README.md
+
+<div align="center">
+
+# vllnt skills
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Skills](https://img.shields.io/badge/skills-1-blue.svg)](./#available-skills)
+[![Release](https://img.shields.io/github/v/release/vllnt/skills?display_name=tag&sort=semver)](https://github.com/vllnt/skills/releases/latest)
+
+**Compatible with:** Claude Code • OpenCode • Windsurf • Cursor • More via [skills.sh](https://skills.sh)
+
+[GitHub](https://github.com/vllnt) • [Web](https://bntvllnt.com)
+
+</div>
+
+---
+
+## About
+
+Open-source agent skills published by **vllnt**. Reusable capabilities for any AI coding agent, distributed via [skills.sh](https://skills.sh).
+
+This repo is a sibling of [`bntvllnt/agent-skills`](https://github.com/bntvllnt/agent-skills) — content is being progressively migrated to the `vllnt` org as it stabilizes for organizational use.
+
+---
+
+## Installation
+
+```bash
+npx skills add vllnt/skills
+```
+
+Or install a single skill:
+
+```bash
+npx skills add vllnt/skills/regulatory-guard
+```
+
+---
+
+## Available Skills
+
+### [Regulatory Guard](./regulatory-guard/) — Web Compliance Audit
+
+Verify a website or web app strictly follows applicable legislation: privacy (GDPR / CCPA / ePrivacy), accessibility (WCAG 2.2 AA / ADA / EAA), consumer & e-commerce (DSA / DMA / CCPA-sale / CAN-SPAM), and AI / content (EU AI Act / copyright / DMCA). Outputs a tiered compliance report with evidence, severity, and remediation.
+
+[View skill documentation →](./regulatory-guard/SKILL.md)
+
+---
+
+## Skill Structure
+
+Each skill is a self-contained folder:
+
+```
+skill-name/
+├── SKILL.md          # Main skill file (required, with YAML frontmatter)
+├── README.md         # Human-facing docs
+├── EXAMPLE.md        # Usage examples (optional)
+└── references/       # Reference docs loaded on-demand (optional)
+```
+
+Skills are agent-agnostic Markdown — no build step.
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Issues and PRs welcome.
+
+---
+
+## License
+
+[MIT](./LICENSE) © 2026 vllnt
+
+### Contributing
+Source: CONTRIBUTING.md
+
+# Contributing to vllnt skills
+
+Thanks for your interest in contributing! This guide explains how to get involved.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you agree to uphold this code.
+
+## How to Contribute
+
+### Reporting Bugs
+
+1. Check [existing issues](https://github.com/vllnt/skills/issues) first
+2. Use the [bug report template](https://github.com/vllnt/skills/issues/new?template=bug_report.yml)
+3. Include: steps to reproduce, expected vs actual behavior, environment details, relevant logs
+
+### Suggesting Features
+
+1. Check [existing requests](https://github.com/vllnt/skills/issues?q=label%3Aenhancement)
+2. Use the [feature request template](https://github.com/vllnt/skills/issues/new?template=feature_request.yml)
+3. Describe the problem you're solving, not just the solution
+
+### Submitting Changes
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Make your changes
+4. Update `CHANGELOG.md` (CI requires it on every PR)
+5. Commit using [conventional commits](https://www.conventionalcommits.org/):
+   - `feat: add new feature`
+   - `fix: resolve bug`
+   - `docs: update documentation`
+   - `chore: maintenance task`
+6. Push and open a Pull Request against `main`
+
+## Development Setup
+
+```bash
+git clone https://github.com/vllnt/skills.git
+cd skills
+```
+
+No build step required — skills are pure Markdown files.
+
+## Skill Structure
+
+Each skill follows this structure:
+
+```
+skill-name/
+├── SKILL.md          # Main skill file (required)
+├── README.md         # Skill documentation
+├── references/       # Reference docs loaded on-demand
+└── EXAMPLE.md        # Usage examples (optional)
+```
+
+### Key Conventions
+
+- `SKILL.md` must include valid YAML frontmatter (`name`, `description`)
+- Reference files are loaded by the action router, not eagerly
+- Skills must be agent-agnostic (Claude Code, OpenCode, Cursor, etc.)
+- Use relative paths for cross-references within a skill
+- Skills must NOT cross-reference other skills (independence)
+
+## Pull Request Guidelines
+
+- Keep PRs focused — one skill or feature per PR
+- Update the skill's `README.md` for any behavior changes
+- Update root `CHANGELOG.md` (BLOCKING — CI enforces this)
+- Follow existing patterns in similar skills
+- Request review from maintainers
+
+## First-Time Contributors
+
+Look for issues labeled [`good first issue`](https://github.com/vllnt/skills/labels/good%20first%20issue).
+
+## Community
+
+- [GitHub](https://github.com/vllnt) — issues, PRs, code
+- [Web](https://bntvllnt.com) — about the maintainers and projects
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the same license as the project (MIT).
+
+### Releasing
+Source: RELEASING.md
+
+# Releasing
+
+This repo is designed so AI agents (and humans) can ship a release end-to-end with two scripts. No manual GitHub UI clicks.
+
+## Flow
+
+```
+PR: scripts/changelog-add.sh "<entry>"   ── one entry per PR, BLOCKING in CI
+   │
+   ▼
+main: scripts/release.sh --bump patch    ── bumps version, tags, pushes
+   │
+   ▼
+.github/workflows/publish.yml            ── auto-creates GitHub Release on tag push
+```
+
+## Per-PR (every contribution)
+
+1. Make your change.
+2. Add a CHANGELOG entry:
+   ```bash
+   bash scripts/changelog-add.sh --type feat --scope regulatory-guard "add EAA accessibility audit"
+   ```
+   (or pass a free-form line: `bash scripts/changelog-add.sh "fix(ci): handle empty changelog"`)
+3. Commit. The pre-commit hook validates SKILL.md frontmatter for any touched skill.
+4. Open PR. CI checks:
+   - `validate-frontmatter` — every skill has valid YAML frontmatter
+   - `changelog` — `CHANGELOG.md` was modified AND `[Unreleased]` has at least one entry
+
+## Cutting a Release
+
+When you want to ship:
+
+```bash
+bash scripts/release.sh --bump patch    # 0.1.0 -> 0.1.1
+bash scripts/release.sh --bump minor    # 0.1.0 -> 0.2.0
+bash scripts/release.sh --bump major    # 0.1.0 -> 1.0.0
+
+bash scripts/release.sh --bump patch --dry-run    # preview without pushing
+```
+
+The script:
+1. Verifies clean tree on `main`
+2. Verifies `[Unreleased]` is non-empty
+3. Computes next version from latest `vX.Y.Z` git tag
+4. Promotes `[Unreleased]` → `[X.Y.Z] - YYYY-MM-DD` and prepends a fresh empty `[Unreleased]`
+5. Commits `chore(release): vX.Y.Z`, tags `vX.Y.Z`, pushes both
+
+`.github/workflows/publish.yml` then fires on the tag push and creates the GitHub Release with notes extracted from `CHANGELOG.md`.
+
+## Agent-Friendly Notes
+
+- All scripts are **non-interactive** — no prompts, all flags explicit.
+- All scripts are **idempotent where safe** — `changelog-add.sh` won't duplicate identical lines; `release.sh` aborts cleanly if state is wrong.
+- Errors print to stderr with actionable next steps.
+- No external dependencies — pure `bash` + `awk`.
+
+## First-Time Setup (after clone)
+
+```bash
+bash scripts/install-hooks.sh
+```
+
+Sets `core.hooksPath=.githooks` so the pre-commit validator runs locally.
+
+### Changelog
+Source: CHANGELOG.md
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+## [0.1.0] - 2026-05-08
+
+- chore: initial public release of `vllnt/skills` (sibling of `bntvllnt/agent-skills`, progressive migration target for the `vllnt` organization)
+- feat(regulatory-guard): initial release. Web compliance audit skill covering privacy (GDPR / CCPA / ePrivacy), accessibility (WCAG 2.2 AA / ADA / EAA), consumer & e-commerce (DSA / DMA / CCPA-sale / CAN-SPAM), and AI / content (EU AI Act / copyright / DMCA). Outputs tiered findings with evidence, severity, and remediation steps.
+- chore: scaffold MIT license, README, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, issue/PR templates, FUNDING, CI workflow (CHANGELOG-required), publish workflow (canary + manual release), and `llms.txt` / `llms-full.txt` for agent discovery.
+
+## Skills
+
+### regulatory-guard — SKILL
+Source: regulatory-guard/SKILL.md
+
+---
+name: regulatory-guard
+description: Audit a website or web app for strict compliance with applicable legislation across four domains — privacy (GDPR, CCPA, ePrivacy), accessibility (WCAG 2.2 AA, ADA, EAA), consumer & e-commerce (DSA, DMA, CCPA-sale, CAN-SPAM), and AI / content (EU AI Act, copyright, DMCA). Produces a tiered compliance report with cited evidence, severity, and concrete remediation steps. Use when releasing publicly, expanding to a new jurisdiction, or hardening before a regulator inquiry.
+---
+
+# Regulatory Guard
+
+**A standalone audit skill that verifies a website or web app strictly follows the legislation that applies to its users, content, and jurisdictions.**
+
+Use when:
+- Preparing a public launch (B2C or B2B-with-consumer-touchpoints)
+- Expanding to a new market (EU, UK, California, Brazil, etc.)
+- Hardening before a regulator inquiry, DPIA review, or enterprise procurement
+- Adding AI features that touch user-generated content
+- Periodic compliance posture check (recommended quarterly)
+
+Triggers: "compliance audit", "GDPR check", "is this site GDPR compliant", "WCAG audit", "accessibility audit", "ADA compliance", "EAA check", "CCPA compliance", "cookie banner audit", "AI Act compliance", "regulatory check", "legal audit", "audit website", "audit web app", "compliance posture".
+
+> **Disclaimer.** This skill produces a structured technical audit, not legal advice. High-severity findings should be reviewed by qualified counsel. Jurisdictional applicability is heuristic — when in doubt, mark as `APPLIES?` and escalate.
+
+---
+
+## Agent Capabilities
+
+| Capability | Used For | Required | Fallback |
+|------------|----------|----------|----------|
+| Browser navigation (Playwright / agent-browser) | Live page inspection, network capture, cookie enumeration | Recommended | Static review of source files only |
+| File read | Read source/config to find handlers, env, headers, policies | Yes | — |
+| HTTP request (curl / fetch) | Headers, robots.txt, sitemap.xml, .well-known | Recommended | — |
+| Sub-agent dispatch | Parallel domain audits | Recommended | Sequential in main thread |
+
+This skill remains functional in a "static-only" mode (no browser) but loses the ability to verify cookie banners, runtime trackers, and rendered ARIA — flag those checks as `UNVERIFIED` in that case.
+
+---
+
+## Table of Contents
+
+1. [Quick Start](#quick-start)
+2. [Audit Scope Detection](#audit-scope-detection)
+3. [Audit Domains](#audit-domains)
+4. [Severity Tiers](#severity-tiers)
+5. [Execution Flow](#execution-flow)
+6. [Evidence Format](#evidence-format)
+7. [Output Format](#output-format)
+8. [References](#references)
+
+---
+
+## Quick Start
+
+```bash
+# Audit a deployed site (live)
+regulatory-guard audit https://example.com
+
+# Audit local app (dev server)
+regulatory-guard audit http://localhost:3000 --source ./
+
+# Audit only one domain
+regulatory-guard audit https://example.com --domain privacy
+regulatory-guard audit https://example.com --domain accessibility
+regulatory-guard audit https://example.com --domain consumer
+regulatory-guard audit https://example.com --domain ai-content
+
+# Restrict to specific jurisdictions
+regulatory-guard audit https://example.com --jurisdictions EU,US-CA
+```
+
+Without a CLI router, agents invoke this skill by following the [Execution Flow](#execution-flow) below using their native tools.
+
+---
+
+## Audit Scope Detection
+
+Before running checks, determine what applies. **Skip irrelevant law — false positives erode trust.**
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│              SCOPE DETECTION (run first)                     │
+├──────────────────────────────────────────────────────────────┤
+│ 1. Target users (geo)? ─────► EU? US? CA? UK? BR? Global?    │
+│ 2. Data collected? ─────────► PII? sensitive? minors?        │
+│ 3. Commerce? ───────────────► sales, ads, marketplace?       │
+│ 4. AI features? ────────────► generation? recommendation?    │
+│ 5. Service size? ───────────► VLOP/VLOSE? gatekeeper?        │
+└──────────────────────────────────────────────────────────────┘
+            │
+            ▼
+   Build APPLICABILITY MATRIX → only audit what applies
+```
+
+**Heuristics for jurisdictional applicability:**
+
+| Signal | Likely applies |
+|--------|----------------|
+| `i18n` includes EU language(s); EU pricing; ".eu" / EU TLD | GDPR + ePrivacy + EAA + DSA |
+| Any user from EU possible (no geo-block) | GDPR + ePrivacy |
+| US users; CA pricing; "California" mention | CCPA / CPRA |
+| ≥45M EU monthly active users | DSA VLOP rules |
+| ≥45M EU MAU **and** core platform service | DMA gatekeeper rules |
+| User-facing AI generation, recommendation, biometric, scoring | EU AI Act |
+| Marketing emails to anyone | CAN-SPAM (US) + GDPR (EU) + CASL (CA) |
+| User-uploaded media | DMCA (US) + Copyright Directive (EU) |
+
+If ambiguous → mark as `APPLIES?` with the signals you used, ask the user to confirm before running domain-specific checks.
+
+---
+
+## Audit Domains
+
+Each domain has its own deep checklist in `references/`. Load on-demand.
+
+### 1. Privacy → [`references/privacy.md`](./references/privacy.md)
+
+Scope: **GDPR**, **CCPA / CPRA**, **ePrivacy Directive** (cookie law), **PIPL**, **LGPD**.
+
+Top-level checks:
+- Cookie consent — opt-in (EU), opt-out (US), no pre-checked boxes, banner blocks non-essential trackers until consent
+- Privacy policy — completeness, clarity, last-updated date, lawful basis stated, retention periods, sub-processors, contact for DPO/privacy
+- Data subject rights — discoverable mechanism for access, deletion, rectification, portability, objection, opt-out of sale
+- DPIA triggers — high-risk processing identified
+- Cross-border transfers — SCCs / adequacy decisions referenced
+- Breach response — documented procedure, 72-hour notification capability
+- Children — COPPA / age gate / parental consent if minors possible
+
+### 2. Accessibility → [`references/accessibility.md`](./references/accessibility.md)
+
+Scope: **WCAG 2.2 Level AA**, **ADA Title III** (US), **European Accessibility Act** (EAA, mandatory June 28, 2025), **EN 301 549**, **Section 508**.
+
+Top-level checks:
+- Perceivable: text alternatives, captions, color contrast (4.5:1 normal / 3:1 large), reflow, resize 200%
+- Operable: keyboard accessible, no keyboard traps, focus visible (2.2 new), target size (2.2 new), no seizure-inducing flashes
+- Understandable: language declared, predictable navigation, error identification + suggestion, labels/instructions, consistent help (2.2 new)
+- Robust: parses, name/role/value, status messages
+- Accessibility statement: published, conformance level, contact, enforcement
+- Procurement (EAA scope): VPAT or equivalent for B2B
+
+### 3. Consumer & E-commerce → [`references/consumer.md`](./references/consumer.md)
+
+Scope: **DSA** (Digital Services Act), **DMA** (Digital Markets Act), **CCPA "sale"** rules, **CAN-SPAM**, **Consumer Rights Directive (EU)**, **Omnibus Directive**, **Unfair Commercial Practices Directive**, **CPRA dark-patterns rules**.
+
+Top-level checks:
+- Pricing transparency: total price upfront, no drip pricing, currency clear, taxes/fees disclosed before checkout
+- Withdrawal / refund: 14-day right (EU), clear policy, withdrawal form provided
+- Reviews & rankings: discloses if reviews verified, ranking parameters disclosed (Omnibus)
+- Dark patterns: no forced action, no obstruction, no misdirection, opt-out as easy as opt-in
+- DSA notice & action: working content-flagging, statement of reasons, transparency reports (if applicable)
+- DMA: gatekeeper obligations (interop, sideloading, no self-preferencing) — only if designated
+- Marketing email: unsubscribe in every email, accurate sender, accurate subject (CAN-SPAM); double opt-in (GDPR)
+- Cookie / consent reuse for marketing: separate from analytics consent
+
+### 4. AI & Content → [`references/ai-content.md`](./references/ai-content.md)
+
+Scope: **EU AI Act** (phased applicability through 2026/2027), **Copyright Directive (EU)**, **DMCA** (US), **CDA Section 230** boundaries, **state AI disclosure laws** (e.g., CA, CO, IL).
+
+Top-level checks:
+- AI Act risk classification: unacceptable / high / limited / minimal — system identified and classified
+- Transparency: users informed when interacting with AI (chatbots, deepfakes, generative content)
+- Training-data disclosure for general-purpose AI (GPAI) per AI Act
+- Copyright: TDM opt-out (Copyright Directive Art 4), training-data licensing posture
+- DMCA: registered designated agent, takedown workflow, counter-notice flow, repeat-infringer policy
+- User-generated content moderation: terms aligned with platform policy
+- Watermarking / provenance: synthetic media labeled (AI Act + state laws)
+- AI-generated decisions affecting users (employment, credit, housing, etc.) — explainability + appeal
+
+---
+
+## Severity Tiers
+
+Each finding receives one of four severity levels:
+
+| Severity | Meaning | Examples |
+|----------|---------|----------|
+| **BLOCKER** | Live legal exposure NOW. Fix before next deploy. | Tracking pixels firing pre-consent in EU; no DPA; no CCPA opt-out link; site unusable by keyboard; no DMCA agent on UGC platform. |
+| **HIGH** | Material risk; fix this sprint. | Privacy policy missing retention periods; no accessibility statement; dark pattern in checkout; no AI disclosure in chatbot. |
+| **MEDIUM** | Best-practice gap; fix this quarter. | Color contrast failures on non-critical pages; cookie banner UX could improve; missing alt text on decorative images marked as content. |
+| **LOW** | Polish / documentation. | Privacy policy could be clearer; missing language attribute on `<html>`; outdated jurisdiction list. |
+
+Plus two non-finding states:
+- **PASS** — explicitly verified compliant
+- **UNVERIFIED** — could not check (e.g., no live URL, gated behind auth) — list what's needed to verify
+
+---
+
+## Execution Flow
+
+### Phase 0 — Scope
+
+1. Confirm target: live URL, source path, or both.
+2. Apply [Audit Scope Detection](#audit-scope-detection) → produce APPLICABILITY MATRIX.
+3. Confirm with user if any domain is ambiguous.
+
+### Phase 1 — Gather (parallel where possible)
+
+For each applicable domain, collect:
+
+| Domain | What to gather |
+|--------|----------------|
+| Privacy | Privacy policy text, cookie banner UX (pre/post consent), `Set-Cookie` headers, third-party network calls before consent, list of data subject rights flows. |
+| Accessibility | Rendered DOM, ARIA tree, axe-core/Lighthouse output, keyboard tab path, color contrast measurements, accessibility statement page. |
+| Consumer | Checkout flow screenshots, pricing pages, email signup → confirmation flow, T&Cs, refund policy, review system disclosures. |
+| AI / content | List of AI-driven features, model providers, training-data sources (if known), DMCA designated-agent page, content moderation policies. |
+
+### Phase 2 — Evaluate
+
+For each check in the applicable domain reference, mark: PASS / BLOCKER / HIGH / MEDIUM / LOW / UNVERIFIED.
+Each non-PASS finding **must** include evidence (see [Evidence Format](#evidence-format)).
+
+### Phase 3 — Report
+
+Produce a single report following [Output Format](#output-format).
+
+### Phase 4 — Remediation Plan
+
+For BLOCKER + HIGH findings, draft a concrete remediation:
+- File path / page URL
+- Suggested change (code, copy, configuration)
+- Owner (engineering / legal / content)
+- Estimated effort (XS / S / M / L)
+
+---
+
+## Evidence Format
+
+Every non-PASS finding must cite specific evidence so it can be verified:
+
+```
+[domain.check-id] <one-line summary>
+  severity: BLOCKER
+  evidence:
+    - URL: https://example.com/checkout
+    - request: GET https://google-analytics.com/collect?... (fired pre-consent)
+    - source: app/layout.tsx:42 — <Script src="..." strategy="beforeInteractive" />
+    - cookie: _ga=... (Set-Cookie before consent dialog dismissed)
+  applicable_law: GDPR Art 6 + ePrivacy Art 5(3)
+  remediation:
+    - gate <Script> behind consent state
+    - migrate to consent-aware loader (e.g., conditionally render after user accepts)
+  effort: S
+```
+
+Never assert a finding without at least one of: URL + observed behavior, source path + line, network capture, header value, screenshot reference.
+
+---
+
+## Output Format
+
+```markdown
+# Regulatory Compliance Audit — <site / app name>
+
+**Date:** 2026-MM-DD
+**Auditor:** regulatory-guard skill (vllnt/skills)
+**Target:** https://example.com (+ source: ./)
+**Scope:** EU, US (CA), Global users
+
+## Applicability Matrix
+| Law | Applies | Reason |
+|-----|---------|--------|
+| GDPR | YES | Site available to EU users; collects email |
+| CCPA / CPRA | YES | "California" mentioned; US users targeted |
+| EAA | YES | B2C e-commerce, available in EU after 2025-06-28 |
+| DSA | NO | <45M EU MAU and not a hosting provider for UGC at platform scale |
+| EU AI Act | LIMITED | Chatbot present (limited-risk transparency obligations) |
+| ... | ... | ... |
+
+## Summary
+
+| Severity | Count |
+|----------|-------|
+| BLOCKER  | 3 |
+| HIGH     | 7 |
+| MEDIUM   | 12 |
+| LOW      | 5 |
+| UNVERIFIED | 2 |
+| PASS     | 41 |
+
+**Verdict:** NOT READY FOR PUBLIC RELEASE — 3 blockers must be resolved.
+
+## Findings — Privacy
+... (one entry per non-PASS finding, in Evidence Format)
+
+## Findings — Accessibility
+...
+
+## Findings — Consumer & E-commerce
+...
+
+## Findings — AI & Content
+...
+
+## Remediation Plan (BLOCKER + HIGH)
+| ID | Severity | Owner | Effort | Description |
+|----|----------|-------|--------|-------------|
+| privacy.cookie-pre-consent | BLOCKER | eng | S | Gate GA behind consent... |
+| ... | ... | ... | ... | ... |
+
+## Out of Scope / Unverified
+- "third-party-trackers": could not verify on /admin (auth required) — please re-run with admin session
+- ...
+
+## Limitations
+This audit is a structured technical review, not legal advice. High-severity findings should be reviewed by qualified counsel for the relevant jurisdictions.
+```
+
+---
+
+## References
+
+Each domain's deep checklist:
+
+- Privacy: [`references/privacy.md`](./references/privacy.md)
+- Accessibility: [`references/accessibility.md`](./references/accessibility.md)
+- Consumer & E-commerce: [`references/consumer.md`](./references/consumer.md)
+- AI & Content: [`references/ai-content.md`](./references/ai-content.md)
+
+See also [`EXAMPLE.md`](./EXAMPLE.md) for a full sample audit run.
+
+### regulatory-guard — README
+Source: regulatory-guard/README.md
+
+# Regulatory Guard
+
+Audit a website or web app for strict compliance with applicable legislation across four domains:
+
+- **Privacy** — GDPR, CCPA / CPRA, ePrivacy, PIPL, LGPD
+- **Accessibility** — WCAG 2.2 AA, ADA Title III, European Accessibility Act (EAA), EN 301 549, Section 508
+- **Consumer & E-commerce** — DSA, DMA, Consumer Rights / Omnibus / UCP Directives, CCPA "sale", CAN-SPAM
+- **AI & Content** — EU AI Act, Copyright Directive, DMCA, state AI disclosure laws
+
+## Why this skill exists
+
+Public-facing apps inherit a long tail of legal obligations the moment they ship. This skill turns that tail into a structured, evidence-backed audit that an agent can run before launch, before entering a new market, or on a recurring cadence.
+
+## What it produces
+
+A tiered compliance report with:
+- Applicability matrix (which laws apply, with reasoning)
+- Findings grouped by domain, each with evidence, cited law, and remediation
+- Severity: BLOCKER / HIGH / MEDIUM / LOW / UNVERIFIED / PASS
+- Concrete remediation plan for BLOCKER + HIGH
+
+## How to use
+
+See [SKILL.md](./SKILL.md) for the full execution flow and triggers.
+
+## What this skill is NOT
+
+- Not legal advice. High-severity findings should go to qualified counsel.
+- Not a guarantee. Compliance is contextual; this is a structured starting point.
+- Not a replacement for a DPIA or formal accessibility audit by certified auditors when those are legally required.
+
+## Examples
+
+See [EXAMPLE.md](./EXAMPLE.md).
+
+### regulatory-guard — EXAMPLE
+Source: regulatory-guard/EXAMPLE.md
+
+# Regulatory Guard — Example Run
+
+This is a condensed example of a real-world audit output. Use it as a template for the report shape.
+
+## Target
+
+- **Site:** https://example-shop.eu
+- **Source:** ./apps/web (Next.js 15, deployed on Vercel)
+- **Business:** Direct-to-consumer apparel, ships globally
+- **Audit date:** 2026-05-08
+
+## Applicability Matrix
+
+| Law | Applies | Reason |
+|-----|---------|--------|
+| GDPR + ePrivacy | YES | EU customers; analytics + marketing trackers; account creation |
+| CCPA / CPRA | YES | Ships to California; "California" mentioned in shipping page |
+| EAA (from 2025-06-28) | YES | B2C e-commerce in EU |
+| WCAG 2.2 AA | YES | Bar for both EAA and ADA |
+| ADA Title III | YES | US customers, place of public accommodation per DOJ |
+| CRD + Omnibus + UCPD | YES | EU consumer e-commerce |
+| DSA | LIMITED | Online platform Art 6, but micro-enterprise carve-out may apply — confirm headcount + turnover |
+| DMA | NO | Not a designated gatekeeper |
+| EU AI Act | LIMITED | "Style assistant" chatbot = limited-risk Art 50 transparency |
+| DMCA | NO | No third-party UGC at meaningful scale |
+| CAN-SPAM | YES | US marketing emails |
+
+## Summary
+
+| Severity | Count |
+|----------|-------|
+| BLOCKER  | 4 |
+| HIGH     | 9 |
+| MEDIUM   | 14 |
+| LOW      | 6 |
+| UNVERIFIED | 3 |
+| PASS     | 38 |
+
+**Verdict:** **NOT READY** — 4 blockers must be resolved before next public deploy.
+
+---
+
+## Findings — Privacy
+
+```
+[privacy.cookie.pre-consent-trackers]
+  severity: BLOCKER
+  evidence:
+    - URL: https://example-shop.eu/
+    - request: GET https://www.googletagmanager.com/gtag/js?id=G-XXXX (fired before banner interaction)
+    - request: POST https://stats.g.doubleclick.net/j/collect (fired before banner)
+    - source: apps/web/app/layout.tsx:23 — <Script src="..." strategy="afterInteractive" />
+    - cookie: _ga=GA1.2.123456789... (Set on landing pre-consent)
+  applicable_law: GDPR Art 6 + ePrivacy Art 5(3); EDPB 03/2022
+  remediation:
+    - Remove eager <Script> insertion
+    - Use a consent-aware loader (e.g., Cookiebot / OneTrust / custom hook gated on consent state)
+    - Default state = no non-essential cookies
+  effort: S (1–2 days)
+```
+
+```
+[privacy.cookie.banner-rejection-equal]
+  severity: BLOCKER
+  evidence:
+    - URL: https://example-shop.eu/
+    - screenshot: Accept = solid green button; Reject = small underlined text link in corner
+  applicable_law: ePrivacy Art 5(3); EDPB 03/2022; CNIL guidance
+  remediation:
+    - Reject-all button visually equivalent to Accept-all (size, contrast, position)
+    - Both reachable in single click, no nested menu for "reject"
+  effort: XS
+```
+
+```
+[privacy.dsr.no-mechanism]
+  severity: BLOCKER
+  evidence:
+    - URL: https://example-shop.eu/privacy — mentions rights but no contact/form
+    - search: no `/privacy/request` or DSAR endpoint found in source
+  applicable_law: GDPR Art 12, 15–22; CCPA §1798.130
+  remediation:
+    - Add /privacy/request page with form (data type + identity verification + email confirmation)
+    - Document SLA in privacy policy (30 days GDPR / 45 days CCPA)
+  effort: M
+```
+
+```
+[privacy.policy.missing-retention]
+  severity: HIGH
+  evidence:
+    - URL: https://example-shop.eu/privacy — no retention period or criteria for any data category
+  applicable_law: GDPR Art 13(2)(a)
+  remediation:
+    - Add retention table per data category
+  effort: S
+```
+
+(... 6 more privacy findings omitted ...)
+
+---
+
+## Findings — Accessibility
+
+```
+[a11y.2.1.1.keyboard-trap-modal]
+  severity: BLOCKER
+  evidence:
+    - URL: https://example-shop.eu/cart (modal opens on Add to Cart)
+    - manual: Tab cycles inside modal correctly, but no key returns focus to trigger; Escape doesn't close
+  applicable_law: WCAG 2.1.2; EAA / EN 301 549 §9.2.1.2
+  remediation:
+    - Implement focus trap with restoration to trigger on close
+    - Add Escape handler
+    - Use a battle-tested primitive (Radix Dialog, Headless UI Dialog, native <dialog>)
+  effort: S
+```
+
+```
+[a11y.1.4.3.contrast-cta]
+  severity: HIGH
+  evidence:
+    - URL: https://example-shop.eu/products/shirt-001
+    - measurement: "Add to Cart" button #FFB300 on #FFFFFF = 1.94:1 (needs ≥4.5:1)
+  applicable_law: WCAG 1.4.3
+  remediation:
+    - Darken button background to #B58300 (4.74:1) or change text to dark
+  effort: XS
+```
+
+(... 5 more accessibility findings omitted ...)
+
+---
+
+## Findings — Consumer & E-commerce
+
+```
+[consumer.pricing.fees-at-checkout]
+  severity: BLOCKER
+  evidence:
+    - URL: https://example-shop.eu/cart → /checkout
+    - observation: "€4.50 service fee" appears only on final page
+  applicable_law: CRD Art 6(1)(e); UCPD; CA SB 478
+  remediation:
+    - Disclose unavoidable fees in product or cart page, before review
+  effort: S
+```
+
+(... more findings omitted ...)
+
+---
+
+## Findings — AI & Content
+
+```
+[ai.chatbot.disclosure-missing]
+  severity: HIGH
+  evidence:
+    - URL: https://example-shop.eu/ — chat widget bottom-right
+    - observation: no "AI assistant" label; persona "Sophie" suggests human
+  applicable_law: EU AI Act Art 50(1); CA SB 1001 (commerce)
+  remediation:
+    - Label widget "AI Assistant"
+    - First message: "Hi, I'm an AI assistant. Type 'human' to reach a person."
+  effort: XS
+```
+
+(... more findings omitted ...)
+
+---
+
+## Remediation Plan (BLOCKER + HIGH)
+
+| ID | Severity | Owner | Effort | Description |
+|----|----------|-------|--------|-------------|
+| privacy.cookie.pre-consent-trackers | BLOCKER | eng | S | Gate trackers behind consent state |
+| privacy.cookie.banner-rejection-equal | BLOCKER | design + eng | XS | Equal-prominence reject-all |
+| privacy.dsr.no-mechanism | BLOCKER | eng + legal | M | DSAR form + workflow |
+| consumer.pricing.fees-at-checkout | BLOCKER | eng | S | Show service fee in cart |
+| a11y.2.1.1.keyboard-trap-modal | BLOCKER | eng | S | Replace modal with accessible primitive |
+| privacy.policy.missing-retention | HIGH | legal | S | Update retention disclosure |
+| a11y.1.4.3.contrast-cta | HIGH | design | XS | Adjust button contrast |
+| ai.chatbot.disclosure-missing | HIGH | eng | XS | AI label + first-message disclosure |
+| ... | ... | ... | ... | ... |
+
+## Out of Scope / Unverified
+
+- `privacy.policy.subprocessor-list`: page links to a PDF that returned 403 — please re-share
+- `consumer.refund.flow`: requires authenticated session; rerun with synthetic test account
+- `ai.training-data`: model is a third-party API (Claude); confirm provider's TDM-opt-out policy is referenced in your terms
+
+## Limitations
+
+This audit is a structured technical review, not legal advice. High-severity findings should be reviewed by qualified counsel for the relevant jurisdictions.
+
+### regulatory-guard — references/privacy
+Source: regulatory-guard/references/privacy.md
+
+# Privacy Audit — Deep Checklist
+
+Loaded on-demand by `SKILL.md`. Covers **GDPR**, **CCPA / CPRA**, **ePrivacy Directive**, with notes for **PIPL** (China), **LGPD** (Brazil), **PIPEDA** (Canada), and **UK GDPR**.
+
+---
+
+## 1. Cookie & Tracker Consent
+
+| ID | Check | Severity if fail | Law |
+|----|-------|------------------|-----|
+| privacy.cookie.pre-consent-trackers | No analytics/marketing/social trackers fire **before** explicit user consent (EU) | BLOCKER | ePrivacy Art 5(3); GDPR Art 6 |
+| privacy.cookie.banner-rejection-equal | "Reject all" is **as prominent and one-click** as "Accept all" | BLOCKER | EDPB 03/2022 + CNIL guidance |
+| privacy.cookie.no-pre-checked | No pre-checked consent boxes (incl. legitimate-interest pseudo-opt-in dark patterns) | HIGH | GDPR Art 4(11); Planet49 (CJEU C-673/17) |
+| privacy.cookie.granularity | Categories distinguishable (analytics vs marketing vs social vs functional) | HIGH | EDPB 05/2020 |
+| privacy.cookie.withdraw-easy | Withdrawing consent is as easy as giving it (footer link or persistent UI) | HIGH | GDPR Art 7(3) |
+| privacy.cookie.no-cookie-walls | No "consent or pay" without genuine alternative (region-dependent — EDPB 04/2024 nuance) | HIGH | EDPB 04/2024 |
+| privacy.cookie.essential-only-baseline | Strictly necessary cookies set without consent are limited to those required for the service | MEDIUM | ePrivacy Art 5(3) exemption |
+| privacy.cookie.documentation | Cookie policy lists every cookie, purpose, third party, retention | MEDIUM | GDPR Art 13 |
+| privacy.tracker.fingerprint | Fingerprinting (canvas, font, audio) treated as a tracker requiring consent | HIGH | EDPB 9/2014 + ePrivacy |
+
+### Verification (when browser available)
+1. Load page in clean profile.
+2. Capture all network requests + `Set-Cookie` headers **before** clicking anything.
+3. Any third-party tracker/marketing cookie set pre-consent → `BLOCKER`.
+4. Click "Reject all" → re-capture; any non-essential tracker fired → `BLOCKER`.
+
+---
+
+## 2. Privacy Policy Completeness
+
+GDPR Art 13/14 minimum:
+
+- [ ] Identity & contact of controller
+- [ ] DPO contact (if appointed; required if Art 37)
+- [ ] Purposes of processing **and** lawful basis for each (Art 6)
+- [ ] Legitimate-interest balancing summary (when basis = LI)
+- [ ] Recipients / categories of recipients
+- [ ] International transfers + safeguards (SCCs, adequacy decision, BCRs)
+- [ ] Retention period or criteria
+- [ ] Data subject rights enumerated + how to exercise
+- [ ] Right to lodge complaint with supervisory authority
+- [ ] Whether provision is statutory/contractual + consequences of refusal
+- [ ] Existence of automated decision-making / profiling + meaningful info about logic
+- [ ] Source of data (when not from data subject) per Art 14
+- [ ] Last-updated date + change-log practice
+
+CCPA / CPRA additions:
+
+- [ ] Categories of PI collected (CCPA categories)
+- [ ] Sources of PI
+- [ ] Business / commercial purposes
+- [ ] Categories of third parties to whom PI is disclosed/sold/shared
+- [ ] Sensitive PI handling disclosure
+- [ ] Right to know / delete / correct / opt-out of sale-or-share / limit use of sensitive PI
+- [ ] "Do Not Sell or Share My Personal Information" + "Limit the Use of My Sensitive Personal Information" links in footer
+- [ ] Notice at collection (may be linked from collection point)
+
+---
+
+## 3. Data Subject Rights (DSR)
+
+| Right | EU (GDPR) | US (CCPA / CPRA) | Verification |
+|-------|-----------|-------------------|--------------|
+| Access | Art 15 | "Right to know" | Discoverable mechanism, response within 30/45 days, identity verification proportionate |
+| Erasure | Art 17 | "Right to delete" | Working flow; cascades to processors; exceptions documented |
+| Rectification | Art 16 | "Right to correct" | Mechanism exists; updates propagate |
+| Portability | Art 20 | (limited) | Machine-readable export (CSV/JSON) |
+| Object | Art 21 | — | Honored, esp. for direct marketing (must always succeed) |
+| Restrict | Art 18 | — | Mechanism exists |
+| Opt-out of sale/share | — | CCPA "DNS/DNS-S" | Footer link present, GPC respected (CPRA) |
+| Limit sensitive PI | — | CPRA | Mechanism exists |
+| Automated decision rights | Art 22 | (state-by-state) | Human review path documented |
+
+**Verification:** identify a DSR submission flow (email, form, in-product). Submit a synthetic request if user authorizes; otherwise inspect source for handler and SLA.
+
+---
+
+## 4. Lawful Basis & Consent Engineering
+
+- [ ] Lawful basis recorded per processing activity (Record of Processing — Art 30)
+- [ ] Consent (when used) is freely given, specific, informed, unambiguous (Art 4(11))
+- [ ] Separate consent for separate purposes (analytics vs marketing vs profiling)
+- [ ] Children's data — age gate or parental consent flow if minors plausible (GDPR Art 8: 13–16 depending on member state; COPPA: under 13 in US)
+- [ ] Special categories (Art 9) — explicit consent or other Art 9 basis documented (health, biometric, religion, etc.)
+
+---
+
+## 5. Cross-Border Transfers
+
+- [ ] Transfers to "third countries" identified
+- [ ] Mechanism per transfer: adequacy decision / SCCs / BCRs / Art 49 derogation
+- [ ] Transfer Impact Assessment (TIA) on file when SCCs used (post-Schrems II)
+- [ ] EU-US Data Privacy Framework (DPF) — used? Vendor self-certified?
+- [ ] Sub-processor list published or available; flow-down clauses in DPAs
+
+---
+
+## 6. Vendor & Processor Management
+
+- [ ] DPA signed with every processor (Art 28)
+- [ ] Sub-processor list published or notified
+- [ ] Vendor risk assessed (security, location, legal regime)
+- [ ] Processor contact for breach notification documented
+
+---
+
+## 7. Breach Response
+
+- [ ] Documented incident response procedure
+- [ ] 72-hour notification to supervisory authority capability (Art 33)
+- [ ] Data subject notification capability when high risk (Art 34)
+- [ ] Breach register maintained
+
+---
+
+## 8. DPIA Triggers (Art 35)
+
+DPIA required when processing is "likely to result in a high risk", including:
+
+- Systematic and extensive profiling with significant effects
+- Large-scale processing of Art 9 (special category) or Art 10 (criminal) data
+- Systematic monitoring of public areas
+- Plus member-state DPA "blacklist" / "whitelist" criteria
+
+If any apply → check if DPIA exists, is documented, and has been updated.
+
+---
+
+## 9. Children & Sensitive Categories
+
+- [ ] If under-13 / under-16 plausible: COPPA / GDPR Art 8 compliance
+- [ ] Verifiable parental consent mechanism
+- [ ] Reduced data collection from minors
+- [ ] No behavioral advertising to minors (CPRA + DSA Art 28 for VLOPs)
+- [ ] Art 9 sensitive data: explicit purpose limitation
+
+---
+
+## 10. Documentation & Governance
+
+- [ ] Record of Processing Activities (RoPA) maintained — Art 30
+- [ ] Privacy by Design / Default evidence — Art 25
+- [ ] DPO appointed when Art 37 applies (public authority / large-scale monitoring / Art 9 large-scale)
+- [ ] EU Representative appointed if Art 27 applies (no establishment in EU)
+- [ ] Data classification scheme (PII / sensitive / public) applied to actual data stores
+- [ ] Retention policies enforced (not just documented)
+
+---
+
+## Quick "go-live" gate (any FAIL = BLOCKER)
+
+1. No tracker fires before consent in EU.
+2. Reject-all is one click and equally prominent.
+3. Privacy policy exists and lists every Art 13 element.
+4. CCPA opt-out link in footer (if US users).
+5. Working DSR mechanism published.
+6. DPA signed with every third-party processor handling PII.
+
+### regulatory-guard — references/accessibility
+Source: regulatory-guard/references/accessibility.md
+
+# Accessibility Audit — Deep Checklist
+
+Loaded on-demand by `SKILL.md`. Covers **WCAG 2.2 Level AA**, **ADA Title III** (US), **European Accessibility Act / EAA** (mandatory June 28, 2025), **EN 301 549** (EU procurement), **Section 508** (US federal).
+
+---
+
+## Applicability Quick Test
+
+| Service | Likely required |
+|---------|-----------------|
+| Public-facing US website (place of public accommodation) | ADA Title III (DOJ position: WCAG 2.1 AA) |
+| US federal procurement / federal-funded | Section 508 → WCAG 2.0 AA refresh |
+| EU B2C e-commerce, banking, transport, e-books, ICT (after 2025-06-28) | EAA → EN 301 549 → WCAG 2.1 AA minimum |
+| EU public sector | Web Accessibility Directive → EN 301 549 |
+| Anything serious in 2026+ | Use **WCAG 2.2 AA** as the working bar |
+
+---
+
+## WCAG 2.2 AA — Full Checklist (BLOCKING when applicable)
+
+### 1. Perceivable
+
+| ID | SC | Check |
+|----|----|----|
+| 1.1.1 | A | Non-text content has text alternative (alt, aria-label, role + name) |
+| 1.2.1–1.2.5 | A/AA | Captions, audio description, transcripts for media |
+| 1.3.1 | A | Info & relationships conveyed in markup (semantics, not just visuals) |
+| 1.3.2 | A | Meaningful sequence preserved when CSS removed |
+| 1.3.3 | A | Instructions don't rely on shape/color/size alone |
+| 1.3.4 | AA | Orientation not locked to portrait/landscape unless essential |
+| 1.3.5 | AA | Input purpose programmatically identified (autocomplete attrs) |
+| 1.4.1 | A | Color is not the sole means of conveying info |
+| 1.4.3 | AA | Contrast 4.5:1 normal text, 3:1 large (≥18.66px bold or ≥24px) |
+| 1.4.4 | AA | Text resizable to 200% without loss of content/function |
+| 1.4.5 | AA | Images of text avoided unless essential |
+| 1.4.10 | AA | Reflow at 320 CSS px / 256 CSS px (vertical scroll OK) |
+| 1.4.11 | AA | Non-text contrast ≥3:1 for UI components and graphical objects |
+| 1.4.12 | AA | Text spacing adjustable (line-height 1.5×, paragraph 2×, letter 0.12em, word 0.16em) without loss |
+| 1.4.13 | AA | Hover/focus content dismissible, hoverable, persistent |
+
+### 2. Operable
+
+| ID | SC | Check |
+|----|----|----|
+| 2.1.1 | A | All functionality keyboard-accessible |
+| 2.1.2 | A | No keyboard trap |
+| 2.1.4 | A | Single-character key shortcuts disablable / remappable |
+| 2.2.1 | A | Timing adjustable / extendable / disablable |
+| 2.2.2 | A | Pause/stop/hide for moving/blinking/auto-updating content |
+| 2.3.1 | A | No content flashing >3× per second over flash threshold |
+| 2.4.3 | A | Focus order is meaningful |
+| 2.4.4 | A | Link purpose clear from link text (or surrounding context) |
+| 2.4.5 | AA | Multiple ways to find pages (nav, search, sitemap) |
+| 2.4.6 | AA | Headings & labels descriptive |
+| 2.4.7 | AA | Focus visible |
+| **2.4.11** | **AA** (new in 2.2) | Focus not obscured (minimum) — at least partly visible |
+| **2.4.12** | AAA | (Focus not obscured — enhanced; AAA, advisory) |
+| 2.5.1 | A | Pointer gestures: multipoint/path-based have single-pointer alternative |
+| 2.5.2 | A | Pointer cancellation: down-event ≠ commit |
+| 2.5.3 | A | Label in name: visible label text is part of accessible name |
+| 2.5.4 | A | Motion actuation has UI alternative |
+| **2.5.7** | **AA** (new in 2.2) | Dragging movements have single-pointer alternative |
+| **2.5.8** | **AA** (new in 2.2) | Target size minimum 24×24 CSS px (with exceptions) |
+
+### 3. Understandable
+
+| ID | SC | Check |
+|----|----|----|
+| 3.1.1 | A | Page language declared (`<html lang>`) |
+| 3.1.2 | AA | Language of parts marked when different |
+| 3.2.1 | A | On-focus does not change context |
+| 3.2.2 | A | On-input does not change context unexpectedly |
+| 3.2.3 | AA | Consistent navigation across pages |
+| 3.2.4 | AA | Consistent identification of components |
+| **3.2.6** | **A** (new in 2.2) | Consistent help (contact info, chat, etc. in same relative location) |
+| 3.3.1 | A | Error identification |
+| 3.3.2 | A | Labels or instructions for inputs |
+| 3.3.3 | AA | Error suggestion provided when known |
+| 3.3.4 | AA | Error prevention for legal/financial/data submissions (review/correct/cancel) |
+| **3.3.7** | **A** (new in 2.2) | Redundant entry: previously entered info auto-populated or selectable |
+| **3.3.8** | **AA** (new in 2.2) | Accessible authentication (no cognitive function test like image-puzzle without alternative) |
+
+### 4. Robust
+
+| ID | SC | Check |
+|----|----|----|
+| 4.1.1 | (obsolete in 2.2) | (no longer required) |
+| 4.1.2 | A | Name, role, value programmatically determinable for UI components |
+| 4.1.3 | AA | Status messages exposed to AT (aria-live, role=status/alert) |
+
+---
+
+## Beyond WCAG (jurisdictional)
+
+### EAA-specific (EN 301 549 §5–13 + chapters)
+- Hardware + software accessibility requirements
+- Synchronized media for telecom + audiovisual services
+- Real-time text (RTT) for voice/video communications
+- Compatibility with assistive technologies (AT)
+
+### ADA Title III
+- DOJ has stated WCAG 2.1 AA is the de-facto bar (April 2024 final rule for state/local; private guidance varies)
+- Mobile apps included
+- Reasonable modifications for accessibility-blocking flows
+
+### Section 508 (US federal)
+- Procurement: Voluntary Product Accessibility Template (VPAT) / Accessibility Conformance Report (ACR)
+- Aligns with EN 301 549 since 2018 refresh
+
+---
+
+## Accessibility Statement (REQUIRED when EAA or WAD applies)
+
+Must include:
+
+- [ ] Conformance status (full / partial / non-conformant) and target standard (WCAG 2.2 AA / EN 301 549)
+- [ ] Known limitations + workarounds
+- [ ] Date of statement + last review
+- [ ] Feedback mechanism (email + form) for users to report inaccessibility
+- [ ] Enforcement procedure / national contact body (EU: per member state)
+- [ ] Compatibility statement (browsers, AT versions tested)
+
+---
+
+## Procurement / B2B
+
+- [ ] VPAT 2.4 (or later) / ACR available on request
+- [ ] EN 301 549-aligned for EU procurement
+- [ ] Roadmap for known non-conformances
+
+---
+
+## Verification Tooling
+
+| Layer | Tool |
+|-------|------|
+| Static analysis | axe-core (DevTools), Lighthouse, WAVE, Pa11y |
+| Manual | Keyboard-only test, screen reader (NVDA / VoiceOver), 200% zoom, reflow at 320px, OS high-contrast |
+| Color | WCAG color-contrast calculator, APCA (advisory) |
+
+**Automated tools catch ~30–40% of issues.** Manual review of keyboard, focus, reading order, ARIA correctness is required.
+
+---
+
+## Quick "go-live" gate (any FAIL = BLOCKER)
+
+1. All interactive elements keyboard-reachable, focus visible, no traps.
+2. Color contrast 4.5:1 on body text, 3:1 on large text + UI components.
+3. All form inputs labeled.
+4. `<html lang>` set; landmarks (`<nav>`, `<main>`, `<header>`, `<footer>`) present.
+5. Images have alt or are explicitly decorative (alt="").
+6. Accessibility statement published (when EAA / WAD applies).
+7. Target size ≥24×24 CSS px (WCAG 2.2 new).
+
+### regulatory-guard — references/consumer
+Source: regulatory-guard/references/consumer.md
+
+# Consumer & E-commerce Audit — Deep Checklist
+
+Loaded on-demand by `SKILL.md`. Covers **Digital Services Act (DSA)**, **Digital Markets Act (DMA)**, **Consumer Rights Directive (CRD)**, **Omnibus Directive**, **Unfair Commercial Practices Directive (UCPD)**, **CCPA / CPRA "sale or share"**, **CAN-SPAM** (US), **CASL** (Canada), and emerging **dark-pattern** rules.
+
+---
+
+## 1. Pricing Transparency
+
+### EU (CRD + Omnibus + UCPD)
+- [ ] **Total price** including taxes shown before order placement (CRD Art 6(1)(e))
+- [ ] **Unit price** displayed where applicable (Price Indication Directive)
+- [ ] Delivery / additional charges disclosed before checkout (CRD Art 6(1)(e))
+- [ ] No drip pricing — all unavoidable fees shown upfront (UCPD)
+- [ ] Currency unambiguous, conversion rates disclosed if shown
+- [ ] **Discount reference price** = lowest price in last 30 days (Omnibus Art 2 / CRD Art 6a)
+- [ ] Personalized pricing disclosed when used (Omnibus)
+
+### US (FTC + state laws)
+- [ ] No hidden / "junk" fees (FTC Junk Fees Rule, effective 2025-05-12: total price upfront for live-event tickets and short-term lodging; broader proposed rules)
+- [ ] California SB 478 — "honest pricing" (in effect 2024-07-01): no fees added beyond posted price for goods/services to consumers
+
+---
+
+## 2. Withdrawal / Refund / Cancellation
+
+### EU (CRD)
+- [ ] 14-day right of withdrawal stated for distance-sold goods/services (Art 9)
+- [ ] Standard withdrawal form provided (Annex I)
+- [ ] Pre-contract info (Art 6) provided in durable medium
+- [ ] Order confirmation in durable medium (email or download)
+- [ ] Withdrawal effects: refund within 14 days, including original delivery (Art 13)
+- [ ] Exceptions documented (digital content with consent, sealed goods, perishables)
+
+### US (state-by-state)
+- [ ] FTC Cooling-Off Rule for door-to-door / off-premises sales >$25/$130
+- [ ] California "automatic renewal" law: clear terms + cancellation method as easy as signup
+- [ ] **FTC Click-to-Cancel Rule** (when in force) — cancellation method must be at least as simple as the sign-up method
+- [ ] Negative-option opt-in clarity (no pre-checked boxes)
+
+---
+
+## 3. Reviews, Rankings & Endorsements (Omnibus + FTC)
+
+### EU
+- [ ] Discloses whether and how reviews are verified to come from real users
+- [ ] Discloses ranking parameters and their relative weight (CRD Art 6a, Platform-to-Business Reg)
+- [ ] No fake reviews (paid or AI-generated unverified)
+
+### US (FTC Endorsement Guides + 16 CFR Part 465 — Fake Reviews Rule, 2024)
+- [ ] No fake or AI-generated reviews of own product
+- [ ] Material connections disclosed for endorsements/affiliates
+- [ ] No suppressing negative reviews
+- [ ] No buying/selling fake social indicators
+
+---
+
+## 4. Dark Patterns & Manipulative Design
+
+Based on EDPB 03/2022, OECD, FTC, CPRA:
+
+| Pattern | Why illegal/risky |
+|---------|-------------------|
+| Asymmetric choice (Accept big, Reject hidden) | DSA Art 25; CPRA; UCPD |
+| Confirmshaming ("No thanks, I hate saving money") | UCPD; CPRA |
+| Roach motel (easy in, hard out) | FTC Click-to-Cancel; CPRA |
+| Forced action / forced registration | UCPD |
+| Misdirection (urgency/scarcity untrue) | UCPD; FTC |
+| Visual interference (greyed-out reject button) | EDPB; CPRA |
+| Trick wording (double negatives, ambiguous defaults) | UCPD; CPRA |
+| Pre-selected options that incur charges (CRD Art 22) | CRD; UCPD |
+
+**DSA Art 25:** "Online platforms shall not design, organise or operate their online interfaces in a way that deceives, manipulates or otherwise materially distorts" user choices.
+
+---
+
+## 5. DSA — Digital Services Act
+
+Applies to **intermediary services**: mere conduit, caching, **hosting** (incl. online platforms, search). Tiered obligations.
+
+### All hosting / online platforms
+- [ ] Notice & action mechanism (Art 16) — easy reporting of illegal content
+- [ ] Statement of reasons for content moderation actions (Art 17) — sent to user + DSA Transparency DB
+- [ ] Trusted flagger priority (Art 22) — when designated
+- [ ] No dark patterns (Art 25)
+- [ ] Online advertising transparency (Art 26) — labeled "advertisement" + parameters
+- [ ] No targeted ads to minors (Art 28)
+- [ ] No targeted ads using sensitive data (Art 26(3))
+- [ ] Recommender system parameters disclosed (Art 27)
+- [ ] Online interfaces accessible for minors when service used by them (Art 28)
+
+### Online platforms (excl. micro/small)
+- [ ] Internal complaint-handling system (Art 20)
+- [ ] Out-of-court dispute settlement option (Art 21)
+- [ ] Trader traceability for B2C marketplaces (Art 30 — "Know Your Business Customer")
+- [ ] Annual transparency report (Art 24)
+
+### VLOPs / VLOSEs (>45M EU MAU)
+- [ ] Annual systemic risk assessment (Art 34)
+- [ ] Risk mitigation measures (Art 35)
+- [ ] Independent audit (Art 37)
+- [ ] At least one non-profiling-based recommender option (Art 38)
+- [ ] Ad repository (Art 39)
+- [ ] Data access for researchers (Art 40)
+- [ ] Compliance officer (Art 41)
+
+---
+
+## 6. DMA — Digital Markets Act
+
+Only applies to **designated gatekeepers** (Commission decision). If not designated → SKIP.
+
+If designated, core platform service obligations (Art 5–7):
+- [ ] Interoperability for messaging (Art 7)
+- [ ] No self-preferencing in ranking (Art 6(5))
+- [ ] No combining personal data across services without explicit consent (Art 5(2))
+- [ ] Allow third-party app stores / sideloading (Art 6(4))
+- [ ] Allow business users to communicate offers outside the platform (Art 5(4))
+- [ ] Real-time data portability for end users (Art 6(9))
+
+---
+
+## 7. Marketing Communications
+
+### Email (US — CAN-SPAM)
+- [ ] Accurate "From" / "Reply-To" / routing info
+- [ ] Subject line not deceptive
+- [ ] Identified as ad (when applicable)
+- [ ] Valid physical postal address in every email
+- [ ] Working unsubscribe in every email; honored within 10 business days
+- [ ] No further mail to that address after unsubscribe (except transactional)
+
+### Email (EU — ePrivacy Art 13 + GDPR)
+- [ ] Prior opt-in consent for marketing (or soft opt-in for existing-customer's similar products with each email having unsubscribe)
+- [ ] Unsubscribe in every email; honored immediately
+- [ ] Sender identity clear, no concealing
+- [ ] Granular consent: marketing ≠ analytics ≠ profiling
+
+### Email (Canada — CASL)
+- [ ] Express or implied consent on file (timestamped)
+- [ ] Sender ID + contact info in every email
+- [ ] Unsubscribe processed within 10 business days
+
+### SMS / Push
+- [ ] Prior express consent (TCPA in US for marketing SMS)
+- [ ] STOP keyword honored (US)
+- [ ] Quiet hours respected
+
+---
+
+## 8. Cookie / Consent Reuse
+
+- [ ] Marketing consent **separate** from analytics consent
+- [ ] Profiling consent **separate** from marketing
+- [ ] Consent receipt logged (timestamp, version, choices) for audit
+
+---
+
+## 9. Subscription & Auto-Renewal
+
+- [ ] Auto-renewal disclosed in pre-contract info
+- [ ] Renewal reminder before charge (varies by jurisdiction; required in CA, NY, IL, OR, etc.)
+- [ ] Cancellation flow as easy as sign-up (FTC Click-to-Cancel; CRD)
+- [ ] Free trial → paid: no automatic conversion without re-consent in some jurisdictions
+- [ ] Price changes: prior notice + opt-out
+
+---
+
+## 10. Children & Vulnerable Consumers
+
+- [ ] Age gate where service not intended for under-13/16
+- [ ] Reduced data + no behavioral ads to minors (DSA Art 28; CPRA; COPPA)
+- [ ] No exploitative dark patterns targeting cognitive limits
+- [ ] Clear, age-appropriate language where minors permitted
+
+---
+
+## 11. Marketplace / UGC Specific
+
+- [ ] B2C trader vs C2C seller clearly identified to consumer (CRD Art 6a; Omnibus)
+- [ ] If platform is the trader: full CRD obligations
+- [ ] If platform is intermediary: clear party identification + dispute path
+- [ ] Trader traceability per DSA Art 30
+
+---
+
+## Quick "go-live" gate (any FAIL = BLOCKER for the relevant jurisdiction)
+
+1. Total price (incl. taxes/unavoidable fees) shown before checkout.
+2. 14-day withdrawal right disclosed for EU consumers.
+3. Working unsubscribe in every marketing email + accurate sender info.
+4. Reject-all consent path is one click and equally prominent (cross-ref privacy.md).
+5. CCPA "Do Not Sell or Share" link in footer (US users + sale/share).
+6. Cancellation flow at least as easy as sign-up.
+7. No DSA Art 25 dark patterns in critical flows (consent, checkout, account deletion).
+
+### regulatory-guard — references/ai-content
+Source: regulatory-guard/references/ai-content.md
+
+# AI & Content Audit — Deep Checklist
+
+Loaded on-demand by `SKILL.md`. Covers **EU AI Act** (phased applicability), **Copyright Directive** (EU TDM), **DMCA** (US), **CDA Section 230** boundaries, **state AI disclosure laws** (CA AB 2013/SB 942, CO SB 21-169, NYC Local Law 144, etc.).
+
+---
+
+## 1. EU AI Act Risk Classification
+
+The AI Act sorts AI systems into four tiers. Identify each AI system in scope and classify it.
+
+| Tier | Examples | Status |
+|------|----------|--------|
+| **Unacceptable risk** (Art 5) | Social scoring, real-time biometric ID in public (with narrow LE exceptions), predictive policing of individuals, emotion recognition in workplace/education, untargeted face-image scraping | PROHIBITED — applicable from 2025-02-02 |
+| **High risk** (Art 6 + Annex III) | Recruitment/HR, credit scoring, education access, critical infrastructure, law enforcement, migration, judicial use | Strict obligations from 2026-08-02 (Annex III) / 2027-08-02 (some Annex I products) |
+| **Limited risk** (Art 50) | Chatbots, AI-generated synthetic content, emotion/biometric categorization | Transparency obligations from 2026-08-02 |
+| **Minimal risk** | Spam filters, recommendation widgets, generic ML internals | No specific obligations |
+| **GPAI** (Art 51–55) | Foundation models (LLMs, image, audio) | Provider obligations from 2025-08-02 (existing) / 2027-08-02 (older deployed) |
+
+**Provider vs Deployer:** Many obligations differ. If you build the AI system or substantially modify it, you're likely a *provider*. If you only use it, you're a *deployer*.
+
+### Key checks per tier
+
+#### Limited risk (most common for web apps)
+- [ ] Users informed they are interacting with an AI system (Art 50(1)) — visible disclosure in chatbot UI
+- [ ] AI-generated synthetic image / audio / video / text **labeled as artificially generated** (Art 50(2))
+- [ ] Deepfakes labeled (Art 50(4))
+- [ ] Emotion-recognition / biometric-categorization users informed (Art 50(3))
+- [ ] Disclosures **clearly perceivable** at first interaction, in accessible format
+
+#### High risk (when applicable)
+- [ ] Risk management system (Art 9)
+- [ ] Data governance + quality (Art 10) — bias, representativeness, no Art 9 sensitive data unless documented basis
+- [ ] Technical documentation (Art 11 + Annex IV)
+- [ ] Logging / record-keeping (Art 12)
+- [ ] Transparency to deployers (Art 13) — instructions for use
+- [ ] Human oversight (Art 14)
+- [ ] Accuracy, robustness, cybersecurity (Art 15)
+- [ ] Quality management system (Art 17)
+- [ ] Conformity assessment + EU declaration of conformity + CE marking (Art 43, 47, 48)
+- [ ] Registration in EU database (Art 49)
+- [ ] Post-market monitoring (Art 72)
+- [ ] Incident reporting (Art 73)
+
+#### GPAI provider
+- [ ] Technical documentation (Art 53) — at least Annex XI
+- [ ] Information for downstream providers (Art 53) — Annex XII
+- [ ] Copyright policy + EU TDM opt-out respected (Art 53(1)(c))
+- [ ] **Public summary of training data** (Art 53(1)(d)) — using Commission template
+- [ ] If "systemic risk" GPAI (Art 51 thresholds): model evaluation, adversarial testing, incident tracking, cybersecurity (Art 55)
+
+---
+
+## 2. Copyright & Training Data
+
+### EU Copyright Directive (Directive 2019/790)
+- [ ] **Art 4 TDM exception:** respected when right-holders haven't opted out via machine-readable means (e.g., `robots.txt` / `ai.txt` / metadata)
+- [ ] **Art 3 TDM:** for research orgs, no opt-out — but commercial use should rely on Art 4
+- [ ] If using third-party model: provider's training-data policy reviewed for opt-out compliance
+- [ ] Site itself sets opt-out signals if it doesn't want its content used for training (e.g., `User-agent: GPTBot Disallow: /`)
+
+### US (no statutory TDM exception — fair use case-by-case)
+- [ ] Track guidance from active litigation (Authors v. OpenAI, NYT v. Microsoft, etc.)
+- [ ] License training data when feasible
+- [ ] Attribution / provenance metadata preserved when generated content reuses identifiable inputs
+
+### Outputs
+- [ ] AI-generated content reviewed for substantial similarity to training inputs
+- [ ] Where outputs may include identifiable third-party content (e.g., code, lyrics), terms of service flag this risk to users
+- [ ] User-generated content uploaded to your service: license terms permit your AI uses (or explicit opt-in)
+
+---
+
+## 3. DMCA Compliance (US, for hosting / UGC platforms)
+
+§512 safe-harbor preconditions:
+- [ ] **Designated DMCA agent registered** with US Copyright Office (renewed every 3 years)
+- [ ] Agent contact published on the site (typically `/dmca` or `/copyright`)
+- [ ] **Takedown procedure** documented + functioning
+- [ ] Acknowledge & act on valid takedown notices "expeditiously"
+- [ ] **Counter-notice** procedure documented
+- [ ] **Repeat-infringer policy** documented and enforced
+- [ ] No interference with standard technical measures
+
+### EU mirror — Copyright Directive Art 17 (online content-sharing service providers)
+- [ ] Best-efforts to obtain authorization for protected content
+- [ ] Best-efforts to ensure unavailability of unauthorized content (notice + stay-down)
+- [ ] Complaint & redress mechanism
+
+---
+
+## 4. State AI Disclosure Laws (US)
+
+### California
+- [ ] **AB 2013 (effective 2026-01-01):** GenAI training-data documentation published if model offered/modified in CA
+- [ ] **SB 942 (CA AI Transparency Act):** GenAI providers (>1M monthly visitors) must offer free AI-detection tool + watermark/manifest options
+- [ ] **AB 1008:** PI under CCPA includes AI-generated info derived from PI
+- [ ] **SB 1001 (Bot disclosure):** disclose bot identity in commerce/election contexts
+- [ ] **AB 2655 (Defending Democracy):** election deepfake provisions
+
+### Colorado
+- [ ] **SB 21-169 (Insurance):** no algorithmic discrimination in insurance
+- [ ] **CO AI Act (SB 24-205, effective 2026-02-01):** high-risk AI duty of care, impact assessments, consumer notification (developer + deployer obligations)
+
+### Illinois
+- [ ] **AI Video Interview Act:** consent + disclosure if AI used in hiring video interviews
+- [ ] **HB 3773 (effective 2026-01-01):** civil rights protections in AI employment decisions
+
+### NYC
+- [ ] **Local Law 144 (AEDT):** annual independent bias audit for automated employment decision tools; candidate notice
+
+### Federal
+- [ ] **FTC Section 5:** no deceptive claims about AI capability or training; no unfair AI-driven harms
+- [ ] **EEOC + DOJ joint guidance** on AI in employment
+
+---
+
+## 5. AI in User-Affecting Decisions
+
+If AI materially affects employment, credit, insurance, housing, education access, healthcare, or legal:
+
+- [ ] Notify affected user of AI use (timing varies by law)
+- [ ] Provide explanation of factors / "meaningful information about the logic" (GDPR Art 22; CO AI Act; CCPA limited)
+- [ ] Right to human review / appeal
+- [ ] Document model card, validation, fairness testing
+- [ ] Avoid Art 22 GDPR solely-automated decision unless one of three legal bases met
+
+---
+
+## 6. Watermarking & Provenance
+
+- [ ] Synthetic-media labeling implemented (AI Act Art 50(2))
+- [ ] C2PA / Content Credentials embedded where supported (recommended)
+- [ ] Watermarks tested for robustness against trivial removal
+- [ ] CA SB 942 detection tool + manifest (when applicable)
+
+---
+
+## 7. Bot & Chatbot Disclosure
+
+- [ ] Chatbot identifies as AI on first interaction (AI Act Art 50; CA SB 1001)
+- [ ] Hand-off to human option offered for sensitive interactions (where required)
+- [ ] System prompt / persona doesn't claim human identity in deceptive way
+
+---
+
+## 8. Section 230 / Liability Boundaries (US)
+
+- [ ] Platform doesn't materially contribute to creation of unlawful content (would erode 230 immunity)
+- [ ] AI-generated outputs by the platform itself: 230 likely *does not* protect (per emerging case law) → moderate
+- [ ] Recommender systems: defend with 230(c)(1) where possible; document content-neutral signals
+
+---
+
+## 9. Transparency Reports (DSA + voluntary)
+
+If DSA hosting / online platform:
+- [ ] AI-driven moderation disclosed (volume, accuracy, error rates) per Art 15 / Art 24
+
+Voluntary best practice:
+- [ ] Annual AI transparency report (model versions, deprecations, incidents, demographic performance)
+
+---
+
+## Quick "go-live" gate (any FAIL = BLOCKER if AI features are user-facing in scope)
+
+1. Chatbot / AI assistant: clear disclosure that it's AI (Art 50).
+2. AI-generated synthetic media: labeled (Art 50(2)).
+3. UGC platform (US): DMCA agent registered, takedown flow live.
+4. UGC platform (EU): notice & action mechanism live.
+5. GPAI provider: training-data summary published (Art 53(1)(d)).
+6. AI in employment/credit/insurance: notice + explanation + human review path.
+7. No prohibited Art 5 use cases active.
+
+## Optional
+
+### Security Policy
+Source: SECURITY.md
+
+# Security Policy
+
+## Supported Versions
+
+| Version | Supported |
+|---------|-----------|
+| Latest  | Yes       |
+| < Latest | No       |
+
+Only the latest release receives security updates. We recommend always using the most recent version.
+
+## Reporting a Vulnerability
+
+**Do NOT open a public issue for security vulnerabilities.**
+
+### Preferred Method
+
+Use [GitHub Security Advisories](https://github.com/vllnt/skills/security/advisories/new) to privately report vulnerabilities. This creates a private channel between you and the maintainers.
+
+### Alternative
+
+DM via [X / Twitter](https://bntvllnt.com/x) with:
+
+- Description of the vulnerability
+- Steps to reproduce
+- Affected versions
+- Potential impact
+- Suggested fix (if any)
+
+## Response Timeline
+
+| Stage | Target |
+|-------|--------|
+| Acknowledgment | Within 48 hours |
+| Initial assessment | Within 7 days |
+| Patch development | Within 30 days |
+| Public disclosure | Within 90 days of report |
+
+We follow a **90-day coordinated disclosure** policy. If a fix is ready sooner, we'll disclose sooner.
+
+## Credit
+
+We credit reporters in:
+- Release notes
+- Security advisory
+- CVE entries (when applicable)
+
+If you prefer to remain anonymous, let us know in your report.
+
+## Scope
+
+In scope:
+- Skills published in this repository
+- Documentation files that, if tampered with, could mislead agents into unsafe actions
+
+Out of scope:
+- Third-party agent runtimes (Claude Code, OpenCode, Cursor, etc.)
+- The `skills.sh` distribution platform (report to its maintainers)
+
+### Code of Conduct
+Source: CODE_OF_CONDUCT.md
+
+# Contributor Covenant Code of Conduct
+
+## Our Pledge
+
+We as members, contributors, and leaders pledge to make participation in our
+community a welcoming experience for everyone, regardless of background or identity.
+
+We pledge to act and interact in ways that contribute to an open, welcoming,
+diverse, inclusive, and healthy community.
+
+## Our Standards
+
+Examples of behavior that contributes to a positive environment:
+
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
+
+Examples of unacceptable behavior:
+
+- The use of sexualized language or imagery, and unwelcome sexual attention
+- Trolling, insulting/derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information without explicit permission
+- Other conduct which could reasonably be considered inappropriate
+
+## Enforcement Responsibilities
+
+Maintainers are responsible for clarifying and enforcing standards of acceptable
+behavior and will take appropriate and fair corrective action in response to any
+behavior that they deem inappropriate, threatening, offensive, or harmful.
+
+## Scope
+
+This Code of Conduct applies within all community spaces, and also applies when
+an individual is officially representing the community in public spaces.
+
+## Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported to the maintainers via [GitHub Security Advisories](https://github.com/vllnt/skills/security/advisories/new) or by direct message on [X / Twitter](https://bntvllnt.com/x).
+
+All complaints will be reviewed and investigated promptly and fairly.
+
+## Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 2.1.
+
+[homepage]: https://www.contributor-covenant.org

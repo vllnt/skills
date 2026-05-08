@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Project-managed pre-commit hook. Activate with:
+#   git config core.hooksPath .githooks
+#
+# Or run scripts/install-hooks.sh once after clone.
+
+set -u
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT" || exit 1
+
+# Only validate when SKILL.md or related skill files changed.
+changed="$(git diff --cached --name-only --diff-filter=ACMR)"
+
+needs_validate=0
+if grep -qE '(^|/)SKILL\.md$' <<< "$changed"; then
+  needs_validate=1
+fi
+# Also re-validate if any skill folder file changed (cheap — only ~ms per skill).
+if grep -qE '^[^/]+/(SKILL\.md|README\.md|EXAMPLE\.md|references/)' <<< "$changed"; then
+  needs_validate=1
+fi
+
+if [[ "$needs_validate" -eq 1 ]]; then
+  echo "pre-commit: validating skill frontmatter..."
+  bash "$ROOT/scripts/validate-frontmatter.sh" || {
+    echo ""
+    echo "pre-commit: SKILL.md frontmatter validation failed."
+    echo "fix the errors above, then re-stage and re-commit."
+    exit 1
+  }
+fi
+
+exit 0

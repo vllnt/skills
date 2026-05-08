@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability
+    url: https://github.com/vllnt/skills/security/advisories/new
+    about: Report security vulnerabilities privately
+  - name: Website
+    url: https://bntvllnt.com
+    about: Learn more about the project and maintainers
