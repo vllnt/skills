@@ -5,16 +5,7 @@ on:
     branches: [main]
     tags:
       - 'v*.*.*'
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: "Version bump type"
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+  workflow_dispatch: {}
 
 concurrency:
   group: publish-${{ github.event_name }}-${{ github.ref }}
@@ -24,12 +15,8 @@ permissions:
   contents: write
 
 jobs:
-  # ─────────────────────────────────────────────────────────────────────────
-  # Canary: every push to main that isn't a release commit gets a canary tag.
-  # Lets agents/users grab the latest code from main as a versioned artifact.
-  # ─────────────────────────────────────────────────────────────────────────
   canary:
-    name: Canary Tag
+    name: Canary Release
     if: |
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
@@ -54,22 +41,15 @@ jobs:
           BASE="${BASE#v}"
           SHORT_SHA=$(echo "$GITHUB_SHA" | cut -c1-7)
           CANARY_TAG="v${BASE}-canary.${SHORT_SHA}"
-
           git tag "$CANARY_TAG"
           git push origin "$CANARY_TAG"
-
           gh release create "$CANARY_TAG" \
             --title "$CANARY_TAG" \
             --notes "Canary release from \`${GITHUB_SHA::7}\` on main." \
             --prerelease
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # Stable release via workflow_dispatch — agents/maintainers pick the bump.
-  # Works in addition to the local scripts/release.sh path (which pushes a tag
-  # directly and is handled by the `release-from-tag` job below).
-  # ─────────────────────────────────────────────────────────────────────────
-  release-from-dispatch:
-    name: Release (workflow_dispatch)
+  release-dispatch:
+    name: Tag Release (workflow_dispatch)
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -78,65 +58,42 @@ jobs:
           fetch-depth: 0
           ref: main
 
-      - name: Verify [Unreleased] has entries
+      - name: Read latest dated version from CHANGELOG.md
+        id: version
         run: |
-          if ! awk '/^## \[Unreleased\]/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md | grep -qE '^- '; then
-            echo "::error::CHANGELOG.md [Unreleased] has no entries. Add at least one bullet before releasing."
+          ver=$(awk '
+            /^## \[Unreleased\]/ { next }
+            match($0, /^## \[([0-9]+\.[0-9]+\.[0-9]+)\]/, m) {
+              print m[1]
+              exit
+            }
+          ' CHANGELOG.md)
+          if [ -z "$ver" ]; then
+            echo "::error::No dated version section in CHANGELOG.md. Open a release PR that promotes [Unreleased] -> [x.y.z] first."
+            exit 1
+          fi
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "tag=v$ver"     >> "$GITHUB_OUTPUT"
+
+      - name: Guard against retag
+        run: |
+          if git rev-parse "${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "::error::Tag ${{ steps.version.outputs.tag }} already exists. Land a release PR with a new version section before dispatching."
             exit 1
           fi
 
-      - name: Compute next version
-        id: next
-        run: |
-          latest=$(git tag --list 'v*' --sort=-version:refname | grep -v canary | head -1 || true)
-          current="${latest#v}"
-          [ -z "$current" ] && current="0.0.0"
-          IFS='.' read -r major minor patch <<< "$current"
-          case "${{ inputs.bump }}" in
-            major) major=$((major + 1)); minor=0; patch=0 ;;
-            minor) minor=$((minor + 1)); patch=0 ;;
-            patch) patch=$((patch + 1)) ;;
-          esac
-          ver="${major}.${minor}.${patch}"
-          echo "version=$ver" >> "$GITHUB_OUTPUT"
-          echo "tag=v$ver" >> "$GITHUB_OUTPUT"
-
-      - name: Promote [Unreleased] → [version]
-        run: |
-          ver="${{ steps.next.outputs.version }}"
-          today="$(date -u +%Y-%m-%d)"
-          tmp=$(mktemp)
-          awk -v ver="$ver" -v date="$today" '
-            /^## \[Unreleased\]/ && replaced==0 {
-              print "## [Unreleased]"
-              print ""
-              print "## [" ver "] - " date
-              replaced=1
-              next
-            }
-            { print }
-          ' CHANGELOG.md > "$tmp"
-          mv "$tmp" CHANGELOG.md
-
-      - name: Commit, tag, push
+      - name: Create + push tag
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tag="${{ steps.next.outputs.tag }}"
+          tag="${{ steps.version.outputs.tag }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md
-          git commit -m "chore(release): $tag"
           git tag -a "$tag" -m "$tag"
-          git push origin main
           git push origin "$tag"
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # Stable release from a pushed tag — fires when scripts/release.sh tags
-  # locally OR after release-from-dispatch pushes its tag.
-  # ─────────────────────────────────────────────────────────────────────────
   release-from-tag:
-    name: Release (tag push)
+    name: Publish Release (tag push)
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'canary')
     runs-on: ubuntu-latest
     steps:
@@ -149,7 +106,7 @@ jobs:
         run: |
           tag="${GITHUB_REF#refs/tags/}"
           ver="${tag#v}"
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag"     >> "$GITHUB_OUTPUT"
           echo "version=$ver" >> "$GITHUB_OUTPUT"
 
       - name: Extract changelog section
@@ -180,7 +137,7 @@ jobs:
             --notes-file /tmp/release-notes.md \
             --latest
 
-      - name: Clean up canary tags & releases behind this stable
+      - name: Clean up canary tags & releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

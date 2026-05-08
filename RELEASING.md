@@ -1,101 +1,73 @@
 # Releasing
 
-This repo is designed so AI agents (and humans) can ship a release end-to-end. Three release paths, one source of truth (`CHANGELOG.md`).
+`main` is protected. No commits land on `main` outside a squash-merged PR. CI never pushes commits to `main`. The release flow respects this.
 
 ## Per-PR (every contribution)
 
 ```
 1. make change
-2. bash scripts/changelog-add.sh "<entry>"   ← appends under [Unreleased]
-3. commit                                    ← pre-commit validates frontmatter
-4. open PR                                   ← CI blocks if CHANGELOG.md unchanged
+2. bash scripts/changelog-add.sh "<entry>"   appends under [Unreleased]
+3. commit                                    pre-commit validates frontmatter
+4. open PR                                   CI blocks if CHANGELOG unchanged
                                               or [Unreleased] empty
 ```
 
-## Three Release Paths
+CI gates that block the merge:
+- `Validate Skill Frontmatter` — every `<skill>/SKILL.md` has valid YAML frontmatter
+- `Changelog Required` — `CHANGELOG.md` modified AND `[Unreleased]` has at least one bullet
+
+## At-a-glance
 
 ```
-┌───────────────────────────────────────────────────────────────────┐
-│                    main                                          │
-│   ┌──────────────────────────────────────────────────────────┐   │
-│   │  PATH A — local script (preferred for fast turnaround)   │   │
-│   │  bash scripts/release.sh --bump patch                    │   │
-│   │  → bumps, promotes [Unreleased], tags, pushes            │   │
-│   │  → publish.yml job `release-from-tag` fires              │   │
-│   └──────────────────────────────────────────────────────────┘   │
-│                                                                   │
-│   ┌──────────────────────────────────────────────────────────┐   │
-│   │  PATH B — GitHub Actions UI (workflow_dispatch)          │   │
-│   │  Actions tab → Publish → Run workflow → bump=patch/min…  │   │
-│   │  → publish.yml job `release-from-dispatch` does the      │   │
-│   │    promotion + commit + tag + push                       │   │
-│   │  → triggers `release-from-tag` on the resulting tag      │   │
-│   └──────────────────────────────────────────────────────────┘   │
-│                                                                   │
-│   ┌──────────────────────────────────────────────────────────┐   │
-│   │  PATH C — canary (automatic on every main push)          │   │
-│   │  → publish.yml job `canary` creates                      │   │
-│   │    `v<latest-stable>-canary.<sha7>` prerelease           │   │
-│   │  → cleaned up automatically when next stable ships       │   │
-│   └──────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────┘
+        ┌──────────────────────────────────────────┐
+        │         Cutting a release                │
+        │  bash scripts/release-prep.sh --bump pX  │
+        │  → opens PR `release/vX.Y.Z` promoting   │
+        │    [Unreleased] -> [X.Y.Z] - YYYY-MM-DD  │
+        └─────────────────┬────────────────────────┘
+                          │ squash-merge release PR
+                          ▼
+        ┌──────────────────────────────────────────┐
+        │ Actions → Publish → Run workflow         │
+        │  → reads version from CHANGELOG          │
+        │  → creates tag vX.Y.Z at main HEAD       │
+        │    (tags bypass branch protection)       │
+        │  → release-from-tag: GitHub Release      │
+        │    with notes from CHANGELOG, cleans     │
+        │    canary tags                           │
+        └──────────────────────────────────────────┘
 ```
 
-### When to use which path
+## Three jobs in `publish.yml`
 
-| Path | Use when | Friction |
-|------|----------|----------|
-| A — local script | You're already on a clean main locally | Lowest |
-| B — workflow_dispatch | You want the bump done from the browser, e.g. on mobile or from another machine | Low |
-| C — canary | Always-on. No action needed. Used to grab the latest main as a versioned ref. | None |
+| Job | Trigger | Action |
+|-----|---------|--------|
+| `canary` | every push to `main` (except `chore(release):`) | tag + GitHub prerelease `v<latest-stable>-canary.<sha7>` |
+| `release-dispatch` | `workflow_dispatch` | creates tag `vX.Y.Z` at `main` HEAD only — no commits pushed |
+| `release-from-tag` | any `v*.*.*` tag push | creates GitHub Release from `CHANGELOG.md` section, cleans canaries |
 
-## Path A — Local
+`release-dispatch` deliberately pushes only the tag — branch protection stays intact and no PAT or bypass actor is needed (mirrors `vllnt/ui`'s pattern).
+
+## Cutting a Release
 
 ```bash
-bash scripts/release.sh --bump patch    # 0.1.0 -> 0.1.1
-bash scripts/release.sh --bump minor    # 0.1.0 -> 0.2.0
-bash scripts/release.sh --bump major    # 0.1.0 -> 1.0.0
-bash scripts/release.sh --bump patch --dry-run   # preview without pushing
+bash scripts/release-prep.sh --bump patch    # 0.1.0 -> 0.1.1
+bash scripts/release-prep.sh --bump minor
+bash scripts/release-prep.sh --bump major
+bash scripts/release-prep.sh --bump patch --dry-run    # preview, no branch/PR
 ```
 
-What it does:
-1. Verifies clean tree on `main`
-2. Verifies `[Unreleased]` is non-empty
-3. Computes next version from the latest `vX.Y.Z` tag
-4. Promotes `[Unreleased]` → `[X.Y.Z] - YYYY-MM-DD`
-5. Commits `chore(release): vX.Y.Z`, tags, pushes both
+What it does (no force-push, no main-write):
+1. Verifies clean main + non-empty `[Unreleased]`
+2. Computes next version from latest `vX.Y.Z` tag
+3. Creates branch `release/vX.Y.Z`, promotes `[Unreleased]` → `[X.Y.Z] - YYYY-MM-DD`
+4. Pushes branch + opens PR
 
-The tag push fires `publish.yml > release-from-tag` which creates the GitHub Release with notes from `CHANGELOG.md`.
+Squash-merge the release PR. Then **Actions → Publish → Run workflow** on `main`. The `release-dispatch` job creates the tag, which fires `release-from-tag` — your GitHub Release lands with notes auto-extracted from `CHANGELOG.md`.
 
-## Path B — workflow_dispatch
+## Canary (automatic)
 
-GitHub UI:
-
-```
-Actions  →  Publish  →  Run workflow
-  ├─ Branch: main
-  └─ bump:   patch | minor | major
-```
-
-The workflow runs the same logic as Path A, on the `github-actions[bot]` user, then triggers the tag-driven release job.
-
-## Path C — Canary (automatic)
-
-Every push to `main` (except `chore(release):` commits) gets:
-
-```
-v<latest-stable>-canary.<sha7>
-```
-
-as a prerelease GitHub Release. Lets agents pin to a specific build of `main` for testing without waiting for a stable cut. Canary tags are deleted automatically when the next stable release lands.
-
-## Frontmatter & changelog gates (BLOCKING)
-
-| Gate | Where | Blocks |
-|------|-------|--------|
-| Skill frontmatter (`name`, `description`) | `.githooks/pre-commit` + CI `validate-frontmatter` | Commit + merge |
-| `CHANGELOG.md` modified in PR | CI `changelog` | Merge |
-| `[Unreleased]` non-empty in PR | CI `changelog` | Merge |
+Every push to `main` (except `chore(release):` commits) creates `v<latest-stable>-canary.<sha7>` as a GitHub prerelease. Lets agents pin to a specific main build. Canary tags are cleaned up automatically when the next stable lands.
 
 ## Setup (after clone)
 
@@ -105,9 +77,16 @@ bash scripts/install-hooks.sh
 
 Sets `core.hooksPath=.githooks` so the pre-commit validator runs locally.
 
+## Why this shape
+
+- **Branch protection always-on.** No PAT, no Rulesets bypass actor needed. Every commit on main went through CI + a squash-merged PR.
+- **CI never touches main directly.** Only tags. Tags don't trigger required status checks, so they can be created from `GITHUB_TOKEN` even with `enforce_admins=true`.
+- **Release notes come from one source of truth.** Whatever is in `CHANGELOG.md`'s `[X.Y.Z]` section becomes the GitHub Release body — no separate "release notes" doc to drift.
+- **Canary every push.** Frees you from waiting on stable cuts to test main.
+
 ## Agent-Friendly Notes
 
-- All scripts are **non-interactive** — no prompts, all flags explicit.
-- All scripts are **idempotent where safe** — `changelog-add.sh` won't duplicate identical lines; `release.sh` aborts cleanly on bad state.
-- No external dependencies — pure `bash` + `awk` for local; `gh` + `awk` in CI.
-- Three independent release paths means no single failure mode blocks shipping.
+- All scripts are non-interactive (flags only).
+- All scripts are idempotent where safe.
+- No external deps — `bash` + `awk` + `gh`.
+- Three independent paths (canary / dispatch / tag) means no single failure mode blocks shipping.

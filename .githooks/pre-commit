@@ -31,4 +31,16 @@ if [[ "$needs_validate" -eq 1 ]]; then
   }
 fi
 
+# AGENTS.md and CLAUDE.md must stay byte-identical.
+if grep -qE '^(AGENTS|CLAUDE)\.md$' <<< "$changed"; then
+  if [[ -f AGENTS.md && -f CLAUDE.md ]]; then
+    if ! cmp -s AGENTS.md CLAUDE.md; then
+      echo ""
+      echo "pre-commit: AGENTS.md and CLAUDE.md drifted."
+      echo "fix:  cp AGENTS.md CLAUDE.md   (or the other direction)"
+      exit 1
+    fi
+  fi
+fi
+
 exit 0

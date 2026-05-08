@@ -71,7 +71,8 @@ if [[ ! -f "$CHANGELOG" ]]; then
 fi
 
 # Idempotency: bail if exact line already in file.
-if grep -Fxq "$entry" "$CHANGELOG"; then
+# Use `--` so leading `-` in $entry isn't parsed as a grep option.
+if grep -Fxq -- "$entry" "$CHANGELOG"; then
   echo "skip  entry already present: $entry"
   exit 0
 fi

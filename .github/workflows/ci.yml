@@ -19,6 +19,28 @@ jobs:
       - name: Run validator
         run: bash scripts/validate-frontmatter.sh
 
+  sync-agent-docs:
+    name: Sync Agent Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: AGENTS.md and CLAUDE.md must be byte-identical
+        run: |
+          if [ ! -f AGENTS.md ] || [ ! -f CLAUDE.md ]; then
+            echo "::error::Both AGENTS.md and CLAUDE.md must exist."
+            exit 1
+          fi
+          if ! cmp -s AGENTS.md CLAUDE.md; then
+            echo "::error::AGENTS.md and CLAUDE.md drifted. They must be byte-identical."
+            echo ""
+            echo "Diff:"
+            diff -u AGENTS.md CLAUDE.md || true
+            echo ""
+            echo "Fix locally:  cp AGENTS.md CLAUDE.md   (or vice-versa)"
+            exit 1
+          fi
+          echo "AGENTS.md and CLAUDE.md are in sync ($(wc -c < AGENTS.md) bytes)."
+
   changelog:
     name: Changelog Required
     if: github.event_name == 'pull_request'
