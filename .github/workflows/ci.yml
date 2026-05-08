@@ -60,6 +60,9 @@ jobs:
           fi
 
       - name: Check entry under [Unreleased]
+        # Release PRs intentionally promote [Unreleased] to a dated version,
+        # leaving [Unreleased] empty. Skip this check for them.
+        if: ${{ !startsWith(github.head_ref, 'release/') }}
         run: |
           if ! awk '/^## \[Unreleased\]/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md | grep -qE '^- '; then
             echo "::error::CHANGELOG.md has no entries under [Unreleased]. Add at least one bullet."

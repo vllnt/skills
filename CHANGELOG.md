@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(ci): Changelog Required job no longer false-fails on release PRs (release/v* branches intentionally empty [Unreleased] when promoting to a version)
 - fix(ci): release-dispatch now creates tag + GitHub Release + cleans canaries in one job (tags pushed by GITHUB_TOKEN don't cascade-trigger workflows). release-from-tag kept as idempotent fallback for manually-pushed tags.
 - docs: add Codex + Pi to "Compatible with" lists in README, AGENTS, CLAUDE, llms.txt
 
