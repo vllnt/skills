@@ -2,7 +2,7 @@
 
 > **Sync rule (BLOCKING).** This file (`AGENTS.md`) and `CLAUDE.md` MUST stay byte-identical. CI fails the PR if they drift. When you edit one, edit both. They exist as separate files because some agent runtimes load `AGENTS.md` (open standard) and others load `CLAUDE.md` (Claude Code default) — the content is the same. The CI job that enforces this is `Sync Agent Docs` in `.github/workflows/ci.yml`.
 
-This repo is a collection of agent skills as Markdown files. Compatible with any agent runtime that loads skills from a folder of `<skill>/SKILL.md` documents (Claude Code, OpenCode, Cursor, Windsurf, etc.).
+This repo is a collection of agent skills as Markdown files. Compatible with any agent runtime that loads skills from a folder of `<skill>/SKILL.md` documents (Claude Code, OpenCode, Codex, Pi, Cursor, Windsurf, etc.).
 
 ## Repo Layout
 

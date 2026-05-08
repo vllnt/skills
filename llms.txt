@@ -2,7 +2,7 @@
 
 > Open-source agent skills published by vllnt. Reusable capabilities for any AI coding agent, distributed via skills.sh/vllnt/skills.
 
-This repository hosts agent skills as self-contained Markdown folders (`<skill>/SKILL.md` with YAML frontmatter, plus optional `README.md`, `EXAMPLE.md`, and `references/`). Skills are agent-agnostic — compatible with Claude Code, OpenCode, Cursor, Windsurf, and any runtime that loads skills from Markdown directories. No build step required.
+This repository hosts agent skills as self-contained Markdown folders (`<skill>/SKILL.md` with YAML frontmatter, plus optional `README.md`, `EXAMPLE.md`, and `references/`). Skills are agent-agnostic — compatible with Claude Code, OpenCode, Codex, Pi, Cursor, Windsurf, and any runtime that loads skills from Markdown directories. No build step required.
 
 ## Docs
 
