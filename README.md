@@ -6,7 +6,7 @@
 [![Skills](https://img.shields.io/badge/skills-1-blue.svg)](./#available-skills)
 [![Release](https://img.shields.io/github/v/release/vllnt/skills?display_name=tag&sort=semver)](https://github.com/vllnt/skills/releases/latest)
 
-**Compatible with:** Claude Code • OpenCode • Windsurf • Cursor • More via [skills.sh](https://skills.sh)
+**Compatible with:** Claude Code • OpenCode • Codex • Pi • Windsurf • Cursor • More via [skills.sh](https://skills.sh)
 
 [GitHub](https://github.com/vllnt) • [skills.sh/vllnt](https://skills.sh/vllnt/skills) • [Web](https://vllnt.ai)
 
