@@ -40,7 +40,7 @@ an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the maintainers via [GitHub Security Advisories](https://github.com/vllnt/skills/security/advisories/new) or by direct message on [X / Twitter](https://bntvllnt.com/x).
+reported to the maintainers via [GitHub Security Advisories](https://github.com/vllnt/skills/security/advisories/new) or via [vllnt.ai](https://vllnt.ai).
 
 All complaints will be reviewed and investigated promptly and fairly.
 

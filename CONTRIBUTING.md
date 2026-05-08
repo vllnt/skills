@@ -77,7 +77,8 @@ Look for issues labeled [`good first issue`](https://github.com/vllnt/skills/lab
 ## Community
 
 - [GitHub](https://github.com/vllnt) — issues, PRs, code
-- [Web](https://bntvllnt.com) — about the maintainers and projects
+- [Web](https://vllnt.ai) — about the maintainers and projects
+- [skills.sh/vllnt](https://skills.sh/vllnt/skills) — rendered skill catalog
 
 ## License
 

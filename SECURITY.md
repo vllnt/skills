@@ -19,7 +19,7 @@ Use [GitHub Security Advisories](https://github.com/vllnt/skills/security/adviso
 
 ### Alternative
 
-DM via [X / Twitter](https://bntvllnt.com/x) with:
+If you cannot use GitHub Security Advisories, contact us via [vllnt.ai](https://vllnt.ai). Include:
 
 - Description of the vulnerability
 - Steps to reproduce

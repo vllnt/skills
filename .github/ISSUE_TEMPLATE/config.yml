@@ -4,5 +4,8 @@ contact_links:
     url: https://github.com/vllnt/skills/security/advisories/new
     about: Report security vulnerabilities privately
   - name: Website
-    url: https://bntvllnt.com
+    url: https://vllnt.ai
     about: Learn more about the project and maintainers
+  - name: Skill Catalog
+    url: https://skills.sh/vllnt/skills
+    about: Browse this skill collection on skills.sh

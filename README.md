@@ -8,7 +8,7 @@
 
 **Compatible with:** Claude Code • OpenCode • Windsurf • Cursor • More via [skills.sh](https://skills.sh)
 
-[GitHub](https://github.com/vllnt) • [Web](https://bntvllnt.com)
+[GitHub](https://github.com/vllnt) • [skills.sh/vllnt](https://skills.sh/vllnt/skills) • [Web](https://vllnt.ai)
 
 </div>
 
@@ -16,9 +16,7 @@
 
 ## About
 
-Open-source agent skills published by **vllnt**. Reusable capabilities for any AI coding agent, distributed via [skills.sh](https://skills.sh).
-
-This repo is a sibling of [`bntvllnt/agent-skills`](https://github.com/bntvllnt/agent-skills) — content is being progressively migrated to the `vllnt` org as it stabilizes for organizational use.
+Open-source agent skills published by **vllnt**. Reusable capabilities for any AI coding agent, distributed via [skills.sh](https://skills.sh/vllnt/skills).
 
 ---
 
