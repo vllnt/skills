@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-08
+
 - fix(ci): release-dispatch now creates tag + GitHub Release + cleans canaries in one job (tags pushed by GITHUB_TOKEN don't cascade-trigger workflows). release-from-tag kept as idempotent fallback for manually-pushed tags.
 - docs: add Codex + Pi to "Compatible with" lists in README, AGENTS, CLAUDE, llms.txt
 
