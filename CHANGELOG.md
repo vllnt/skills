@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- chore(agents): add CLAUDE.md mirror of AGENTS.md, document new PR-driven release flow in both, add Sync Agent Docs CI check + pre-commit drift guard
 - fix(scripts): changelog-add.sh idempotency check broke when entry started with leading dash
 - feat: add scripts/release-prep.sh — opens release PR with version bump and CHANGELOG promotion
 - chore(repo): disable wiki and projects, confirm squash-only merge + auto-delete branch on merge, add issue templates
