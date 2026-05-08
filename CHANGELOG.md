@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(scripts): changelog-add.sh idempotency check broke when entry started with leading dash
+- feat: add scripts/release-prep.sh — opens release PR with version bump and CHANGELOG promotion
+- chore(repo): disable wiki and projects, confirm squash-only merge + auto-delete branch on merge, add issue templates
+- chore(ci): PR-driven release flow (mirror vllnt/ui): canary on main push + workflow_dispatch tag-only + tag-trigger publish; no main-writes from CI
 ## [0.1.0] - 2026-05-08
 
 - chore: initial public release of `vllnt/skills`
