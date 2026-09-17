@@ -1,17 +1,16 @@
 # Coordination
 
-1. Bind the review to the requested mode, changed candidate, result, and criteria. Select contract, composition, behavior, ownership, simplicity, and resilience perspectives according to impact; use all six for broad collection changes.
-2. Use independent subagents for distinct material questions and useful parallel work. A mechanical correction needs direct checks, not six reviewers. Without delegation, cover relevant perspectives sequentially and report the limit.
-3. Give each reviewer a bounded scope, current candidate, evidence, and finding format. Keep reviewers read-only; the coordinator owns integration. Avoid recursive review teams and duplicate assignments.
-4. Collect the required coverage. Reuse current evidence; replace a missing reviewer only when its unanswered question matters. Recheck assessments invalidated by edits or changed inputs/environment.
-5. Resolve findings through evidence, not votes. Record the remedy or reason for rejecting a finding. Optional preferences do not block completion; the owner selects sufficiently supported reversible choices.
-6. Repair within scope and repeat only affected checks. Each pass must address changed work or a discriminating question. On stagnation, change approach or return cause, options, recommendation, consequences, and next action; never waive missing required proof.
-7. Report the requested endpoint, actual checks, limits, and remaining work. Assessment-only requests finish with findings or a plan, not unrequested repairs.
+Use [Quality Validation](../../../../capabilities/capability-quality-validation/SKILL.md) for the shared self-assessment, review, critique, triage, and repair loop. The collection-specific perspectives below supply its scope; they do not start a second pool.
+
+1. Define the candidate, mode, criteria, and required proof before editing. Select contract, composition, behavior, ownership, simplicity, and resilience perspectives by impact; cover all six for broad collection changes.
+2. Assign bounded read-only perspectives to available subagents. Keep mechanical checks direct; report when sequential review lacks independence.
+3. Use [review](review.md) for contract/composition/behavior and [critique](critique.md) for ownership/simplicity/resilience. Each returns a scoped verdict and the finding format below.
+4. Integrate decisions as coordinator. Reuse only current proof; request new affected verdicts after repairs. Finish only when required criteria and acceptance hold, or report unresolved work with its next action. Assessment-only work improves the findings or plan without repairing the target.
 
 ## Finding format
 
-- Location, evidence, and a concrete scenario.
-- Requirement and impact; mark optional preferences.
-- Smallest remedy, preserved behavior, and verification.
+- Criterion, location, evidence, and a concrete scenario.
+- Impact and smallest remedy; distinguish required fixes from optional preferences.
+- Preserved behavior and acceptance check.
 
 Return no finding when warranted; there is no quota.

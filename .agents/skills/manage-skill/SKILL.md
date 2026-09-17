@@ -9,11 +9,11 @@ Maintain this collection with the smallest useful instructions. Assessment and p
 
 ## Workflow
 
-1. Read applicable instructions, affected skills, and callers. Identify the requested result, owner, permitted effects, and [Definition of Done](../../../AGENTS.md#decision-and-completion).
+1. Read applicable instructions, affected skills, and callers. Before editing, define the requested result, owner, permitted effects, and [validation criteria](../../../AGENTS.md#decision-and-completion) from the request, applicable rules, principles, and skill contracts.
 2. Apply the [loaded session principles](../../../AGENTS.md#session-principles): derive the need from evidence, then remove, reuse, or consolidate before adding. Apply [naming](../../../AGENTS.md#skill-naming), [ownership](../../../AGENTS.md#ownership), and [discovery](../../../AGENTS.md#future-proof-discovery) rules. Extend an existing owner before adding one; resolve retained callers before deletion.
 3. Write the smallest authorized change: short opening prose, ordered steps, and observable completion criteria. Remove filler, decorative labels, duplicate rules, fixed evolving inventories, and overlapping responsibilities.
-4. Run [review](references/review.md) and [critique](references/critique.md) using independent perspectives from [coordination](references/coordination.md). Assessment-only requests run the requested track; substantive changes need review and critique proportionate to impact. Check each changed skill and their composition.
-5. Repair supported defects and repeat affected checks and perspectives until the current candidate meets its DoD. If evidence stops improving, return incomplete work with the unmet criterion and next action; never weaken criteria or exceed the requested mode.
+4. Self-assess against those criteria, then use [Quality Validation](../../../capabilities/capability-quality-validation/SKILL.md) with [review](references/review.md) and [critique](references/critique.md) using independent perspectives from [coordination](references/coordination.md). Assessment-only requests run the requested track; substantive changes need review and critique proportionate to impact. Check each changed skill and their composition.
+5. Triage evidenced findings, repair supported defects, and request renewed affected checks and verdicts until the current candidate meets its DoD. If evidence stops improving, return incomplete work with the unmet criterion and next action; never weaken criteria or exceed the requested mode.
 6. Complete [maintenance](references/maintenance.md) and report changes, candidate identity, perspective coverage, observed checks, and limitations. Apply this process to self-edits without recursive maintenance.
 
 ## Definition of Done

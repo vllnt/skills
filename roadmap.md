@@ -28,6 +28,14 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 | F11 | Reviewed | Lightweight principles and simplified annexes; preserve necessary domain proof while removing duplicate process. |
 | F12 | Local checks passed | Public-content review and validator failure fixtures passed. Hosted CI and branch mergeability are checked on the PR before handoff. |
 
+## Quality feedback loop
+
+The shared `capability-quality-validation` owns criteria, self-assessment, review/critique, triage, and renewed acceptance. Workflows supply domain criteria from the request, applicable rules, and principles before work. Planning validates a plan; assessment validates a report; implementation validates the changed artifact. Direct checks remain sufficient for mechanical changes.
+
+| ID | State | Result / remaining evidence |
+|---|---|---|
+| F13 | Reviewed | Integrate the shared loop into 17 substantive workflows plus their issue-delivery handoff, mandatory orchestration, and skill maintenance; exercise missing proof, stale verdicts, read-only modes, and disagreement. |
+
 ## Established structure
 
 N01–N04 established caller-based names, public category placement, canonical references, and catalog validation. N05 records the earlier source-review pass; the current candidate is evaluated under F04. Historical acceptance does not establish acceptance of later changes.

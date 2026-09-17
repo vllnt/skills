@@ -101,6 +101,18 @@ A useful output can be verified partial work plus a precise remaining external c
 
 For each case record: ID, skill(s)/content hashes, fixture, observed actions or output, acceptance result, evidence path, and limitation. Summarize actual executed checks separately from simulations and source inspection. Do not claim the suite guarantees zero false positives or that a dry-run proves live deployment/merge behavior.
 
+## Shared quality-loop scenarios
+
+| Case | Input / change | Required result |
+|---|---|---|
+| C54 | Producer reports a perfect score but a required check was not run. | Unverified criterion prevents PASS; score cannot substitute for proof. |
+| C55 | Reviewer accepts, then a repair changes behavior in that reviewer's scope. | Refresh affected proof and request a new verdict before acceptance. |
+| C56 | Critic proposes an optional alternative after all required criteria pass. | Evidence-based disposition; optional preferences do not force endless rework. |
+| C57 | Review finds a flaw in a read-only plan or UI report. | Improve the output only; no target changes or hosted writes. |
+| C58 | A required independent perspective is unavailable. | Report missing coverage; do not claim independence or waive required proof. |
+| C59 | An issue proposal fails quality validation before hosted creation. | Repair and validate the proposal before writing; then read back effects. |
+| C60 | Repair cannot progress with available evidence. | Change approach or return BLOCKED with criterion, options, recommendation, and consequence; no unchanged retry or lowered criterion. |
+
 ## Current candidate evidence
 
 - Structural checks execute in isolated fixtures, including invalid frontmatter, missing categories, duplicate names, and hook behavior.
@@ -109,4 +121,6 @@ For each case record: ID, skill(s)/content hashes, fixture, observed actions or 
 - An isolated Plan Work task left the file unchanged during planning and after simple agreement. An explicit implementation request then produced only the planned duplicate-line removal. Tested skill copies matched the candidate sources.
 - Runtime startup loading, live provider operations, production behavior, and every consumer platform remain outside this evidence. No release or merge is implied by these checks.
 
-- Skills CLI 1.5.25 listing against local category paths found all 19 workflows, 22 capabilities, and 3 mandatory entries without installing them. Root-path discovery found only the local maintainer, so installation uses explicit category paths. Remote installation and runtime startup remain untested.
+- Skills CLI 1.5.25 listing against local category paths found all 19 workflows, 22 capabilities, and 3 mandatory entries before the quality-loop addition; a subsequent capability listing found all 23 capabilities without installing them. Root-path discovery found only the local maintainer, so installation uses explicit category paths. Remote installation and runtime startup remain untested.
+
+- The quality-loop update received independent composition and behavioral source review, including C54–C60: missing proof, stale acceptance, optional disagreement, read-only artifacts, unavailable required independence, pre-write validation, and stalled repair. These are source simulations, not execution of every consumer workflow.

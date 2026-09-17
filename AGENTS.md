@@ -43,11 +43,13 @@ Names must match folders and be unique across public categories, including flat 
 
 The caller owns the requested outcome and overall convergence. A capability owns its bounded result; it does not start another complete review process merely because a caller invoked it.
 
-1. Identify the requested mode, endpoint, owner, and observable criteria.
+1. Before producing or revising a candidate, define the requested mode, endpoint, owner, and validation contract from the request, applicable instructions, loaded principles, and workflow. Specify acceptable/unacceptable outcomes and required proof.
 2. Perform useful independent work in parallel. Use direct checks for bounded mechanical changes, distinct proposal/challenge perspectives for consequential plans, and independent review/critique for substantive cross-owner changes, sensitive boundaries, evidence conflicts, or an explicit broad review request. Cover applicable perspectives without requiring a fixed agent count.
 3. Resolve findings against evidence. The owner decides reversible alternatives within scope; consensus is not a completion requirement. Optional preferences do not block delivery.
 4. Repeat a pass only for changed work, invalidated proof, or a check that can resolve an open question. If progress stalls, change approach or return the cause, viable options, recommendation, consequences, and next action. Continue independent work.
 5. Finish when the requested endpoint and required checks hold. A ready or queued PR is not a completed merge. Missing required proof cannot become a pass.
+
+For substantive work, use [Quality Validation](capabilities/capability-quality-validation/SKILL.md): self-assess, collect independent review and critique, triage findings, improve, and request renewed affected verdicts. Each workflow supplies domain criteria; shared validation owns the feedback protocol. Require current proof and scoped acceptance before success, not a numeric score or unanimous preferences. Validate proposals before dependent writes; read back effects afterward. Apply this same protocol when maintaining skills, without recursive review pools.
 
 An assessment report may complete with bounded coverage gaps when its contract permits it; the uncovered target remains unverified. Evaluate DoD criteria only for the selected mode. Do not mark missing required evidence not applicable. Do not reopen a settled decision without material new evidence.
 

@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Share upfront quality criteria, self-assessment, independent review/critique, and renewed acceptance across substantive workflows and skill maintenance.
+
 - Organize Vstack skills into user workflows, internal capabilities, and three lightweight session principles for thinking, orchestration, and collaboration.
 - Drive tasks to their requested endpoint with proportional independent review, reusable evidence, explicit decisions, and bounded recovery loops.
 - Add project creation/alignment and live `@vllnt` package discovery, including compatible stable/canary evidence; document the optional Vstack profile.

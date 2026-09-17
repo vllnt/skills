@@ -1,6 +1,6 @@
 # Vstack Skills
 
-44 public skills: 19 user workflows, 22 internal capabilities, and 3 session principles. Reuse the [vllnt package ecosystem](https://github.com/vllnt) through the optional Vstack profile and live package discovery.
+45 public skills: 19 user workflows, 23 internal capabilities, and 3 session principles. Reuse the [vllnt package ecosystem](https://github.com/vllnt) through the optional Vstack profile and live package discovery.
 
 ## Session principles
 
@@ -45,6 +45,7 @@
 - [capability-infrastructure-review](capabilities/capability-infrastructure-review/SKILL.md)
 - [capability-nextjs-tests](capabilities/capability-nextjs-tests/SKILL.md)
 - [capability-project-alignment](capabilities/capability-project-alignment/SKILL.md)
+- [capability-quality-validation](capabilities/capability-quality-validation/SKILL.md)
 - [capability-reasoning-assumptions](capabilities/capability-reasoning-assumptions/SKILL.md)
 - [capability-release-changelog](capabilities/capability-release-changelog/SKILL.md)
 - [capability-release-readiness](capabilities/capability-release-readiness/SKILL.md)
