@@ -13,8 +13,9 @@
 ```
 
 CI gates that block the merge:
-- `Validate Skill Frontmatter` — every `<skill>/SKILL.md` has valid YAML frontmatter
+- `Validate Skill Frontmatter` — every `<category>/<skill>/SKILL.md` has valid YAML frontmatter
 - `Changelog Required` — `CHANGELOG.md` modified AND `[Unreleased]` has at least one bullet
+- `Sync Agent Docs` — public catalogs, descriptions, links, and instruction references match the source skills
 
 ## At-a-glance
 
@@ -31,8 +32,8 @@ CI gates that block the merge:
         │ Actions → Publish → Run workflow         │
         │  → reads version from CHANGELOG          │
         │  → creates tag vX.Y.Z at main HEAD       │
-        │    (tags bypass branch protection)       │
-        │  → release-from-tag: GitHub Release      │
+        │    publishes the GitHub Release          │
+        │  → same dispatch job uses CHANGELOG      │
         │    with notes from CHANGELOG, cleans     │
         │    canary tags                           │
         └──────────────────────────────────────────┘
@@ -67,7 +68,7 @@ What it does (no force-push, no main-write):
 3. Creates branch `release/vX.Y.Z`, promotes `[Unreleased]` → `[X.Y.Z] - YYYY-MM-DD`
 4. Pushes branch + opens PR
 
-Squash-merge the release PR. Then **Actions → Publish → Run workflow** on `main`. The `release-dispatch` job creates the tag, which fires `release-from-tag` — your GitHub Release lands with notes auto-extracted from `CHANGELOG.md`.
+Squash-merge the release PR. Then **Actions → Publish → Run workflow** on `main`. The `release-dispatch` job creates the tag, publishes the GitHub Release from `CHANGELOG.md`, and cleans canaries in that same run.
 
 ## Canary (automatic)
 
@@ -92,5 +93,5 @@ Sets `core.hooksPath=.githooks` so the pre-commit validator runs locally.
 
 - All scripts are non-interactive (flags only).
 - All scripts are idempotent where safe.
-- No external deps — `bash` + `awk` + `gh`.
+- Release scripts use `bash`, `awk`, and `gh`; documentation validation uses the Python 3 standard library.
 - Three independent paths (canary / dispatch / tag) means no single failure mode blocks shipping.

@@ -1,34 +1,12 @@
-## Summary
+## Change
 
-<!-- What does this PR do and why? Link related issues with "Closes #123" -->
+<!-- Explain the problem and resulting behavior. -->
 
-## Changes
+## Verification
 
-<!-- Bullet list of specific changes made -->
+<!-- State executed checks, source scenarios, and material limitations. -->
 
--
-
-## Type
-
-<!-- Check the relevant box -->
-
-- [ ] Feature (new functionality)
-- [ ] Bug fix (non-breaking fix)
-- [ ] Refactor (no behavior change)
-- [ ] Docs (documentation only)
-- [ ] Chore (dependencies, CI, tooling)
-
-## Testing
-
-<!-- How did you verify this works? Steps a reviewer can follow. -->
-
-1.
-
-## Checklist
-
-- [ ] Self-reviewed the diff
-- [ ] Updated `CHANGELOG.md` under `[Unreleased]` (BLOCKING — CI enforces)
-- [ ] Ran `bash scripts/validate-frontmatter.sh` (BLOCKING — pre-commit enforces)
-- [ ] Updated docs (if behavior changed)
-- [ ] Skills remain independent (no cross-references)
-- [ ] SKILL.md frontmatter is valid
+- [ ] Frontmatter fixtures, catalog validation, and whitespace checks pass.
+- [ ] Changed modes, callers, and standalone behavior are checked.
+- [ ] Required review findings are resolved; public content contains no secrets or unnecessary personal context.
+- [ ] CHANGELOG and affected navigation are current.

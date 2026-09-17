@@ -11,35 +11,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate-frontmatter:
-    name: Validate Skill Frontmatter
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run validator
-        run: bash scripts/validate-frontmatter.sh
-
   sync-agent-docs:
     name: Sync Agent Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: AGENTS.md and CLAUDE.md must be byte-identical
-        run: |
-          if [ ! -f AGENTS.md ] || [ ! -f CLAUDE.md ]; then
-            echo "::error::Both AGENTS.md and CLAUDE.md must exist."
-            exit 1
-          fi
-          if ! cmp -s AGENTS.md CLAUDE.md; then
-            echo "::error::AGENTS.md and CLAUDE.md drifted. They must be byte-identical."
-            echo ""
-            echo "Diff:"
-            diff -u AGENTS.md CLAUDE.md || true
-            echo ""
-            echo "Fix locally:  cp AGENTS.md CLAUDE.md   (or vice-versa)"
-            exit 1
-          fi
-          echo "AGENTS.md and CLAUDE.md are in sync ($(wc -c < AGENTS.md) bytes)."
+        with:
+          fetch-depth: 0
+      - name: Test documentation validation
+        run: python3 scripts/test-validate-docs.py
+      - name: Validate catalogs and local links
+        run: python3 scripts/validate-docs.py
+      - name: Check pull request whitespace
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: git diff --check "$BASE_SHA...HEAD"
+
+  validate-frontmatter:
+    name: Validate Skill Frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test validator collection contract and failure paths
+        run: bash scripts/test-validate-frontmatter.sh
+      - name: Test pre-commit trigger and staged-content guard
+        run: bash scripts/test-pre-commit.sh
+      - name: Run validator
+        run: bash scripts/validate-frontmatter.sh
 
   changelog:
     name: Changelog Required

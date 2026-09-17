@@ -10,37 +10,32 @@ ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT" || exit 1
 
 # Only validate when SKILL.md or related skill files changed.
-changed="$(git diff --cached --name-only --diff-filter=ACMR)"
+changed="$(git diff --cached --name-only --diff-filter=ACMRD)"
 
 needs_validate=0
-if grep -qE '(^|/)SKILL\.md$' <<< "$changed"; then
+if grep -qE '^(workflows|capabilities|mandatory)/[^/]+/SKILL\.md$' <<< "$changed"; then
   needs_validate=1
 fi
-# Also re-validate if any skill folder file changed (cheap — only ~ms per skill).
-if grep -qE '^[^/]+/(SKILL\.md|README\.md|EXAMPLE\.md|references/)' <<< "$changed"; then
+# Also re-validate if any public skill folder or validator contract changed.
+if grep -qE '^(workflows|capabilities|mandatory)/[^/]+/(SKILL\.md|README\.md|EXAMPLE\.md|references/)|^scripts/(validate-frontmatter|test-validate-frontmatter|test-pre-commit)\.sh$' <<< "$changed"; then
   needs_validate=1
 fi
 
 if [[ "$needs_validate" -eq 1 ]]; then
-  echo "pre-commit: validating skill frontmatter..."
+  unstaged="$(git diff --name-only -- workflows capabilities mandatory scripts/validate-frontmatter.sh scripts/test-validate-frontmatter.sh scripts/test-pre-commit.sh)"
+  if [[ -n "$unstaged" ]]; then
+    echo "pre-commit: stage or revert scoped unstaged changes before validation:"
+    printf '%s\n' "$unstaged"
+    exit 1
+  fi
+
+  echo "pre-commit: validating staged public skill content..."
   bash "$ROOT/scripts/validate-frontmatter.sh" || {
     echo ""
     echo "pre-commit: SKILL.md frontmatter validation failed."
     echo "fix the errors above, then re-stage and re-commit."
     exit 1
   }
-fi
-
-# AGENTS.md and CLAUDE.md must stay byte-identical.
-if grep -qE '^(AGENTS|CLAUDE)\.md$' <<< "$changed"; then
-  if [[ -f AGENTS.md && -f CLAUDE.md ]]; then
-    if ! cmp -s AGENTS.md CLAUDE.md; then
-      echo ""
-      echo "pre-commit: AGENTS.md and CLAUDE.md drifted."
-      echo "fix:  cp AGENTS.md CLAUDE.md   (or the other direction)"
-      exit 1
-    fi
-  fi
 fi
 
 exit 0
