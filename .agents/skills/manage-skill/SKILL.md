@@ -3,22 +3,27 @@ name: manage-skill
 description: Create, change, organize, or delete this collection's skills through concise procedures, observable completion criteria, and independent review and critique.
 ---
 
-# Manage Skill
+## Goal
 
-Maintain this collection with the smallest useful instructions. Assessment and planning return findings or a plan only; skip writes, execution side effects, and maintenance mutations.
+Maintain this collection with concise, executable skills that preserve their callers and requested effects.
+
+### Definition of Done
+
+- Each skill uses its family's structure and has one owner, explicit effects, and useful instructions only.
+- Required claims have evidence; domain criteria distinguish acceptance, missing proof, and incomplete work.
+- Changed behavior and composition pass applicable review and critique on the current candidate.
+- Catalogs, references, templates, and checks agree; the report distinguishes execution, source simulation, and remaining gaps.
+
+## Boundaries
+
+- Assessment and planning revise only their output; skip repository edits and effectful maintenance.
+- Keep project policy in its owning instructions. Skills describe intrinsic effects and discover consumer rules.
 
 ## Workflow
 
-1. Read applicable instructions, affected skills, and callers. Before editing, define the requested result, owner, permitted effects, and [validation criteria](../../../AGENTS.md#decision-and-completion) from the request, applicable rules, principles, and skill contracts.
-2. Apply the [loaded session principles](../../../AGENTS.md#session-principles): derive the need from evidence, then remove, reuse, or consolidate before adding. Apply [naming](../../../AGENTS.md#skill-naming), [ownership](../../../AGENTS.md#ownership), and [discovery](../../../AGENTS.md#future-proof-discovery) rules. Extend an existing owner before adding one; resolve retained callers before deletion.
-3. Write the smallest authorized change: short opening prose, ordered steps, and observable completion criteria. Remove filler, decorative labels, duplicate rules, fixed evolving inventories, and overlapping responsibilities.
-4. Self-assess against those criteria, then use [Quality Validation](../../../capabilities/capability-quality-validation/SKILL.md) with [review](references/review.md) and [critique](references/critique.md) using independent perspectives from [coordination](references/coordination.md). Assessment-only requests run the requested track; substantive changes need review and critique proportionate to impact. Check each changed skill and their composition.
-5. Triage evidenced findings, repair supported defects, and request renewed affected checks and verdicts until the current candidate meets its DoD. If evidence stops improving, return incomplete work with the unmet criterion and next action; never weaken criteria or exceed the requested mode.
-6. Complete [maintenance](references/maintenance.md) and report changes, candidate identity, perspective coverage, observed checks, and limitations. Apply this process to self-edits without recursive maintenance.
-
-## Definition of Done
-
-- The change has one owner, preserves supported callers and effects, and contains only instructions that affect behavior.
-- Affected workflows and capabilities have ordered procedures, observable completion criteria, and bounded repair/recheck paths; mandatory skills follow the lightweight principle format in AGENTS.md.
-- Applicable review and critique accept the current candidate; required findings and affected maintenance checks are resolved.
-- Catalogs and references match the files; the report distinguishes executed checks, simulations, and unresolved limitations.
+1. Read applicable instructions, affected skills, and callers. Before work, derive criteria from the request, rules, principles, and current contracts; define acceptable outcomes and required evidence.
+2. Apply [naming](../../../AGENTS.md#skill-naming), [ownership](../../../AGENTS.md#ownership), and [discovery](../../../AGENTS.md#future-proof-discovery). Remove, reuse, or consolidate before adding; resolve retained callers before deletion.
+3. For authorized changes, use the [family templates](references/templates.md). Give each instruction a concrete effect; replace vague prohibitions with a specific failure and alternative. Preserve mode boundaries and evidence requirements while removing duplication.
+4. Self-assess, then use [Quality Validation](../../../capabilities/capability-quality-validation/SKILL.md) with the [review](references/review.md), [critique](references/critique.md), and [coordination](references/coordination.md) perspectives. If the capability is unavailable, run those perspectives and the repair loop directly. Test individual skills and their handoffs, including unsupported claims and unintended effects.
+5. Triage findings, repair within scope, and request renewed affected checks and verdicts until criteria pass. On stalled evidence, change approach or return the unmet criterion and next action; never lower criteria or claim missing proof.
+6. Complete mode-appropriate [maintenance](references/maintenance.md). Report the result, evidence, and limits. Self-edits follow this process without recursive review pools.

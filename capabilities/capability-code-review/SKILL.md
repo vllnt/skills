@@ -3,21 +3,28 @@ name: capability-code-review
 description: Assess a candidate diff for evidence-backed security, correctness, reliability, design, performance, cost, and delivery risks without repairing or approving it.
 ---
 
-# Capability Code Review
+## Contract
 
-Review a scoped candidate diff without editing, approving, merging, publishing, or submitting an external review.
+- Input: Base, candidate, scope, acceptance criteria, environment, constraints, complete diff, callers, tests, and configuration.
+- Output: Ranked actionable findings, reviewed perspectives, exclusions, limitations, and next checks.
+- Effects: Read-only review. It does not edit, approve, merge, publish, or submit an external review.
 
-## Procedure
-
-1. Set base, candidate, scope, acceptance criteria, environment, and constraints. Read consumer rules, the complete diff, relevant callers, tests, and configuration.
-2. Map changed entry points through contracts, state, consumers, and external effects. Assess applicable security, correctness, reliability, performance/cost, maintainability, developer experience, observability, and delivery perspectives.
-3. Investigate supported boundaries, denial, retry, timeout, cancellation, concurrency, and recovery paths. Separate demonstrated defects, supported risks, and unanswered questions.
-4. Deduplicate and rank findings. Each required finding includes location, scenario, evidence, impact, smallest repair, and verification; record exclusions and limitations.
-5. When material risk or uncertainty remains, use independent review and critique perspectives when available; otherwise apply them sequentially. These perspectives assess this procedure; the caller owns overall convergence. For a new candidate or evidence, re-review affected findings and checks until defects in review evidence or candidate assessment resolve; blocked coverage yields the next check, and target-code repair is not required for a bounded review. Do not retry unchanged evidence; return the unresolved criterion and next discriminating check.
-
-## Definition of Done
+### Acceptance
 
 - Findings bind to the exact base, candidate, and reviewed scope.
 - Checked perspectives and material exclusions are explicit.
 - Every required finding is actionable and evidence-backed.
 - A no-finding conclusion names reviewed scope, exclusions, and remaining risk.
+
+## Procedure
+
+1. Set the base, candidate, scope, acceptance criteria, environment, and constraints. Read consumer rules, the complete diff, relevant callers, tests, and configuration.
+2. Map changed entry points through contracts, state, consumers, and external effects. Assess applicable security, correctness, reliability, performance/cost, maintainability, developer experience, observability, and delivery.
+3. Investigate supported boundaries, denial, retry, timeout, cancellation, concurrency, and recovery. Separate demonstrated defects, supported risks, and unanswered questions.
+4. Deduplicate and rank findings. Each required finding includes location, scenario, evidence, impact, smallest repair, and verification.
+5. Return material risks, uncertainties, and current evidence to the caller's quality validation. When standalone, return coverage gaps and the next check. Re-review only affected findings for new candidate or evidence; a bounded review can complete without target-code repair.
+
+## Pitfalls
+
+- A passing test outside the changed contract does not clear a finding; bind the test, base, candidate, and scenario.
+- Absence of findings is not approval; report exclusions and remaining risk.

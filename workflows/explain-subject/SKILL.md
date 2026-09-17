@@ -3,20 +3,25 @@ name: explain-subject
 description: Explain a real subject with a simple verified mental model and clear limits.
 ---
 
-# Explain Subject
+## Goal
 
-Explain a real subject so the reader can reason or decide with it.
+Explain a real subject so the reader can reason about or decide on it.
+
+### Definition of Done
+
+- The subject, depth, and decision served are explicit.
+- The overview, map, and explanation address that decision.
+- Facts are sourced or labeled uncertain; analogies state their limits.
+- Current validation accepts the explanation or names the unresolved claim and next verifying source.
+
+## Boundaries
+
+- Do not present simplifications, assumptions, or unverified claims as facts.
 
 ## Workflow
 
-1. Confirm subject, depth, intended decision, and evidence; inspect relevant code or authoritative sources for uncertain facts.
-2. Give one true overview, the smallest useful map, and plain-language explanations. Use a bounded analogy only when it clarifies the stated decision.
-3. State assumptions, simplifications, sources, and remaining gaps.
-4. Use independent review and critique only for distinct material claims; otherwise assess sequentially. Recheck after changed evidence. Return the next verifying source and recommended next action for unresolved claims.
-
-## Definition of Done
-
-- Subject, depth, and served question are clear.
-- Overview, map, and explanation address the stated decision; any analogy has clear limits.
-- Facts are sourced or labeled uncertain.
-- The explanation supports the stated decision without presenting unsupported claims as facts.
+1. Resolve the subject, depth, intended decision, applicable instructions, and required evidence.
+2. Inspect relevant code or authoritative sources for uncertain material facts.
+3. Give one true overview, the smallest useful map, and plain-language explanations. Use an analogy only when it clarifies the decision.
+4. Self-assess the factual claims. For distinct material claims, seek independent review and critique, triage corrections, and renew affected assessment until accepted.
+5. Return sources, assumptions, simplifications, gaps, and the next verifying source for any unresolved claim.

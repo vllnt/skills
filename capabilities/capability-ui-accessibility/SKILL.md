@@ -3,22 +3,29 @@ name: capability-ui-accessibility
 description: Build, review, and repair accessible web interfaces with applicable standards and explicit browser, keyboard, and assistive-technology evidence.
 ---
 
-# Capability UI Accessibility
+## Contract
 
-Use this skill to author, review, or repair requested web UI. Discover the consumer repository's supported platforms, accessibility requirements, and installed tools. Review is read-only; use isolated authorized data for state-changing journeys. Missing tooling narrows evidence, never creates a pass.
+- Input: A changed UI route or component, relevant states, primary task, target revision, applicable requirements, and authorized mode.
+- Output: Evidence-backed accessibility findings or authorized repairs, with untested coverage and remaining work.
+- Effects: Review is read-only. Authoring or repair may change authorized UI; state-changing journeys use isolated authorized data.
+
+### Acceptance
+
+- The changed UI, relevant states, primary task, target revision, and applicable requirements are identified.
+- Each claimed accessible flow has applicable browser, axe, keyboard, and manual evidence.
+- Authorized repairs preserve semantic, focus, label, contrast, and custom-widget contracts across affected states.
+- Untested assistive technology or browser coverage is explicit, and scores or source-only results are never conformance claims.
 
 ## Procedure
 
-1. Define the changed route or component, relevant states, primary task, target revision, and applicable requirements. Use installed browser and axe tooling, or an equivalent, when available; otherwise perform bounded source/manual review and report the missing evidence. Do not install tools automatically.
-2. Build with native semantics first: use correct elements and landmarks; add ARIA only for behavior HTML cannot express. Every control needs a name, keyboard operation, visible focus, logical DOM/tab order, and valid state.
-3. Check changed forms, images, dynamic content, dialogs, and navigation. Labels and errors must be associated; meaningful images need text alternatives; decorative images use empty `alt`; focusable content must never be hidden from assistive technology.
-4. For custom widgets, implement the complete role, name, state, focus, and keyboard contract. Modal dialogs move focus in, contain it while open, and restore it on close. Do not use positive `tabindex` or remove focus visibility without an equivalent.
-5. For an accessibility claim, verify changed routes and states in a real browser: axe has zero unresolved applicable violations; the keyboard-only primary task succeeds with visible, unobscured focus and no unintended trap; manual checks cover applicable contrast, zoom/reflow, errors/status, text alternatives, and complex-widget screen-reader behavior when in scope and available.
-6. Run Lighthouse only when requested or required. Treat it as a diagnostic, never WCAG proof. Compare the current UI with the DoD; repair authorized gaps and repeat affected browser, keyboard, and manual checks. In review mode, return findings only. When material risk or uncertainty remains, use independent review and critique perspectives when available, otherwise sequential perspectives. These perspectives assess this procedure; the caller owns overall convergence. Missing browser, assistive-technology, or authority evidence is incomplete with its next check.
+1. Discover supported platforms, accessibility requirements, and installed tools. Use browser and axe tooling, or an equivalent, when available; otherwise conduct bounded source or manual review and report missing evidence. Do not install tools automatically.
+2. In review, inspect the following contracts without changing UI. For authorized authoring or repair, build with native semantics first. Give every control a name, keyboard operation, visible focus, logical DOM or tab order, and valid state; use ARIA only for behavior HTML cannot express.
+3. Check forms, images, dynamic content, dialogs, and navigation. Associate labels and errors, provide text alternatives for meaningful images, use empty `alt` for decorative images, and keep focusable content available to assistive technology.
+4. For custom widgets, inspect or, in authorized authoring/repair, implement the complete role, name, state, focus, and keyboard contract. Modal dialogs move focus in, contain it while open, and restore it on close.
+5. Verify changed routes and states in a real browser: report applicable axe violations and repair them only in authorized authoring/repair mode, complete the keyboard-only primary task with visible unobscured focus and no unintended trap, and manually check applicable contrast, zoom or reflow, errors or status, text alternatives, and complex-widget screen-reader behavior when in scope and available.
+6. Run Lighthouse only when requested or required. In review mode, return findings only. Repair authorized gaps, rerun affected evidence, and send material uncertainty and proof to the caller's Quality Validation pool. Return the next check for missing browser, assistive-technology, or authority evidence.
 
-## Definition of Done
+## Pitfalls
 
-- The changed UI, relevant states, primary task, target revision, and applicable requirements are identified.
-- Every claimed accessible flow has applicable browser axe, keyboard, and manual evidence; untested assistive technology or browser coverage is explicit.
-- Authorized repairs preserve semantic, focus, label, contrast, and custom-widget contracts across affected states.
-- A score or source-only result is never reported as accessibility conformance.
+- A Lighthouse score is diagnostic, never WCAG proof.
+- Do not use positive `tabindex` or hide focus visibility without an equivalent accessible interaction.

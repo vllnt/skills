@@ -97,7 +97,7 @@ Finish at the requested endpoint. A bounded report can finish with explicit gaps
 
 ## Maintaining this collection
 
-Use the repository-local [.agents/skills/manage-skill/SKILL.md](.agents/skills/manage-skill/SKILL.md). This maintainer is intentionally public repository tooling, excluded from the installable catalog. Public `manage-skills` provides the portable lifecycle workflow.
+Use the repository-local [.agents/skills/manage-skill/SKILL.md](.agents/skills/manage-skill/SKILL.md). This maintainer is intentionally public repository tooling, excluded from the installable catalog. Public `manage-skills` provides the portable lifecycle workflow. Author agent-facing instructions with the [family templates](.agents/skills/manage-skill/references/templates.md); criteria precede procedures, and mandatory skills contain principles only.
 
 See [AGENTS.md](AGENTS.md), [CONTRIBUTING.md](CONTRIBUTING.md), [roadmap.md](roadmap.md), and [RELEASING.md](RELEASING.md). Keep [CHANGELOG.md](CHANGELOG.md) current.
 

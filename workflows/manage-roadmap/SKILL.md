@@ -3,22 +3,22 @@ name: manage-roadmap
 description: Create, maintain, synchronize, or report a traceable roadmap that preserves direction and history.
 ---
 
-# Manage Roadmap
+## Goal
 
-Maintain direction and sequence, not an issue tracker or execution authority. Report, board, and sync are read-only.
+Maintain an evidence-backed roadmap that preserves direction and history. It does not execute work or replace an issue tracker.
 
-## Workflow
+### Definition of Done
 
-1. Confirm operation, roadmap location, applicable user, project, and nested rules, loaded principles, product evidence, current work, and delivery evidence. Before producing a substantive roadmap candidate, define its validation contract: candidate, mode, Definition of Done, criteria, evidence, and useful perspectives.
-2. Keep outcomes, current work, evidence, dependencies, decisions, and uncertainty traceable to their owner.
-3. Recommend the next outcome or decision with its consequence. Make reversible sequencing choices from evidence; ask only for a consequential choice or missing authority.
-4. For a substantive roadmap candidate, use [Quality Validation](../../capabilities/capability-quality-validation/SKILL.md) before authorized maintenance. If unavailable, self-assess; obtain distinct review and critique with subagents, or assess them sequentially only when independence is not required; otherwise return BLOCKED. Triage findings, improve the candidate, and request fresh affected verdicts until PASS. Use direct checks for mechanical work.
-5. For authorized maintenance, apply only the validated edit while preserving completed/dropped history and human decisions. Verify links, status transitions, history, and applicable checks. Recheck only after changed evidence or a repair; on unchanged evidence, change approach or return the cause, options, recommendation, consequence, and next action.
-
-## Definition of Done
-
-- Operation, authoritative location, mode, and sources are explicit.
+- Operation, authoritative location, mode, sources, and criteria are explicit.
 - Maintained work preserves traceability, history, and a current recommended next outcome or decision.
 - Read-only output distinguishes shipped, planned, blocked, and unverified work.
 - Authorized edits have verified transitions and links.
-- Completion requires current mode-specific acceptance: every required criterion has proof, applicable review and critique scopes accept, and no required finding remains.
+- Current validation accepts the selected mode; no required finding remains.
+
+## Workflow
+
+1. Resolve operation, roadmap location, product evidence, current work, delivery evidence, applicable instructions, and validation criteria.
+2. Keep outcomes, work, evidence, dependencies, decisions, and uncertainty traceable to their owner.
+3. Recommend the next outcome or decision and its consequence. Make reversible sequencing choices from evidence.
+4. For substantive roadmap work, use `capability-quality-validation` when available; otherwise apply its feedback loop directly before authorized maintenance. Triage findings, improve the candidate, and renew affected verdicts until acceptance.
+5. In maintenance mode, apply only the validated edit while preserving completed and dropped history and human decisions. Verify links, status transitions, history, and applicable checks.

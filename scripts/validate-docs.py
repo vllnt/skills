@@ -14,10 +14,66 @@ LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
 HEADING = re.compile(r"^#{1,6}\s+(.+?)\s*#*\s*$")
 FENCE = re.compile(r"^\s*(```|~~~)")
 FIELD = re.compile(r"^(name|description):\s*(.+?)\s*$", re.M)
+LIST_ITEM = re.compile(r"^-\s+\S")
+FLAT_FIELD = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$")
 
 
 def fail(errors: list[str], message: str) -> None:
     errors.append(message)
+
+
+def scalar(value: str) -> str | None:
+    """Parse the flat, single-line string subset used by this collection."""
+    value = value.strip()
+    lowered = value.lower()
+    if not value or value.startswith(("|", ">", "[", "{", "&", "!", "*", "#")):
+        return None
+    if lowered in {"null", "~", "true", "false", "yes", "no", "on", "off"}:
+        return None
+    if value.startswith('"') or value.startswith("'"):
+        quote = value[0]
+        if len(value) < 2 or not value.endswith(quote):
+            return None
+        value = value[1:-1]
+    elif value.endswith(('"', "'")) or ": " in value:
+        return None
+    return value or None
+
+
+def validate_local_frontmatter(root: Path, path: Path, errors: list[str]) -> None:
+    """Apply the collection's flat frontmatter contract to local maintenance."""
+    relative = path.relative_to(root).as_posix()
+    content = path.read_text(encoding="utf-8")
+    if not content.startswith("---\n"):
+        fail(errors, f"{relative}: missing opening '---' frontmatter delimiter")
+        return
+    end = content.find("\n---\n", 4)
+    if end < 0:
+        fail(errors, f"{relative}: frontmatter block missing or unterminated")
+        return
+
+    fields: dict[str, str] = {}
+    for line in content[4:end].splitlines():
+        match = FLAT_FIELD.fullmatch(line)
+        if not match:
+            fail(errors, f"{relative}: frontmatter must be a flat mapping of single-line strings")
+            continue
+        key, raw = match.groups()
+        value = scalar(raw)
+        if value is None:
+            fail(errors, f"{relative}: frontmatter field '{key}' must be a non-empty scalar string")
+            continue
+        if key in fields:
+            fail(errors, f"{relative}: duplicate frontmatter field '{key}'")
+            continue
+        fields[key] = value
+
+    name = fields.get("name")
+    description = fields.get("description")
+    if name != path.parent.name:
+        fail(errors, f"{relative}: name must match folder '{path.parent.name}'")
+    if not description or len(description) < 20:
+        fail(errors, f"{relative}: description must be a specific scalar string of at least 20 characters")
 
 
 def public_skills(root: Path) -> dict[str, tuple[str, str]]:
@@ -52,6 +108,118 @@ def markdown_without_fences(path: Path) -> list[tuple[int, str]]:
         if not fenced:
             lines.append((number, line))
     return lines
+
+
+def skill_body(path: Path) -> list[tuple[int, str]]:
+    """Return the Markdown body after the required YAML frontmatter."""
+    content = path.read_text(encoding="utf-8")
+    end = content.find("\n---\n", 4)
+    if end < 0:
+        return []
+    body = content[end + 5 :].splitlines()
+    lines: list[tuple[int, str]] = []
+    fenced = False
+    for number, line in enumerate(body, content[: end + 5].count("\n") + 1):
+        if FENCE.match(line):
+            fenced = not fenced
+            continue
+        if not fenced:
+            lines.append((number, line))
+    return lines
+
+
+def skill_headings(path: Path) -> list[tuple[int, int, str]]:
+    headings: list[tuple[int, int, str]] = []
+    for line_number, line in skill_body(path):
+        match = HEADING.match(line)
+        if match:
+            level = len(line) - len(line.lstrip("#"))
+            headings.append((line_number, level, match.group(1)))
+    return headings
+
+
+def section_lines(path: Path, heading: tuple[int, int, str]) -> list[str]:
+    """Return body lines until the next heading of the same or higher level."""
+    number, level, _ = heading
+    lines = skill_body(path)
+    result: list[str] = []
+    active = False
+    for line_number, line in lines:
+        if line_number == number:
+            active = True
+            continue
+        if not active:
+            continue
+        match = HEADING.match(line)
+        if match:
+            next_level = len(line) - len(line.lstrip("#"))
+            if next_level <= level:
+                break
+        result.append(line)
+    return result
+
+
+def validate_exact_headings(
+    relative: str,
+    headings: list[tuple[int, int, str]],
+    expected: list[tuple[int, str]],
+    errors: list[str],
+) -> bool:
+    actual = [(level, text) for _, level, text in headings]
+    if actual == expected:
+        return True
+    rendered = " -> ".join("#" * level + " " + text for level, text in actual) or "(none)"
+    wanted = " -> ".join("#" * level + " " + text for level, text in expected)
+    fail(errors, f"{relative}: headings must be '{wanted}', found '{rendered}'")
+    return False
+
+
+def validate_criteria(relative: str, path: Path, heading: tuple[int, int, str], errors: list[str]) -> None:
+    count = sum(bool(LIST_ITEM.match(line)) for line in section_lines(path, heading))
+    if not 3 <= count <= 5:
+        fail(errors, f"{relative}: '{heading[2]}' needs 3-5 criteria, found {count}")
+
+
+def validate_skill_structure(root: Path, errors: list[str]) -> None:
+    """Keep public skills and the local maintainer on their family templates."""
+    targets: list[tuple[str, Path, str]] = []
+    for category in CATEGORIES:
+        targets.extend((category, path, category) for path in sorted((root / category).glob("*/SKILL.md")))
+    local = root / ".agents/skills/manage-skill/SKILL.md"
+    if not local.is_file():
+        fail(errors, ".agents/skills/manage-skill/SKILL.md: missing required local maintenance skill")
+    else:
+        validate_local_frontmatter(root, local, errors)
+        targets.append(("local manage-skill", local, "workflow"))
+
+    for category, path, family in targets:
+        relative = path.relative_to(root).as_posix()
+        headings = skill_headings(path)
+        if any(level == 1 for _, level, _ in headings):
+            fail(errors, f"{relative}: do not repeat the skill name as an H1 title")
+            continue
+
+        if family in ("workflows", "workflow"):
+            expected = [(2, "Goal"), (3, "Definition of Done"), (2, "Workflow")]
+            if (2, "Boundaries") in [(level, text) for _, level, text in headings]:
+                expected.insert(2, (2, "Boundaries"))
+            if validate_exact_headings(relative, headings, expected, errors):
+                validate_criteria(relative, path, headings[1], errors)
+        elif family == "capabilities":
+            expected = [(2, "Contract"), (3, "Acceptance"), (2, "Procedure")]
+            if headings and headings[-1][1:] == (2, "Pitfalls"):
+                expected.append((2, "Pitfalls"))
+            if validate_exact_headings(relative, headings, expected, errors):
+                contract = section_lines(path, headings[0])
+                for field in ("Input", "Output", "Effects"):
+                    if not any(line.startswith(f"- {field}:") for line in contract):
+                        fail(errors, f"{relative}: Contract needs '- {field}:'")
+                validate_criteria(relative, path, headings[1], errors)
+        else:
+            expected = [(2, "Principles")]
+            if validate_exact_headings(relative, headings, expected, errors):
+                if not any(LIST_ITEM.match(line) for line in section_lines(path, headings[0])):
+                    fail(errors, f"{relative}: Principles needs at least one non-empty principle")
 
 
 def slug(value: str) -> str:
@@ -177,6 +345,7 @@ def main() -> int:
 
     validate_readme_descriptions(root, skills, errors)
     validate_links(root, errors)
+    validate_skill_structure(root, errors)
 
     if errors:
         for error in errors:

@@ -3,22 +3,22 @@ name: improve-project
 description: Adapt an existing repository to applicable stack preferences through small verified stages.
 ---
 
-# Improve Project
+## Goal
 
-Realign an established project in small stages; use `improve-code` for local behavior-preserving simplification. Assessment/planning skips implementation and execution steps and validates only the proposed stages.
+Realign an established project with applicable stack preferences in small verified stages, or return its staged plan.
+
+### Definition of Done
+
+- Alignment, preserved contracts, package/runtime choices, and stage boundary are explicit.
+- A plan contains stages, acceptance, recovery, and gaps without execution or data changes.
+- An authorized stage has configuration and behavior evidence or a labeled platform gap.
+- Data transitions have required recovery and authorization evidence.
+- Current validation accepts the selected mode; an unmet required criterion remains REVISE or BLOCKED.
 
 ## Workflow
 
-1. Confirm target alignment, rules, authority, current state, preserved contracts, replacement scope, and the mode-specific Definition of Done and proof from the request, applicable instructions, and loaded principles.
-2. Use `capability-project-alignment` when available for target decisions and its `capability-stack-packages` composition for current evidence; otherwise perform those checks directly. Compare needed packages and runtimes against consumer evidence, exports, peers, data owners, and compatibility; define the smallest staged plan.
-3. Capture an authorized baseline, then apply one authorized stage with exact dependency/configuration checks.
-4. For data/backend work, verify mapping, authorization, reconciliation, recovery, and cutover ownership in isolation before dependent work.
-5. Verify affected consumers, entry points, platforms, failures, and data invariants. Validate the stage or plan against its mode-specific criteria. Use `capability-quality-validation` when available; otherwise self-assess, use independent review and critique for substantive work, or assess perspectives sequentially and state unavailable independence; triage findings, repair only authorized gaps, and renew affected verdicts after a change. Use direct checks for mechanical work. On REVISE, continue authorized repair or plan revision and fresh affected verdicts until acceptance. If a required correction is outside authority, return REVISE with the remedy and required checks. Return BLOCKED only when a required criterion cannot advance, with its next action; report only the observed partial stage as verified and do not retry unchanged evidence.
-
-## Definition of Done
-
-- Alignment, contracts, package/runtime decisions, and stage boundary are explicit.
-- Planning returns stages, acceptance, recovery, and gaps without execution or data changes.
-- Authorized stage has configuration and behavior evidence or labeled platform gap.
-- Data transitions have required recovery and authorization evidence.
-- Completion requires current mode-specific validation acceptance; otherwise report REVISE/BLOCKED with the unmet criterion and next action.
+1. Resolve target alignment, current state, rules, authority, preserved contracts, replacement scope, criteria, and proof.
+2. Use `capability-project-alignment` and `capability-stack-packages` when available; otherwise compare consumer evidence, exports, peers, data owners, and compatibility directly. Define the smallest stage.
+3. In change mode, capture an authorized baseline, then apply one authorized stage with exact dependency and configuration checks.
+4. In change mode, verify data or backend mapping, authorization, reconciliation, recovery, and cutover ownership before dependent work.
+5. In change mode, verify affected consumers, entry points, platforms, failures, and data invariants. In planning mode, return stages, acceptance, recovery, and gaps only. For substantive work, use `capability-quality-validation` when available; otherwise apply its feedback loop directly. Renew affected verdicts after each repair.

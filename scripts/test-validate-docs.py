@@ -17,10 +17,54 @@ def write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def skill(root: Path, category: str, name: str, description: str) -> None:
+def body_for(category: str) -> str:
+    if category == "workflows":
+        return """## Goal
+
+Produce one bounded result.
+
+### Definition of Done
+
+- The requested result exists.
+- Current evidence supports the result.
+- Remaining gaps are explicit.
+
+## Workflow
+
+1. Resolve the scope and criteria.
+2. Produce and verify the result.
+"""
+    if category == "capabilities":
+        return """## Contract
+
+- Input: A bounded caller scope and current candidate.
+- Output: Evidence, result, and remaining work.
+- Effects: Read-only inspection.
+
+### Acceptance
+
+- The result addresses the supplied criteria.
+- Evidence applies to the current candidate.
+- Coverage gaps remain explicit.
+
+## Procedure
+
+1. Inspect the supplied scope.
+2. Return the bounded result.
+"""
+    return """## Principles
+
+- Ground material claims in inspected evidence and label unknowns.
+- Keep decisions within the supplied scope and preserve useful autonomy.
+- Use the smallest check that can resolve a meaningful uncertainty.
+- Report missing proof without representing it as a successful result.
+"""
+
+
+def skill(root: Path, category: str, name: str, description: str, body: str | None = None) -> None:
     write(
         root / category / name / "SKILL.md",
-        f"---\nname: {name}\ndescription: {description}\nlicense: MIT\n---\n# {name}\n",
+        f"---\nname: {name}\ndescription: {description}\nlicense: MIT\n---\n{body or body_for(category)}",
     )
 
 
@@ -55,10 +99,95 @@ def fixture(root: Path) -> list[tuple[str, str, str]]:
     return entries
 
 
+def local_skill(root: Path) -> Path:
+    path = root / ".agents/skills/manage-skill/SKILL.md"
+    write(
+        path,
+        "---\nname: manage-skill\ndescription: Maintain this skill collection with clear contracts and validation.\n---\n"
+        + body_for("workflows"),
+    )
+    return path
+
+
 def main() -> int:
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         entries = fixture(root)
+        local = local_skill(root)
+        run(root)
+
+        local.unlink()
+        run(root, "missing required local maintenance skill")
+        local = local_skill(root)
+        run(root)
+
+        write(local, "# Missing frontmatter\n")
+        run(root, "missing opening '---' frontmatter delimiter")
+        local = local_skill(root)
+
+        write(local, local.read_text(encoding="utf-8").replace("name: manage-skill", "name: wrong-name"))
+        run(root, "name must match folder 'manage-skill'")
+        local = local_skill(root)
+
+        write(local, local.read_text(encoding="utf-8").replace("description: Maintain this skill collection with clear contracts and validation.", "description: short"))
+        run(root, "description must be a specific scalar string")
+        local = local_skill(root)
+
+        write(local, local.read_text(encoding="utf-8").replace("description: Maintain this skill collection with clear contracts and validation.\n", ""))
+        run(root, "description must be a specific scalar string")
+        local = local_skill(root)
+
+        workflow = root / "workflows/plan-work/SKILL.md"
+        skill(root, "workflows", "plan-work", entries[0][2], "# Plan Work\n" + body_for("workflows"))
+        run(root, "do not repeat the skill name as an H1 title")
+        skill(root, "workflows", "plan-work", entries[0][2])
+
+        skill(
+            root,
+            "workflows",
+            "plan-work",
+            entries[0][2],
+            "## Goal\n\nProduce one bounded result.\n\n## Workflow\n\n1. Do work.\n\n### Definition of Done\n\n- One.\n- Two.\n- Three.\n",
+        )
+        run(root, "headings must be")
+        skill(root, "workflows", "plan-work", entries[0][2])
+
+        skill(
+            root,
+            "workflows",
+            "plan-work",
+            entries[0][2],
+            body_for("workflows").replace("- Remaining gaps are explicit.\n", ""),
+        )
+        run(root, "'Definition of Done' needs 3-5 criteria")
+        skill(root, "workflows", "plan-work", entries[0][2])
+
+        capability = root / "capabilities/capability-example-review/SKILL.md"
+        skill(
+            root,
+            "capabilities",
+            "capability-example-review",
+            entries[1][2],
+            body_for("capabilities").replace("- Effects: Read-only inspection.\n", ""),
+        )
+        run(root, "Contract needs '- Effects:'")
+        skill(root, "capabilities", "capability-example-review", entries[1][2])
+
+        mandatory = root / "mandatory/vllnt-thinking-principles/SKILL.md"
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2], "## Goal\n\nThis is not a principle.\n")
+        run(root, "headings must be")
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2])
+
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2], "## Principles\n\nKeep this short.\n")
+        run(root, "Principles needs at least one non-empty principle")
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2])
+
+        local.write_text(
+            local.read_text(encoding="utf-8").replace("### Definition of Done", "## Workflow\n\n1. Bad order.\n\n### Definition of Done", 1),
+            encoding="utf-8",
+        )
+        run(root, ".agents/skills/manage-skill/SKILL.md: headings must be")
+        local = local_skill(root)
         run(root)
 
         readme = root / "README.md"
@@ -86,7 +215,7 @@ def main() -> int:
         (root / "llms.txt").write_text((root / "llms.txt").read_text(encoding="utf-8") + stale, encoding="utf-8")
         run(root, "stale public skill entry 'mandatory/stale/SKILL.md'")
 
-    print("PASS catalog coverage, metadata descriptions, local links, anchors, placeholders, and recovery")
+    print("PASS catalog coverage, links, templates, contracts, criteria, local maintenance, and recovery")
     return 0
 
 

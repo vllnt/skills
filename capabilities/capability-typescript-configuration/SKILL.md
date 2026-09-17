@@ -3,24 +3,31 @@ name: capability-typescript-configuration
 description: Design, migrate, and verify TypeScript compiler configurations and shared presets across Node, libraries, React, and Next.js using diagnostic, emit, packaging, and consumer-build tests.
 ---
 
-# Capability Typescript Configuration
+## Contract
 
-Match compiler behavior to the consumer runtime and build pipeline, then prove the supported contract with real fixtures.
+- Input: A TypeScript candidate, supported compiler and runtime consumers, build or emission ownership, and authorized change scope.
+- Output: Effective configuration evidence, diagnosed contracts, authorized changes or recommendations, and compile, emit, packaging, or consumer results.
+- Effects: May change authorized compiler configuration or presets. The caller owns broader migration and delivery.
+
+### Acceptance
+
+- Effective configurations, supported compiler or runtime consumers, and emission owner are identified.
+- Each claimed preset behavior has applicable positive and negative diagnostics, resolution, and emit or no-emit evidence.
+- Published or framework-facing changes have applicable isolated-consumer or framework-build evidence.
+- Missing compiler execution is explicit; inspection alone does not establish compile or runtime behavior.
 
 ## Procedure
 
-1. Inspect consumer instructions, scripts, lockfile, tsconfig inheritance, package exports, compiler binaries, and fixtures. Record supported compiler/runtime/framework/bundler versions, module format, and whether TypeScript owns emission.
-2. Capture each affected effective configuration with the installed compiler's `--showConfig`; resolve inheritance before editing a shared base. Inspect compiler-API consumers such as linters/build plugins separately from CLI compilation.
-3. Choose settings by consumer: Node needs a supported module/resolution pair and runtime-compatible extensions; libraries need matching emitted JS, declarations, and exports; bundled apps need bundler-supported JSX/resolution; framework-owned builds retain required plugins/generated includes and avoid competing emit.
-4. Keep bases small and consumers responsible for layout-specific roots, outputs, includes, and ambient types. Treat strictness, `target`, `lib`, `types`, `paths`, inherited relative paths, and array replacement as explicit contracts; `paths` does not rewrite emitted imports and types do not polyfill runtime APIs.
-5. Do not broadly suppress diagnostics with `skipLibCheck`, weaker strictness, or a compiler upgrade without identifying the cause and tradeoff.
-6. Verify each changed preset with positive and negative diagnostic fixtures, representative resolution (exports, extensions, ambient types, ESM/CommonJS), and emit behavior. Inspect emitted JS, declarations, and maps; execute relevant emitted JS, or prove no artifacts for no-emit configurations.
-7. For published presets, compile an isolated consumer installed from the packed package without workspace-only dependencies. Run affected framework/bundler builds including generated types and JSX; compiler success alone does not prove framework compatibility.
-8. For a fix, demonstrate isolated failure then success and rerun invalidated checks. Without TypeScript, inspect manifests, config, fixtures, and package contents and report compile/emit as unexecuted. Compare the current candidate with the DoD; repair authorized gaps and repeat diagnostics and consumer checks. For material compiler, package, or framework questions, use independent review and critique perspectives when available, otherwise sequential perspectives. Reuse caller evidence only when config, candidate, environment, and proof remain current. Missing compiler, consumer, or authority evidence is incomplete with its next check.
+1. Inspect consumer instructions, scripts, lockfile, tsconfig inheritance, exports, compiler binaries, and fixtures. Record supported compiler, runtime, framework or bundler versions, module format, and emission owner.
+2. Capture every affected effective configuration with the installed compiler's `--showConfig`. Resolve inheritance before editing a shared base; inspect compiler-API consumers such as linters or build plugins separately from CLI compilation.
+3. Select settings by consumer: Node needs compatible module, resolution, and extensions; libraries need matching emitted JavaScript, declarations, and exports; bundled apps need supported JSX or resolution; framework-owned builds retain their required plugins and generated includes without competing emit.
+4. Keep bases small. Make consumers own layout-specific roots, outputs, includes, and ambient types. Treat strictness, target, lib, types, paths, inherited relative paths, and array replacement as explicit contracts.
+5. Identify the cause before using `skipLibCheck`, weaker strictness, or a compiler upgrade. State its tradeoff.
+6. Verify changed presets with positive and negative diagnostic fixtures, representative resolution, and emit behavior. Inspect emitted JavaScript, declarations, and maps; execute relevant output or prove no artifacts for no-emit configurations.
+7. For published presets, compile an isolated consumer installed from the packed package without workspace-only dependencies. Run affected framework or bundler builds, including generated types and JSX. For a fix, show isolated failure then success and rerun invalidated checks.
+8. If TypeScript is unavailable, inspect manifests, configuration, fixtures, and package contents and report compile or emit as unexecuted. Send material compiler, package, or framework uncertainties and proof to the caller's Quality Validation pool; otherwise return the next check.
 
-## Definition of Done
+## Pitfalls
 
-- The effective configurations, supported compiler/runtime consumers, and emission owner are identified.
-- Each claimed preset behavior has applicable positive/negative diagnostics, resolution, and emit or no-emit evidence.
-- Published or framework-facing changes have applicable isolated-consumer or framework-build evidence.
-- Missing compiler execution is explicit; configuration inspection alone does not establish compile or runtime behavior.
+- `paths` does not rewrite emitted imports, and `types` does not polyfill runtime APIs. Test the emitted or consuming behavior.
+- Compiler success alone does not prove framework compatibility or published package consumption.

@@ -1,6 +1,6 @@
 # Coordination
 
-Use [Quality Validation](../../../../capabilities/capability-quality-validation/SKILL.md) for the shared self-assessment, review, critique, triage, and repair loop. The collection-specific perspectives below supply its scope; they do not start a second pool.
+Use [Quality Validation](../../../../capabilities/capability-quality-validation/SKILL.md) when available for the shared self-assessment, review, critique, triage, and repair loop; otherwise perform that cycle directly with the perspectives below. The collection-specific perspectives below supply its scope; they do not start a second pool.
 
 1. Define the candidate, mode, criteria, and required proof before editing. Select contract, composition, behavior, ownership, simplicity, and resilience perspectives by impact; cover all six for broad collection changes.
 2. Assign bounded read-only perspectives to available subagents. Keep mechanical checks direct; report when sequential review lacks independence.

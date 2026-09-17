@@ -3,21 +3,25 @@ name: build-landing-page
 description: Draft or review framework-independent landing-page structure and conversion copy for one primary action.
 ---
 
-# Build Landing Page
+## Goal
 
-Create copy/specification or review one landing page; publishing and experiments remain external.
+Produce one evidence-backed landing-page draft, targeted rewrite, or review for one audience and primary action. Publishing and experiments remain external.
+
+### Definition of Done
+
+- The requested draft, rewrite, or review is delivered for the stated audience and action.
+- Claims, assumptions, evidence gaps, and the conversion path are explicit.
+- Review findings include evidence, a correction, and an acceptance check.
+- Current validation accepts the selected mode; an unmet required criterion remains REVISE or BLOCKED.
+
+## Boundaries
+
+- Do not invent testimonials, metrics, guarantees, customer claims, or observed experiment results. Mark them as missing or use supported evidence.
 
 ## Workflow
 
-1. Confirm write, rewrite, or review mode; audience, action, outcome, evidence, consumer guidance, and the mode-specific Definition of Done and proof from the request, applicable instructions, and loaded principles.
-2. For a complete draft, use [structure blueprints](references/structure-blueprints.md); for targeted copy, use [copywriting formulas](references/copywriting-formulas.md); for a review, use the [review rubric](references/review-rubric.md). Draft one recommended conversion path, or return evidence-backed fixes with replacement copy.
-3. State assumptions and proof gaps; never invent testimonials, metrics, guarantees, or customer claims.
-4. Validate the draft, rewrite, or review report against its mode-specific criteria. Use `capability-quality-validation` when available; otherwise self-assess, use independent review and critique for substantive work, or assess perspectives sequentially and state unavailable independence; triage findings, repair only the authorized output, and renew affected verdicts after a change. Use direct checks for mechanical work. On REVISE, continue authorized repair or report revision and fresh affected verdicts until acceptance. If a required correction is outside authority, return REVISE with the remedy and required checks. Return BLOCKED only when a required criterion cannot advance, with its next action; do not retry unchanged evidence.
-
-## Definition of Done
-
-- The requested copy/specification or review is delivered.
-- Audience, primary action, assumptions, and gaps are explicit.
-- Copy has one coherent path and supported claims only.
-- Review findings include evidence, correction, and acceptance check.
-- Completion requires current mode-specific validation acceptance; otherwise report REVISE/BLOCKED with the unmet criterion and next action.
+1. Resolve the mode, audience, action, outcome, evidence, and acceptance criteria from the request, applicable instructions, and loaded principles.
+2. Use the relevant structure, copywriting, or review reference. Draft one recommended conversion path, or return evidence-backed findings with replacement copy.
+3. Check claims against available evidence and record material assumptions and gaps.
+4. For substantive work, use `capability-quality-validation`; otherwise apply its self-assess, review, critique, triage, improve, and renewed-verdict loop directly. Repair only the authorized output until the current candidate passes.
+5. Return the result, current evidence, and the unmet criterion with its next action when validation cannot pass.

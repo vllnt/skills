@@ -3,25 +3,31 @@ name: capability-nextjs-tests
 description: Verify and diagnose Next.js pages, hydration, runtime errors, routing and user flows using repository-native tests and available browser tooling.
 ---
 
-# Capability Nextjs Tests
+## Contract
 
-Verify and diagnose requested Next.js behavior. Browser evidence is required for rendering, hydration, and interaction claims; HTTP checks establish only status, headers, redirects, and response bodies. Return findings for an authorized repair owner; this skill does not implement fixes.
+- Input: A Next.js revision, route or flow, expected behavior, environment, and authorized test scope.
+- Output: Reproducible findings, observed evidence, coverage gaps, and the smallest recommended repair.
+- Effects: Diagnosis without source repairs. Authorized tests may start a local server and exercise isolated test data; the caller owns repairs and convergence.
+
+### Acceptance
+
+- The report identifies the revision, route, expected behavior, environment, and checked states or viewports.
+- Rendering, hydration, and interaction claims have observed browser evidence.
+- Findings are reproducible and supported by sanitized evidence.
+- Browser gaps are explicit and never become browser-behavior claims.
 
 ## Procedure
 
-1. Discover consumer instructions, scripts, lockfile, installed Next.js version, router conventions, tests, candidate revision, route, expected outcome, and authorized environment. Use version-matched guidance for routing, caching, and Server Actions.
-2. Match any running server to the repository by workspace, launch logs, URL, and port. A process or MCP listing is discovery evidence only; inspect configuration or launch the approved command in a managed session. Never kill an unrelated server.
-3. Use installed Playwright, Cypress, browser automation, browser MCP, or authorized manual evidence. Optional Next.js DevTools diagnostics complement logs/build/tests; do not install or require a vendor tool.
+1. Discover applicable instructions, scripts, lockfile, installed Next.js version, router conventions, tests, candidate revision, route, expected behavior, and authorized environment. Use version-matched guidance for routing, caching, and Server Actions.
+2. Match a running server to the repository through workspace, launch logs, URL, and port. Inspect configuration or launch the approved command in a managed session; never kill an unrelated server.
+3. Use installed Playwright, Cypress, browser automation, browser MCP, or authorized manual evidence. Optional Next.js DevTools diagnostics complement logs, builds, and tests; do not install or require a vendor tool. If browser execution is unavailable, run permitted source, unit/server, or HTTP checks, skip browser-only steps, and report the browser-coverage gap.
 4. For a bug, reproduce it with an isolated failing scenario. Start console, page-error, request, and server-diagnostic collection before navigation, without retaining secrets.
-5. Navigate to the real route, await meaningful readiness, execute the flow with observable role/name assertions, and verify visible outcome, navigation, and required persisted state. A click, URL change, screenshot, or quiet console alone is insufficient.
-6. Cover direct entry/reload and relevant client navigation, loading/error/empty/auth states, and supported viewports. For responsive public UI, include mobile and desktop; scope narrower products with stated coverage.
-7. For the requested flow, check accessible names, semantics, keyboard operation, and focus where they affect browser behavior. A full accessibility assessment belongs to `capability-ui-accessibility` when requested and available; an accessibility tree is not a full audit.
-8. Report reproducible findings and the smallest repair, then compare the current evidence with the DoD. Test a repaired candidate only when it is supplied and authorized; otherwise name the exact follow-up route and check. When material risk or uncertainty remains, use independent review and critique perspectives when available, otherwise cover them sequentially. These perspectives assess this procedure; the caller owns overall convergence. Missing access or authority is incomplete with its next decisive check.
+5. Navigate to the real route, await meaningful readiness, execute the flow with observable role or name assertions, and verify the visible outcome, navigation, and required persisted state.
+6. Cover direct entry or reload, relevant client navigation, loading, error, empty, and auth states, plus supported viewports. For a responsive public UI, include mobile and desktop; state narrower coverage.
+7. Check accessible names, semantics, keyboard operation, and focus when they affect the requested browser flow. Use `capability-ui-accessibility` in review mode for a full accessibility assessment when relevant and available.
+8. Return findings, evidence, coverage, and limits. Test a repaired candidate only when supplied and authorized; otherwise name the exact follow-up route and check. Send material uncertainties and proof to the caller's Quality Validation pool; otherwise return the next decisive check.
 
-When browser execution is unavailable, use source, unit/server, and HTTP checks, report browser gaps, and continue safe work. Return target, routes/states/viewports, tools and results, sanitized artifacts, findings, and limits. See [tool examples](references/tool-examples.md) and [optional integrations](references/mcp-plugins.md) when relevant.
+## Pitfalls
 
-## Definition of Done
-
-- The report identifies the revision, route, expected outcome, environment, and checked states/viewports.
-- Every rendering, hydration, or interaction claim has observed browser evidence; absent browser access is an explicit gap, not a claim.
-- Findings are reproducible, evidence-backed, and include the smallest recommended repair; this capability makes no repair.
+- A click, URL change, screenshot, quiet console, HTTP result, or accessibility tree alone does not prove the requested user flow. Observe the required browser outcome.
+- HTTP checks prove status, headers, redirects, and bodies; they do not prove rendering, hydration, or interaction.

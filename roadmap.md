@@ -36,6 +36,12 @@ The shared `capability-quality-validation` owns criteria, self-assessment, revie
 |---|---|---|
 | F13 | Reviewed | Integrate the shared loop into 17 substantive workflows plus their issue-delivery handoff, mandatory orchestration, and skill maintenance; exercise missing proof, stale verdicts, read-only modes, and disagreement. |
 
+## Agent-facing templates
+
+| ID | State | Result / remaining evidence |
+|---|---|---|
+| F14 | Reviewed | All public skills and the local maintainer use family templates. Structural failure fixtures and independent contract, behavior, simplicity, tooling, and full-chain reviews pass; mode propagation and single-pool ownership were corrected. |
+
 ## Established structure
 
 N01–N04 established caller-based names, public category placement, canonical references, and catalog validation. N05 records the earlier source-review pass; the current candidate is evaluated under F04. Historical acceptance does not establish acceptance of later changes.

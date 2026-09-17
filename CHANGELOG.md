@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Adopt family-specific agent-facing templates across every skill and the local maintainer; validate structure and strengthen evidence, effect boundaries, and targeted failure handling.
+
 - Share upfront quality criteria, self-assessment, independent review/critique, and renewed acceptance across substantive workflows and skill maintenance.
 
 - Organize Vstack skills into user workflows, internal capabilities, and three lightweight session principles for thinking, orchestration, and collaboration.

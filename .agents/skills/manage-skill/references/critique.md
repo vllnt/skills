@@ -5,7 +5,7 @@ Challenge necessity and instruction cost. Use independent subagents when availab
 | Perspective | Check |
 |---|---|
 | Ownership | Distinct result, existing owner, misplaced policy, and behavior lost by removal. |
-| Simplicity | Filler, duplicate rules, fixed evolving catalogs, unnecessary files, reads, agents, or constraints. |
+| Simplicity | Repeated identity, filler, duplicate rules, vague prohibitions, fixed catalogs, and unnecessary files, reads, agents, or constraints. |
 | Resilience | Ambiguous scope, conflicting rules, stale evidence, and loops that weaken criteria or exceed authority. |
 
 1. Derive the necessary result and constraints from evidence. Challenge inherited assumptions; justify each instruction by its effect.

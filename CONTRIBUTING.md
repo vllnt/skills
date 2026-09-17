@@ -10,7 +10,7 @@ Report reproducible problems through the [issue templates](https://github.com/vl
 | `capabilities/capability-domain-function/` | Reusable internal procedure |
 | `mandatory/vllnt-subject-principles/` | Lightweight session principles |
 
-Every folder contains `SKILL.md` with flat, single-line string frontmatter `name` matching the folder and a specific description. Optional references and examples stay inside the skill and load only when relevant. Mandatory entries have no task workflow or Definition of Done; workflows and capabilities do.
+Every folder contains `SKILL.md` with flat, single-line string frontmatter `name` matching the folder and a specific description. Optional references and examples stay inside the skill and load only when relevant. Use the [family templates](.agents/skills/manage-skill/references/templates.md): workflows place Goal and Definition of Done before Workflow; capabilities place Contract and Acceptance before Procedure; mandatory entries contain Principles only. Do not repeat the skill name as a body title.
 
 Follow [AGENTS.md](AGENTS.md) for naming, ownership, concise authoring, review, and completion. Preserve independent installation: missing peers use the underlying procedure. Consumer rules supply project-specific policy.
 

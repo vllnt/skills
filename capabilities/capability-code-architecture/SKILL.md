@@ -3,23 +3,30 @@ name: capability-code-architecture
 description: Assess architectural friction and recommend smaller modules, clear ownership, traceable dependencies, and behavior-preserving checks.
 ---
 
-# Capability Code Architecture
+## Contract
 
-Find demonstrated architectural friction and recommend the smallest useful change. This is assessment only: it does not refactor code or authorize implementation.
+- Input: Consumer rules, candidate revision, source, tests, decisions, scope, intended behavior, and constraints.
+- Output: Ordered evidence-backed findings, smallest alternatives, trade-offs, verification needs, and coverage gaps.
+- Effects: Read-only assessment. It does not refactor code or authorize implementation.
+
+### Acceptance
+
+- Scope, callers, ownership/dependency evidence, and coverage limits are explicit.
+- Each finding has observed friction, a concrete alternative, and behavior to preserve.
+- Recommendations name a verification path and material failure case.
+- Unverified architecture risks remain separate from conclusions.
 
 ## Procedure
 
-1. Read consumer rules, source, tests, and decisions. Set candidate revision, scope, intended behavior, constraints, and evidence.
-2. Trace entry points, callers, dependency direction, state ownership, and failures. Look for scattered knowledge, pass-through layers, broad interfaces, duplicate ownership, or tests detached from callers.
-3. Compare keeping, deleting, consolidating, or extending an existing owner. For each supported option, state callers, preserved behavior, migration risk, and success/failure checks. Prefer no change when benefit is unproven.
-4. Return ordered findings with locations, evidence, smallest recommendation, trade-offs, and verification needs. Keep observations, hypotheses, and missing runtime evidence separate.
-5. For material ownership, interface, or dependency questions, use independent review and critique perspectives when available; otherwise apply them sequentially. Reuse caller evidence only when candidate, scope, environment, and proof remain current. For a revised candidate, reassess only affected findings and checks until assessment defects resolve; blocked evidence yields coverage gaps and a next check. Do not retry unchanged evidence; return the unresolved criterion and next discriminating check.
+1. Read consumer rules, source, tests, and decisions. Set the candidate, scope, intended behavior, constraints, and evidence.
+2. Trace entry points, callers, dependency direction, state ownership, and failures. Look for scattered knowledge, pass-through layers, broad interfaces, duplicate ownership, and tests detached from callers.
+3. Compare keeping, deleting, consolidating, or extending an existing owner. State callers, preserved behavior, migration risk, and success/failure checks. Prefer no change when benefit is unproven.
+4. Return findings with locations, evidence, smallest recommendation, trade-offs, and verification needs. Keep observations, hypotheses, and missing runtime evidence separate.
+5. Return material ownership, interface, or dependency uncertainties and current evidence to the caller's quality validation. When standalone, return the coverage gap and next check. Reassess only affected findings when evidence changes.
 
 Load [LANGUAGE.md](LANGUAGE.md), [DEEPENING.md](DEEPENING.md), or [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md) only when useful.
 
-## Definition of Done
+## Pitfalls
 
-- Scope, callers, ownership/dependency evidence, and coverage limits are explicit.
-- Each finding has an observed friction, concrete alternative, and behavior to preserve.
-- Recommendations name a verification path and material failure case.
-- The conclusion states the assessment boundary and separately labels unverified architecture risks.
+- Source structure alone does not prove runtime friction; label runtime behavior unverified until it is observed.
+- A smaller module is not automatically a better boundary; compare preserved callers and ownership before recommending a split.
