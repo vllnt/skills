@@ -1,71 +1,95 @@
-<div align="center">
+# Vstack Skills
 
-# vllnt skills
+Opinionated, portable workflows for building and maintaining projects with **[vllnt packages](https://github.com/vllnt)** and the **[@vllnt npm ecosystem](https://www.npmjs.com/org/vllnt)**. Vstack combines the packages, reusable skills, and engineering methods; each project's rules supply its architecture, environments, and permissions.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills](https://img.shields.io/badge/skills-1-blue.svg)](./#available-skills)
-[![Release](https://img.shields.io/github/v/release/vllnt/skills?display_name=tag&sort=semver)](https://github.com/vllnt/skills/releases/latest)
-
-**Compatible with:** Claude Code • OpenCode • Codex • Pi • Windsurf • Cursor • More via [skills.sh](https://skills.sh)
-
-[GitHub](https://github.com/vllnt) • [skills.sh/vllnt](https://skills.sh/vllnt/skills) • [Web](https://vllnt.ai)
-
-</div>
-
----
-
-## About
-
-Open-source agent skills published by **vllnt**. Reusable capabilities for any AI coding agent, distributed via [skills.sh](https://skills.sh/vllnt/skills).
-
----
-
-## Installation
+## Install
 
 ```bash
-npx skills add vllnt/skills
+npx skills add https://github.com/vllnt/skills/tree/main/workflows
+npx skills add https://github.com/vllnt/skills/tree/main/mandatory
 ```
 
-Or install a single skill:
+Install from these category paths to exclude the repository-local maintainer. Use `--list` to inspect a category before installation. Local discovery and isolated folder-copy installation are tested; remote category installation remains to be verified in the selected runtime.
+
+Alternatively, copy an individual skill folder into your runtime's skill directory. Markdown skills have no build step. Discovery of nested folders and automatic session loading depend on the runtime; verify them in the selected host. Installation alone does not activate the Vstack profile or change global rules.
+
+## Choose an entry point
+
+| Folder | Purpose |
+|---|---|
+| `workflows/` | User tasks such as Build Project, Plan Issues, Improve UI, and Deliver Issue. |
+| `references/` | On-demand procedures and supporting guidance; workflows load only the references relevant to the request. |
+| `mandatory/` | Lightweight session principles: [Thinking](mandatory/vllnt-thinking-principles/SKILL.md), [Orchestration](mandatory/vllnt-orchestration-principles/SKILL.md), [Collaboration](mandatory/vllnt-collaboration-principles/SKILL.md). |
+
+Configure the runtime's user/project instructions to read installed mandatory entries at session start and after context loss. Their descriptions express the trigger; they do not enforce loading. A standalone workflow remains useful without other skills.
+
+## Build with Vstack
+
+The optional [Vstack profile](references/vstack.md) prefers Next.js for web, Tauri with a compatible Next.js frontend for desktop, Expo/React Native for mobile, Convex for durable backend state, and TypeScript/Effect for CLI or stateless APIs.
+
+1. Select the profile through applicable user/project instructions.
+2. Use `build-project` for a new baseline or `improve-project` for staged alignment.
+3. Shared alignment discovers relevant `@vllnt` packages, exact versions, stable/canary channels, and consumer compatibility through [Stack packages](references/capabilities/stack-packages/REFERENCE.md).
+4. Reuse compatible foundations before custom implementations. Preserve justified project exceptions and validate actual consumer behavior.
+
+Package inventories and versions are discovered at execution time. This collection does not hardcode which packages exist or install unused dependencies.
+
+## Composition
+
+The workflow owns the requested result. It loads a canonical procedure only when its condition applies, passing mode, scope, candidate, and evidence. Useful independent work runs in parallel; another reference does not automatically trigger another complete review team. Missing optional guidance falls back to the underlying procedure.
+
+Finish at the requested endpoint. A bounded report can finish with explicit gaps; missing required verification cannot become a pass. A blocker returns its cause, options, recommendation, consequences, and next action.
+
+## Available skills
+
+### User workflows
+
+| Skill | Result |
+|---|---|
+| [build-landing-page](workflows/build-landing-page/SKILL.md) | Draft or review framework-independent landing-page structure and conversion copy for one primary action. |
+| [build-project](workflows/build-project/SKILL.md) | Establish and verify a minimal project baseline from applicable stack and package preferences. |
+| [build-prototype](workflows/build-prototype/SKILL.md) | Build and iterate a focused local prototype using observed behavior and human product decisions. |
+| [deliver-issue](workflows/deliver-issue/SKILL.md) | Deliver a scoped issue through a verified pull request and authorized merge to its target branch. |
+| [deliver-pull-request](workflows/deliver-pull-request/SKILL.md) | Review a pull request, coordinate authorized repairs and verification, then merge it when permitted. |
+| [explain-subject](workflows/explain-subject/SKILL.md) | Explain a real subject with a simple verified mental model and clear limits. |
+| [explore-decisions](workflows/explore-decisions/SKILL.md) | Sharpen an artifact or decision through focused evidence-based questions and concrete alternatives. |
+| [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments while preserving observable contracts and affected consumers. |
+| [improve-project](workflows/improve-project/SKILL.md) | Adapt an existing repository to applicable stack preferences through small verified stages. |
+| [improve-ui](workflows/improve-ui/SKILL.md) | Improve an interface’s hierarchy, consistency, responsiveness, and accessibility while preserving journeys. |
+| [manage-defects](workflows/manage-defects/SKILL.md) | Diagnose a reported failure, isolate its cause, and apply authorized repairs with regression evidence. |
+| [manage-issues](workflows/manage-issues/SKILL.md) | Triage GitHub issues into an evidence-backed, atomic, actionable backlog and apply authorized changes. |
+| [manage-roadmap](workflows/manage-roadmap/SKILL.md) | Create, maintain, synchronize, or report a traceable roadmap that preserves direction and history. |
+| [manage-rules](workflows/manage-rules/SKILL.md) | Manage user, project, and nested instructions while preserving scope, precedence, and effective behavior. |
+| [manage-skills](workflows/manage-skills/SKILL.md) | Create, review, update, organize, or retire portable agent skills around a clear outcome and evidence. |
+| [manage-vision](workflows/manage-vision/SKILL.md) | Create, update, locate, or audit an evidence-backed project vision anchor and decision test. |
+| [plan-issues](workflows/plan-issues/SKILL.md) | Assess a codebase and prepare a source-backed, deduplicated issue backlog for human review. |
+| [plan-work](workflows/plan-work/SKILL.md) | Maintain a read-only planning session that returns an actionable plan without local or remote side effects. |
+| [review-ui](workflows/review-ui/SKILL.md) | Assess an interface for evidence-backed usability, responsiveness, consistency, and accessibility findings without changing it. |
+
+## On-demand procedures
+
+The 23 canonical procedures are [indexed in `references/`](references/README.md). They are not installable skills. The reference bundler copies the exact transitive closure linked by each workflow into that workflow’s `references/vstack/` directory; consumers do not need a runtime build step.
+
+## Maintaining this collection
+
+Use the repository-local [.agents/skills/manage-skill/SKILL.md](.agents/skills/manage-skill/SKILL.md). This maintainer is intentionally public repository tooling, excluded from the installable catalog. Public `manage-skills` provides the portable lifecycle workflow. Author agent-facing instructions with the [family templates](.agents/skills/manage-skill/references/templates.md); criteria precede procedures, and mandatory skills contain principles only.
+
+See [AGENTS.md](AGENTS.md), [CONTRIBUTING.md](CONTRIBUTING.md), [roadmap.md](roadmap.md), and [RELEASING.md](RELEASING.md). Keep [CHANGELOG.md](CHANGELOG.md) current.
 
 ```bash
-npx skills add vllnt/skills/regulatory-guard
+python3 scripts/bundle-references.py
+bash scripts/test-validate-frontmatter.sh
+bash scripts/validate-frontmatter.sh
+bash scripts/test-pre-commit.sh
+python3 scripts/test-validate-docs.py
+python3 scripts/validate-docs.py
+python3 scripts/test-bundle-references.py
+python3 scripts/bundle-references.py --check
+git diff --check
 ```
 
----
-
-## Available Skills
-
-### [Regulatory Guard](./regulatory-guard/) — Web Compliance Audit
-
-Verify a website or web app strictly follows applicable legislation: privacy (GDPR / CCPA / ePrivacy), accessibility (WCAG 2.2 AA / ADA / EAA), consumer & e-commerce (DSA / DMA / CCPA-sale / CAN-SPAM), and AI / content (EU AI Act / copyright / DMCA). Outputs a tiered compliance report with evidence, severity, and remediation.
-
-[View skill documentation →](./regulatory-guard/SKILL.md)
-
----
-
-## Skill Structure
-
-Each skill is a self-contained folder:
-
-```
-skill-name/
-├── SKILL.md          # Main skill file (required, with YAML frontmatter)
-├── README.md         # Human-facing docs
-├── EXAMPLE.md        # Usage examples (optional)
-└── references/       # Reference docs loaded on-demand (optional)
-```
-
-Skills are agent-agnostic Markdown — no build step.
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Issues and PRs welcome.
-
----
+Structural checks do not prove agent behavior. [Evaluation scenarios](references/skill-evaluations.md) distinguish source simulations, executed checks, consumer behavior, and runtime-loading evidence.
 
 ## License
 
-[MIT](./LICENSE) © 2026 vllnt
+[MIT](LICENSE) © 2026 vllnt

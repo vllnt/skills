@@ -1,30 +1,46 @@
-# vllnt/skills
+# Vstack Skills
 
-> Open-source agent skills published by vllnt. Reusable capabilities for any AI coding agent, distributed via skills.sh/vllnt/skills.
+22 public skills discoverable through the documented category paths: 19 user workflows and 3 session principles. Reuse the [vllnt package ecosystem](https://github.com/vllnt) through the optional Vstack profile and live package discovery.
 
-This repository hosts agent skills as self-contained Markdown folders (`<skill>/SKILL.md` with YAML frontmatter, plus optional `README.md`, `EXAMPLE.md`, and `references/`). Skills are agent-agnostic — compatible with Claude Code, OpenCode, Codex, Pi, Cursor, Windsurf, and any runtime that loads skills from Markdown directories. No build step required.
+## Session principles
 
-## Docs
+- [vllnt-collaboration-principles](mandatory/vllnt-collaboration-principles/SKILL.md)
+- [vllnt-orchestration-principles](mandatory/vllnt-orchestration-principles/SKILL.md)
+- [vllnt-thinking-principles](mandatory/vllnt-thinking-principles/SKILL.md)
 
-- [README](README.md): Project overview, available skills, installation
-- [Contributing](CONTRIBUTING.md): How to contribute, skill structure conventions, PR guidelines
-- [Releasing](RELEASING.md): Agent-friendly release flow (changelog, version bump, tag, auto-publish)
-- [Changelog](CHANGELOG.md): Version history and release notes
-- [Agents](AGENTS.md): Hard rules and conventions for AI agents contributing to this repo
+## Workflows
 
-## Skills
+- [build-landing-page](workflows/build-landing-page/SKILL.md)
+- [build-project](workflows/build-project/SKILL.md)
+- [build-prototype](workflows/build-prototype/SKILL.md)
+- [deliver-issue](workflows/deliver-issue/SKILL.md)
+- [deliver-pull-request](workflows/deliver-pull-request/SKILL.md)
+- [explain-subject](workflows/explain-subject/SKILL.md)
+- [explore-decisions](workflows/explore-decisions/SKILL.md)
+- [improve-code](workflows/improve-code/SKILL.md)
+- [improve-project](workflows/improve-project/SKILL.md)
+- [improve-ui](workflows/improve-ui/SKILL.md)
+- [manage-defects](workflows/manage-defects/SKILL.md)
+- [manage-issues](workflows/manage-issues/SKILL.md)
+- [manage-roadmap](workflows/manage-roadmap/SKILL.md)
+- [manage-rules](workflows/manage-rules/SKILL.md)
+- [manage-skills](workflows/manage-skills/SKILL.md)
+- [manage-vision](workflows/manage-vision/SKILL.md)
+- [plan-issues](workflows/plan-issues/SKILL.md)
+- [plan-work](workflows/plan-work/SKILL.md)
+- [review-ui](workflows/review-ui/SKILL.md)
 
-- [regulatory-guard](regulatory-guard/SKILL.md): Audit a website or web app for strict compliance with applicable legislation across privacy (GDPR / CCPA / ePrivacy), accessibility (WCAG 2.2 AA / ADA / EAA), consumer & e-commerce (DSA / DMA / CCPA-sale / CAN-SPAM), and AI / content (EU AI Act / copyright / DMCA). Produces tiered findings with evidence and remediation.
+## On-demand procedures
 
-## Tooling
+Canonical procedures are [indexed in references](references/README.md). They are loaded only when a workflow’s condition applies and are not discoverable skills.
 
-- [scripts/validate-frontmatter.sh](scripts/validate-frontmatter.sh): Pre-commit + CI validator for skill SKILL.md frontmatter
-- [scripts/changelog-add.sh](scripts/changelog-add.sh): Idempotent helper to append entries under [Unreleased]
-- [scripts/release.sh](scripts/release.sh): Non-interactive release script — bumps version, promotes [Unreleased], tags, pushes
-- [scripts/install-hooks.sh](scripts/install-hooks.sh): Activate project-managed git hooks (`.githooks/`)
+## Collection documentation
 
-## Optional
-
-- [Security Policy](SECURITY.md): Vulnerability reporting via GitHub Security Advisories
-- [Code of Conduct](CODE_OF_CONDUCT.md): Contributor Covenant 2.1
-- [License](LICENSE): MIT License
+- [README.md](README.md)
+- [AGENTS.md](AGENTS.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [RELEASING.md](RELEASING.md)
+- [CHANGELOG.md](CHANGELOG.md)
+- [roadmap.md](roadmap.md)
+- [references/skill-evaluations.md](references/skill-evaluations.md)
+- [references/vstack.md](references/vstack.md)

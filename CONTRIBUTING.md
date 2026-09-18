@@ -1,85 +1,28 @@
-# Contributing to vllnt skills
+# Contributing
 
-Thanks for your interest in contributing! This guide explains how to get involved.
+Report reproducible problems through the [issue templates](https://github.com/vllnt/skills/issues/new/choose). Explain the desired result, observed behavior, and relevant environment without private data.
 
-## Code of Conduct
+## Structure
 
-This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you agree to uphold this code.
+| Category | Contents |
+|---|---|
+| `workflows/verb-subject/` | Complete user task |
+| `mandatory/vllnt-subject-principles/` | Lightweight session principles |
+| `references/capabilities/<subject>/REFERENCE.md` | Canonical on-demand procedure |
 
-## How to Contribute
+The public catalog includes workflows and mandatory entries, each with a `SKILL.md` file with flat, single-line string frontmatter whose `name` matches the folder and whose description is specific. The repository-local `.agents/skills/manage-skill/SKILL.md` is outside that public catalog but may be discovered by repository-aware hosts. Canonical procedures have no skill metadata; they use Contract, Acceptance, Procedure, and targeted Pitfalls where needed. Optional references and examples load only when relevant. Workflows place Goal and Definition of Done before Workflow; mandatory entries contain Principles only. Do not repeat a skill name as a body title.
 
-### Reporting Bugs
+Follow [AGENTS.md](AGENTS.md) for naming, ownership, concise authoring, review, and completion. Preserve independent installation: missing peers use the underlying procedure. Consumer rules supply project-specific policy.
 
-1. Check [existing issues](https://github.com/vllnt/skills/issues) first
-2. Use the [bug report template](https://github.com/vllnt/skills/issues/new?template=bug_report.yml)
-3. Include: steps to reproduce, expected vs actual behavior, environment details, relevant logs
+## Change process
 
-### Suggesting Features
+1. Create a branch or fork; keep the change focused on one coherent outcome.
+2. Update the owning skill and affected callers, references, and navigation. Do not introduce duplicate responsibilities or copy changing inventories.
+3. Run `bash scripts/test-validate-frontmatter.sh`, `bash scripts/test-pre-commit.sh`, `python3 scripts/test-validate-docs.py`, `python3 scripts/validate-docs.py`, `python3 scripts/test-bundle-references.py`, `python3 scripts/bundle-references.py`, `python3 scripts/bundle-references.py --check`, and `git diff --check`.
+4. Exercise relevant success, failure, and standalone cases. State which checks were executed and which were source simulations.
+5. Add an entry to `CHANGELOG.md` under `Unreleased`.
+6. Review the diff for personal information, secrets, invented examples, and unnecessary private context. Open a PR against `main` with changes, evidence, and remaining limits.
 
-1. Check [existing requests](https://github.com/vllnt/skills/issues?q=label%3Aenhancement)
-2. Use the [feature request template](https://github.com/vllnt/skills/issues/new?template=feature_request.yml)
-3. Describe the problem you're solving, not just the solution
+Markdown skills require no build step. Publication follows [RELEASING.md](RELEASING.md); a skill change does not automatically authorize a release.
 
-### Submitting Changes
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feat/your-feature`
-3. Make your changes
-4. Update `CHANGELOG.md` (CI requires it on every PR)
-5. Commit using [conventional commits](https://www.conventionalcommits.org/):
-   - `feat: add new feature`
-   - `fix: resolve bug`
-   - `docs: update documentation`
-   - `chore: maintenance task`
-6. Push and open a Pull Request against `main`
-
-## Development Setup
-
-```bash
-git clone https://github.com/vllnt/skills.git
-cd skills
-```
-
-No build step required — skills are pure Markdown files.
-
-## Skill Structure
-
-Each skill follows this structure:
-
-```
-skill-name/
-├── SKILL.md          # Main skill file (required)
-├── README.md         # Skill documentation
-├── references/       # Reference docs loaded on-demand
-└── EXAMPLE.md        # Usage examples (optional)
-```
-
-### Key Conventions
-
-- `SKILL.md` must include valid YAML frontmatter (`name`, `description`)
-- Reference files are loaded by the action router, not eagerly
-- Skills must be agent-agnostic (Claude Code, OpenCode, Cursor, etc.)
-- Use relative paths for cross-references within a skill
-- Skills must NOT cross-reference other skills (independence)
-
-## Pull Request Guidelines
-
-- Keep PRs focused — one skill or feature per PR
-- Update the skill's `README.md` for any behavior changes
-- Update root `CHANGELOG.md` (BLOCKING — CI enforces this)
-- Follow existing patterns in similar skills
-- Request review from maintainers
-
-## First-Time Contributors
-
-Look for issues labeled [`good first issue`](https://github.com/vllnt/skills/labels/good%20first%20issue).
-
-## Community
-
-- [GitHub](https://github.com/vllnt) — issues, PRs, code
-- [Web](https://vllnt.ai) — about the maintainers and projects
-- [skills.sh/vllnt](https://skills.sh/vllnt/skills) — rendered skill catalog
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the same license as the project (MIT).
+Contributions follow the [Code of Conduct](CODE_OF_CONDUCT.md) and [MIT license](LICENSE). See [vllnt](https://github.com/vllnt) for the package ecosystem.
