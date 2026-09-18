@@ -3,7 +3,7 @@
 # changelog-add.sh — append an entry to the [Unreleased] section of CHANGELOG.md.
 #
 # Usage:
-#   bash scripts/changelog-add.sh "feat(capability-compliance-review): add CCPA opt-out check"
+#   bash scripts/changelog-add.sh "feat(compliance-review): add CCPA opt-out check"
 #   bash scripts/changelog-add.sh --type fix --scope convex "race in cron scheduler"
 #
 # Designed to be safe for AI agents to call: idempotent (won't duplicate identical
@@ -23,7 +23,7 @@ Usage:
   scripts/changelog-add.sh --type <feat|fix|chore|docs|refactor|perf|test> [--scope <name>] "<message>"
 
 Examples:
-  scripts/changelog-add.sh "feat(capability-compliance-review): add EAA accessibility audit"
+  scripts/changelog-add.sh "feat(compliance-review): add EAA accessibility audit"
   scripts/changelog-add.sh --type fix --scope ci "release workflow handles empty changelog"
 EOF
 }

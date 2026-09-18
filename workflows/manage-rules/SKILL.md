@@ -24,5 +24,5 @@ Give each user, project, or nested rule one clear owner while preserving scope, 
 1. Discover active instruction sources, scopes, activation, imports, authority, consumers, and edit permission without scanning unrelated private projects.
 2. Compare only overlapping scopes. Classify duplicate, contradiction, deliberate override, and unrelated wording.
 3. Choose the smallest repair: keep user preferences at user scope, project decisions at project scope, and exceptions narrow.
-4. For substantive candidates, use `capability-quality-validation` when available; otherwise apply its feedback loop directly before authorized edits. Triage findings, improve the candidate, and renew affected verdicts until acceptance.
+4. For substantive candidates, use [Quality validation](references/vstack/protocols/quality-validation.md) with the mode, scope, candidate, and evidence; otherwise apply its feedback loop directly before authorized edits. Triage findings, improve the candidate, and renew affected verdicts until acceptance.
 5. Apply only authorized validated edits, preserve unrelated or protective rules, and test representative scope behavior where bounded.

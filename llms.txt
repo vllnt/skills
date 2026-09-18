@@ -1,6 +1,6 @@
 # Vstack Skills
 
-45 public skills: 19 user workflows, 23 internal capabilities, and 3 session principles. Reuse the [vllnt package ecosystem](https://github.com/vllnt) through the optional Vstack profile and live package discovery.
+22 public skills discoverable through the documented category paths: 19 user workflows and 3 session principles. Reuse the [vllnt package ecosystem](https://github.com/vllnt) through the optional Vstack profile and live package discovery.
 
 ## Session principles
 
@@ -30,31 +30,9 @@
 - [plan-work](workflows/plan-work/SKILL.md)
 - [review-ui](workflows/review-ui/SKILL.md)
 
-## Capabilities
+## On-demand procedures
 
-- [capability-agent-tooling-review](capabilities/capability-agent-tooling-review/SKILL.md)
-- [capability-ci-optimization](capabilities/capability-ci-optimization/SKILL.md)
-- [capability-code-architecture](capabilities/capability-code-architecture/SKILL.md)
-- [capability-code-review](capabilities/capability-code-review/SKILL.md)
-- [capability-code-test-management](capabilities/capability-code-test-management/SKILL.md)
-- [capability-code-tests](capabilities/capability-code-tests/SKILL.md)
-- [capability-compliance-review](capabilities/capability-compliance-review/SKILL.md)
-- [capability-convex-components](capabilities/capability-convex-components/SKILL.md)
-- [capability-eslint-configuration](capabilities/capability-eslint-configuration/SKILL.md)
-- [capability-infrastructure-costs](capabilities/capability-infrastructure-costs/SKILL.md)
-- [capability-infrastructure-review](capabilities/capability-infrastructure-review/SKILL.md)
-- [capability-nextjs-tests](capabilities/capability-nextjs-tests/SKILL.md)
-- [capability-project-alignment](capabilities/capability-project-alignment/SKILL.md)
-- [capability-quality-validation](capabilities/capability-quality-validation/SKILL.md)
-- [capability-reasoning-assumptions](capabilities/capability-reasoning-assumptions/SKILL.md)
-- [capability-release-changelog](capabilities/capability-release-changelog/SKILL.md)
-- [capability-release-readiness](capabilities/capability-release-readiness/SKILL.md)
-- [capability-runtime-performance](capabilities/capability-runtime-performance/SKILL.md)
-- [capability-stack-packages](capabilities/capability-stack-packages/SKILL.md)
-- [capability-typescript-configuration](capabilities/capability-typescript-configuration/SKILL.md)
-- [capability-ui-accessibility](capabilities/capability-ui-accessibility/SKILL.md)
-- [capability-web-performance](capabilities/capability-web-performance/SKILL.md)
-- [capability-workspace-turborepo](capabilities/capability-workspace-turborepo/SKILL.md)
+Canonical procedures are [indexed in references](references/README.md). They are loaded only when a workflow’s condition applies and are not discoverable skills.
 
 ## Collection documentation
 

@@ -90,11 +90,13 @@ def run(root: Path, expected: str | None = None) -> None:
 def fixture(root: Path) -> list[tuple[str, str, str]]:
     entries = [
         ("workflows", "plan-work", "A sufficiently specific planning skill description."),
-        ("capabilities", "capability-example-review", "A sufficiently specific internal review description."),
         ("mandatory", "vllnt-thinking-principles", "A sufficiently specific session principle description."),
     ]
     for category, name, description in entries:
         skill(root, category, name, description)
+    reference = body_for("capabilities")
+    write(root / "references/capabilities/example-review/REFERENCE.md", reference)
+    write(root / "references/protocols/quality-validation.md", reference)
     catalogs(root, entries)
     return entries
 
@@ -162,25 +164,19 @@ def main() -> int:
         run(root, "'Definition of Done' needs 3-5 criteria")
         skill(root, "workflows", "plan-work", entries[0][2])
 
-        capability = root / "capabilities/capability-example-review/SKILL.md"
-        skill(
-            root,
-            "capabilities",
-            "capability-example-review",
-            entries[1][2],
-            body_for("capabilities").replace("- Effects: Read-only inspection.\n", ""),
-        )
+        capability = root / "references/capabilities/example-review/REFERENCE.md"
+        write(capability, body_for("capabilities").replace("- Effects: Read-only inspection.\n", ""))
         run(root, "Contract needs '- Effects:'")
-        skill(root, "capabilities", "capability-example-review", entries[1][2])
+        write(capability, body_for("capabilities"))
 
         mandatory = root / "mandatory/vllnt-thinking-principles/SKILL.md"
-        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2], "## Goal\n\nThis is not a principle.\n")
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[1][2], "## Goal\n\nThis is not a principle.\n")
         run(root, "headings must be")
-        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2])
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[1][2])
 
-        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2], "## Principles\n\nKeep this short.\n")
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[1][2], "## Principles\n\nKeep this short.\n")
         run(root, "Principles needs at least one non-empty principle")
-        skill(root, "mandatory", "vllnt-thinking-principles", entries[2][2])
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[1][2])
 
         local.write_text(
             local.read_text(encoding="utf-8").replace("### Definition of Done", "## Workflow\n\n1. Bad order.\n\n### Definition of Done", 1),
@@ -210,6 +206,24 @@ def main() -> int:
         skill(root, "mandatory", "vllnt-collaboration-principles", "A sufficiently specific collaboration principle description.")
         run(root, "README.md: missing public skill entry")
         catalogs(root, entries + [("mandatory", "vllnt-collaboration-principles", "A sufficiently specific collaboration principle description.")])
+
+        forbidden = root / "references/capabilities/example-review/SKILL.md"
+        write(forbidden, "---\nname: forbidden\ndescription: A sufficiently specific forbidden skill description.\n---\n")
+        run(root, "SKILL.md is only allowed in public categories or the local maintainer")
+        forbidden.unlink()
+
+        capability.write_text("---\nname: metadata\n---\n" + body_for("capabilities"), encoding="utf-8")
+        run(root, "canonical references must not contain skill metadata")
+        write(capability, body_for("capabilities"))
+
+        quality = root / "references/protocols/quality-validation.md"
+        quality.unlink()
+        run(root, "missing canonical quality protocol")
+        write(quality, body_for("capabilities"))
+
+        capability.unlink()
+        run(root, "contains no canonical REFERENCE.md files")
+        write(capability, body_for("capabilities"))
 
         stale = "- [stale](mandatory/stale/SKILL.md)\n"
         (root / "llms.txt").write_text((root / "llms.txt").read_text(encoding="utf-8") + stale, encoding="utf-8")

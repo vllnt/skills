@@ -4,9 +4,9 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current decisions
 
-- Human workflows, internal capabilities, and mandatory principles have distinct owners.
+- The public catalog exposes only workflows and mandatory principles; repository-local maintenance is separate. Internal procedures are canonical references, bundled per workflow and loaded on demand.
 - Thinking, Orchestration, and Collaboration replace the single principle entry. Synchronization belongs to Orchestration.
-- The workflow owns its outcome and convergence. Capabilities return bounded evidence; current proof is reused across handoffs.
+- The workflow owns its outcome and convergence. Reference procedures return bounded evidence; current proof is reused across handoffs.
 - Vstack prioritizes compatible [vllnt packages](references/vstack.md) through live discovery, not a maintained package list.
 - User/project/nested rules own configuration and permissions. Public examples contain no private operational evidence.
 - Keep repository-local maintenance under `.agents/` intentionally public and separate from the installable catalog.
@@ -30,7 +30,7 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Quality feedback loop
 
-The shared `capability-quality-validation` owns criteria, self-assessment, review/critique, triage, and renewed acceptance. Workflows supply domain criteria from the request, applicable rules, and principles before work. Planning validates a plan; assessment validates a report; implementation validates the changed artifact. Direct checks remain sufficient for mechanical changes.
+The shared [quality validation protocol](references/protocols/quality-validation.md) owns criteria, self-assessment, review/critique, triage, and renewed acceptance. Workflows supply domain criteria from the request, applicable rules, and principles before work. Planning validates a plan; assessment validates a report; implementation validates the changed artifact. Direct checks remain sufficient for mechanical changes.
 
 | ID | State | Result / remaining evidence |
 |---|---|---|
@@ -41,6 +41,12 @@ The shared `capability-quality-validation` owns criteria, self-assessment, revie
 | ID | State | Result / remaining evidence |
 |---|---|---|
 | F14 | Reviewed | All public skills and the local maintainer use family templates. Structural failure fixtures and independent contract, behavior, simplicity, tooling, and full-chain reviews pass; mode propagation and single-pool ownership were corrected. |
+
+## On-demand reference distribution
+
+| ID | State | Result / remaining evidence |
+|---|---|---|
+| F15 | Reviewed | Public discovery is 19 workflows and 3 mandatory skills; 23 internal procedures are on-demand references. Conditional bundles, isolated Improve UI/Build Project copy installations, and independent composition, ownership, and tooling review pass. Automatic runtime loading remains V02. |
 
 ## Established structure
 
@@ -62,9 +68,9 @@ Prioritize runtime and consumer evidence over new wrapper skills. Runtime integr
 
 ## Product and log analysis — proposed, not implemented
 
-`capability-product-analysis` would compare intended journeys with code, configuration, and observed behavior. It would return contradictions, missing evidence, and acceptance cases; architecture, UI, and strategy retain their existing owners.
+A product-analysis reference would compare intended journeys with code, configuration, and observed behavior. It would return contradictions, missing evidence, and acceptance cases; architecture, UI, and strategy retain their existing owners.
 
-`capability-log-analysis` would discover service/environment bindings from consumer rules and configuration, read authorized sources within a finite time window, and return failures plus instrumentation gaps. It must keep environments separate, sanitize payloads, and expose pagination, retention, sampling, truncation, and access limits. Missing logs never prove absence of errors.
+A log-analysis reference would discover service/environment bindings from consumer rules and configuration, read authorized sources within a finite time window, and return failures plus instrumentation gaps. It must keep environments separate, sanitize payloads, and expose pagination, retention, sampling, truncation, and access limits. Missing logs never prove absence of errors.
 
 Reuse `plan-issues` for evidence-backed drafts and root-cause deduplication, and `manage-issues` for authorized hosted changes. A logs question can finish with its evidence report; product analysis and issue creation are not mandatory stages.
 

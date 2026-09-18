@@ -1,6 +1,6 @@
 # Family Templates
 
-Replace placeholders with domain instructions. Preserve frontmatter `name` and a description explaining the result and trigger. Omit optional sections without a concrete failure to prevent. These are authoring templates, not extra runtime instructions.
+Replace placeholders with domain instructions. For discoverable skills, preserve frontmatter `name` and a description explaining the result and trigger. Reference procedures have no frontmatter. Omit optional sections without a concrete failure to prevent. These are authoring templates, not extra runtime instructions.
 
 ## Workflow
 
@@ -33,14 +33,9 @@ description: [Outcome and when to use this workflow.]
 5. [Repair and renew affected verdicts, or report the unmet criterion.]
 ```
 
-## Capability
+## Reference procedure
 
 ```markdown
----
-name: capability-domain-function
-description: [Bounded operation and when a caller needs it.]
----
-
 ## Contract
 
 - Input: [Required scope, candidate, context, and criteria.]
@@ -82,7 +77,8 @@ description: [Activation condition and cross-task behavior.]
 ## Authoring checks
 
 1. Separate identity/trigger, outcome/contract, acceptance, and procedure; remove repeated titles and semantic duplication.
-2. Keep decisive evidence checks in the owning skill. A missing mandatory or peer skill must not silently remove a necessary check.
+2. Keep decisive evidence checks in the owning skill. A missing mandatory skill or procedure reference must not silently remove a necessary check.
 3. Describe specific failures and alternatives instead of generic warnings. Project permissions stay in consumer instructions; loading a skill grants no authority.
 4. Exercise success, missing evidence, contradictory sources, unavailable tools, and assessment-only requests. Inspect actions as well as the answer; tests and sources must exist, not be invented.
-5. Preserve a rule only when it changes a decision, action, verification, or result. Use examples and references only where they remove ambiguity.
+5. Link workflow dependencies to packaged `references/vstack/...` paths with a loading condition. Canonical procedures live under `references/`; regenerate distribution copies instead of editing them.
+6. Preserve a rule only when it changes a decision, action, verification, or result. Use examples and references only where they remove ambiguity.

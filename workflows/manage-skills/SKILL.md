@@ -19,6 +19,6 @@ Maintain portable agent skills while consumer repositories retain their own arch
 
 1. Resolve outcome, scope, owner, effects, callers, applicable instructions, completion proof, and whether an existing skill owns the capability.
 2. For assessment or planning, inspect and propose only. For authorized create, update, organize, or retire work, prepare the smallest distinct candidate and resolve callers before retirement.
-3. Use the family template: workflows state Goal, Definition of Done, optional Boundaries, and Workflow; capabilities state Contract, Acceptance, Procedure, and targeted Pitfalls; mandatory entries state Principles only.
-4. Verify metadata, path/name, references, callers, commands, final diff, success scenarios, and failure or partial-discovery scenarios.
-5. For substantive maintenance, use `capability-quality-validation` when available; otherwise apply the same self-assess, independent review, critique, triage, improve, and renewed-verdict cycle directly. Do not create recursive review pools.
+3. Use the family template: workflows state Goal, Definition of Done, optional Boundaries, and Workflow; internal reference procedures state Contract, Acceptance, Procedure, and targeted Pitfalls without skill metadata; mandatory entries state Principles only.
+4. Verify metadata, path/name, references, callers, commands, final diff, success scenarios, and failure or partial-discovery scenarios. Keep shared procedures canonical; package needed references with each workflow, link them conditionally, and verify isolated installation.
+5. For substantive maintenance, use [Quality validation](references/vstack/protocols/quality-validation.md) with the mode, scope, candidate, and evidence; otherwise apply the same self-assess, independent review, critique, triage, improve, and renewed-verdict cycle directly. Do not create recursive review pools.

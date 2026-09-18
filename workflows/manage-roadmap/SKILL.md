@@ -20,5 +20,5 @@ Maintain an evidence-backed roadmap that preserves direction and history. It doe
 1. Resolve operation, roadmap location, product evidence, current work, delivery evidence, applicable instructions, and validation criteria.
 2. Keep outcomes, work, evidence, dependencies, decisions, and uncertainty traceable to their owner.
 3. Recommend the next outcome or decision and its consequence. Make reversible sequencing choices from evidence.
-4. For substantive roadmap work, use `capability-quality-validation` when available; otherwise apply its feedback loop directly before authorized maintenance. Triage findings, improve the candidate, and renew affected verdicts until acceptance.
+4. For substantive roadmap work, use [Quality validation](references/vstack/protocols/quality-validation.md) with the mode, scope, candidate, and evidence; otherwise apply its feedback loop directly before authorized maintenance. Triage findings, improve the candidate, and renew affected verdicts until acceptance.
 5. In maintenance mode, apply only the validated edit while preserving completed and dropped history and human decisions. Verify links, status transitions, history, and applicable checks.

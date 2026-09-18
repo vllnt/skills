@@ -21,7 +21,7 @@ cd "$ROOT" || exit 2
 
 errors=0
 checked=0
-categories=(workflows capabilities mandatory)
+categories=(workflows mandatory)
 names_file="$(mktemp "${TMPDIR:-/tmp}/vllnt-skills-names.XXXXXX")"
 trap 'rm -f "$names_file"' EXIT
 

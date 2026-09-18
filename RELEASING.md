@@ -13,9 +13,9 @@
 ```
 
 CI gates that block the merge:
-- `Validate Skill Frontmatter` — every `<category>/<skill>/SKILL.md` has valid YAML frontmatter
+- `Validate Skill Frontmatter` — every discoverable `workflows/*/SKILL.md` and `mandatory/*/SKILL.md` has valid metadata
 - `Changelog Required` — `CHANGELOG.md` modified AND `[Unreleased]` has at least one bullet
-- `Sync Agent Docs` — public catalogs, descriptions, links, and instruction references match the source skills
+- `Sync Agent Docs` — public catalogs, descriptions, links, canonical procedures, and generated reference bundles are current
 
 ## At-a-glance
 

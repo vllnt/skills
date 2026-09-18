@@ -25,6 +25,10 @@ jobs:
         run: python3 scripts/test-validate-docs.py
       - name: Validate catalogs and local links
         run: python3 scripts/validate-docs.py
+      - name: Test reference bundling
+        run: python3 scripts/test-bundle-references.py
+      - name: Check generated workflow references
+        run: python3 scripts/bundle-references.py --check
       - name: Check pull request whitespace
         if: github.event_name == 'pull_request'
         env:

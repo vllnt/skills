@@ -9,7 +9,8 @@ import sys
 from pathlib import Path
 
 
-CATEGORIES = ("workflows", "capabilities", "mandatory")
+CATEGORIES = ("workflows", "mandatory")
+LOCAL_MAINTAINER = ".agents/skills/manage-skill/SKILL.md"
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
 HEADING = re.compile(r"^#{1,6}\s+(.+?)\s*#*\s*$")
 FENCE = re.compile(r"^\s*(```|~~~)")
@@ -76,12 +77,20 @@ def validate_local_frontmatter(root: Path, path: Path, errors: list[str]) -> Non
         fail(errors, f"{relative}: description must be a specific scalar string of at least 20 characters")
 
 
-def public_skills(root: Path) -> dict[str, tuple[str, str]]:
+def public_skills(root: Path, errors: list[str]) -> dict[str, tuple[str, str]]:
     skills: dict[str, tuple[str, str]] = {}
+    allowed = {LOCAL_MAINTAINER}
     for category in CATEGORIES:
         directory = root / category
-        for skill_file in sorted(directory.glob("*/SKILL.md")):
+        if not directory.is_dir():
+            fail(errors, f"{category}: missing required public category directory")
+            continue
+        skill_files = sorted(directory.glob("*/SKILL.md"))
+        if not skill_files:
+            fail(errors, f"{category}: contains no public SKILL.md files")
+        for skill_file in skill_files:
             relative = skill_file.relative_to(root).as_posix()
+            allowed.add(relative)
             content = skill_file.read_text(encoding="utf-8")
             if not content.startswith("---\n"):
                 raise ValueError(f"{relative}: missing frontmatter")
@@ -95,6 +104,12 @@ def public_skills(root: Path) -> dict[str, tuple[str, str]]:
             if not name or not description:
                 raise ValueError(f"{relative}: missing name or description")
             skills[relative] = (name.strip("\"'"), description.strip("\"'"))
+    for skill_file in root.rglob("SKILL.md"):
+        if ".git" in skill_file.parts:
+            continue
+        relative = skill_file.relative_to(root).as_posix()
+        if relative not in allowed:
+            fail(errors, f"{relative}: SKILL.md is only allowed in public categories or the local maintainer")
     return skills
 
 
@@ -185,7 +200,7 @@ def validate_skill_structure(root: Path, errors: list[str]) -> None:
     targets: list[tuple[str, Path, str]] = []
     for category in CATEGORIES:
         targets.extend((category, path, category) for path in sorted((root / category).glob("*/SKILL.md")))
-    local = root / ".agents/skills/manage-skill/SKILL.md"
+    local = root / LOCAL_MAINTAINER
     if not local.is_file():
         fail(errors, ".agents/skills/manage-skill/SKILL.md: missing required local maintenance skill")
     else:
@@ -205,21 +220,62 @@ def validate_skill_structure(root: Path, errors: list[str]) -> None:
                 expected.insert(2, (2, "Boundaries"))
             if validate_exact_headings(relative, headings, expected, errors):
                 validate_criteria(relative, path, headings[1], errors)
-        elif family == "capabilities":
-            expected = [(2, "Contract"), (3, "Acceptance"), (2, "Procedure")]
-            if headings and headings[-1][1:] == (2, "Pitfalls"):
-                expected.append((2, "Pitfalls"))
-            if validate_exact_headings(relative, headings, expected, errors):
-                contract = section_lines(path, headings[0])
-                for field in ("Input", "Output", "Effects"):
-                    if not any(line.startswith(f"- {field}:") for line in contract):
-                        fail(errors, f"{relative}: Contract needs '- {field}:'")
-                validate_criteria(relative, path, headings[1], errors)
         else:
             expected = [(2, "Principles")]
             if validate_exact_headings(relative, headings, expected, errors):
                 if not any(LIST_ITEM.match(line) for line in section_lines(path, headings[0])):
                     fail(errors, f"{relative}: Principles needs at least one non-empty principle")
+
+
+def reference_headings(path: Path) -> list[tuple[int, int, str]]:
+    return [(number, len(line) - len(line.lstrip("#")), match.group(1)) for number, line in markdown_without_fences(path) if (match := HEADING.match(line))]
+
+
+def reference_section_lines(path: Path, heading: tuple[int, int, str]) -> list[str]:
+    result: list[str] = []
+    active = False
+    for number, line in markdown_without_fences(path):
+        if number == heading[0]:
+            active = True
+            continue
+        if not active:
+            continue
+        match = HEADING.match(line)
+        if match and len(line) - len(line.lstrip("#")) <= heading[1]:
+            break
+        result.append(line)
+    return result
+
+
+def validate_canonical_references(root: Path, errors: list[str]) -> None:
+    """Validate canonical contracts without treating them as installed skills."""
+    directory = root / "references/capabilities"
+    references = sorted(directory.glob("*/REFERENCE.md")) if directory.is_dir() else []
+    if not references:
+        fail(errors, "references/capabilities: contains no canonical REFERENCE.md files")
+    quality = root / "references/protocols/quality-validation.md"
+    if quality.is_file():
+        references.append(quality)
+    else:
+        fail(errors, "references/protocols/quality-validation.md: missing canonical quality protocol")
+    for path in references:
+        relative = path.relative_to(root).as_posix()
+        content = path.read_text(encoding="utf-8")
+        if content.startswith("---\n") or re.search(r"^(name|description):", content, re.M):
+            fail(errors, f"{relative}: canonical references must not contain skill metadata")
+        headings = reference_headings(path)
+        expected = [(2, "Contract"), (3, "Acceptance"), (2, "Procedure")]
+        if headings and headings[-1][1:] == (2, "Pitfalls"):
+            expected.append((2, "Pitfalls"))
+        if not validate_exact_headings(relative, headings, expected, errors):
+            continue
+        contract = reference_section_lines(path, headings[0])
+        for field in ("Input", "Output", "Effects"):
+            if not any(line.startswith(f"- {field}:") for line in contract):
+                fail(errors, f"{relative}: Contract needs '- {field}:'")
+        count = sum(bool(LIST_ITEM.match(line)) for line in reference_section_lines(path, headings[1]))
+        if not 3 <= count <= 5:
+            fail(errors, f"{relative}: 'Acceptance' needs 3-5 criteria, found {count}")
 
 
 def slug(value: str) -> str:
@@ -330,7 +386,7 @@ def main() -> int:
     errors: list[str] = []
 
     try:
-        skills = public_skills(root)
+        skills = public_skills(root, errors)
     except ValueError as exception:
         fail(errors, str(exception))
         skills = {}
@@ -346,6 +402,7 @@ def main() -> int:
     validate_readme_descriptions(root, skills, errors)
     validate_links(root, errors)
     validate_skill_structure(root, errors)
+    validate_canonical_references(root, errors)
 
     if errors:
         for error in errors:

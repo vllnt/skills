@@ -21,4 +21,4 @@ Maintain a project vision anchor and decision test without taking ownership of t
 2. For authorized create or update, prepare supported goals, audience, constraints, non-goals, outcome, sources, history, and decision test. Preserve existing history and mark unresolved strategy provisional.
 3. For audit or sync, compare proposals, roadmap, or shipped evidence against the anchor and report alignment, conflict, or unknown direction.
 4. Recommend the smallest direction decision or next outcome with its consequence.
-5. For substantive work, use `capability-quality-validation` when available; otherwise apply its feedback loop directly before authorized edits. Triage findings, improve the candidate, renew affected verdicts, then verify links, history, and downstream contradictions.
+5. For substantive work, use [Quality validation](references/vstack/protocols/quality-validation.md) with the mode, scope, candidate, and evidence; otherwise apply its feedback loop directly before authorized edits. Triage findings, improve the candidate, renew affected verdicts, then verify links, history, and downstream contradictions.

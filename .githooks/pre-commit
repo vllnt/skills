@@ -13,16 +13,16 @@ cd "$ROOT" || exit 1
 changed="$(git diff --cached --name-only --diff-filter=ACMRD)"
 
 needs_validate=0
-if grep -qE '^(workflows|capabilities|mandatory)/[^/]+/SKILL\.md$' <<< "$changed"; then
+if grep -qE '^(workflows|mandatory)/[^/]+/SKILL\.md$|^references/(capabilities|protocols)/|^workflows/[^/]+/references/vstack/' <<< "$changed"; then
   needs_validate=1
 fi
 # Also re-validate if any public skill folder or validator contract changed.
-if grep -qE '^(workflows|capabilities|mandatory)/[^/]+/(SKILL\.md|README\.md|EXAMPLE\.md|references/)|^scripts/(validate-frontmatter|test-validate-frontmatter|test-pre-commit)\.sh$' <<< "$changed"; then
+if grep -qE '^(workflows|mandatory)/[^/]+/(SKILL\.md|README\.md|EXAMPLE\.md|references/)|^references/(capabilities|protocols)/|^scripts/(validate-(frontmatter|docs)|test-validate-(frontmatter|docs)|test-pre-commit|bundle-references|test-bundle-references)\.(sh|py)$|^\.githooks/pre-commit$' <<< "$changed"; then
   needs_validate=1
 fi
 
 if [[ "$needs_validate" -eq 1 ]]; then
-  unstaged="$(git diff --name-only -- workflows capabilities mandatory scripts/validate-frontmatter.sh scripts/test-validate-frontmatter.sh scripts/test-pre-commit.sh)"
+  unstaged="$(git diff --name-only -- '*.md' llms.txt workflows references scripts/validate-frontmatter.sh scripts/test-validate-frontmatter.sh scripts/validate-docs.py scripts/test-validate-docs.py scripts/test-pre-commit.sh scripts/bundle-references.py scripts/test-bundle-references.py .githooks/pre-commit)"
   if [[ -n "$unstaged" ]]; then
     echo "pre-commit: stage or revert scoped unstaged changes before validation:"
     printf '%s\n' "$unstaged"
@@ -36,6 +36,8 @@ if [[ "$needs_validate" -eq 1 ]]; then
     echo "fix the errors above, then re-stage and re-commit."
     exit 1
   }
+  python3 "$ROOT/scripts/validate-docs.py" || exit 1
+  python3 "$ROOT/scripts/bundle-references.py" --check || exit 1
 fi
 
 exit 0

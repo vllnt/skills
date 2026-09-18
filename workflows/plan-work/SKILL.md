@@ -24,5 +24,5 @@ Return an actionable plan without local or remote side effects. Execution resume
 1. Inspect only safely readable evidence. Resolve outcome, scope, constraints, applicable instructions, loaded principles, and the plan validation contract.
 2. Produce the simplest ordered work with dependencies, outcomes, future checks, risks, and recommendations. Decide reversible planning details from evidence.
 3. For consequential unresolved choices, give options, recommendation, consequence, and the exact decision needed. Do not ask for routine confirmation.
-4. For substantive plans, use `capability-quality-validation` in read-only mode. Otherwise self-assess, collect distinct review and critique, triage findings, improve the plan, and renew affected verdicts until acceptance.
+4. For substantive plans, use [Quality validation](references/vstack/protocols/quality-validation.md) in read-only mode with the scope, candidate, and evidence. Otherwise self-assess, collect distinct review and critique, triage findings, improve the plan, and renew affected verdicts until acceptance.
 5. Revise only after changed evidence or a discriminating check. On unchanged evidence, change approach or return the cause, options, recommendation, consequence, and next action.
