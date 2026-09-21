@@ -1,0 +1,30 @@
+name: Notify Vstack distribution
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: notify-stack-main
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: github.repository == 'vllnt/skills' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Dispatch trusted upstream notification
+        env:
+          GH_TOKEN: ${{ secrets.STACK_UPDATE_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::Configure STACK_UPDATE_TOKEN using the least-privilege setup documented in vllnt/stack."
+            exit 1
+          fi
+          gh api --method POST repos/vllnt/stack/dispatches --raw-field event_type=skills-updated
+          echo "Sent skills-updated notification; stack resolves the upstream commit independently."

@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - refactor(review): make reviewer coverage proportional, capability-aware, and incremental
+- Document manual notification resends and distinguish successful delivery from a verified downstream merge.
+- Document canonical skill ownership, multi-host distribution, and the protected automatic-update boundary.
+- Notify Vstack distribution after main updates through a fixed cross-repository event, with fail-closed credential checks and regression tests.
 - fix(delivery): require current project-defined local checks before issue-delivery pushes and PR writes or repair pushes
 - Fix root Skills CLI discovery by excluding the repository-local maintainer with internal metadata; validate the exclusion and test public discovery.
 - refactor: distribute internal procedures as on-demand workflow references, keeping only workflows and principles discoverable
