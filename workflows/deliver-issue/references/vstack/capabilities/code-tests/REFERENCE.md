@@ -14,9 +14,9 @@
 
 ## Procedure
 
-1. Read consumer instructions and executable configuration. Set candidate identity, consumers, environments, acceptance cases, and permitted effects.
+1. Read project instructions, check configuration, and CI workflows to identify required checks. Set candidate identity, consumers, environments, acceptance cases, and permitted effects.
 2. Map success, denial, failure, state, and recovery paths. Choose the cheapest checks that exercise real contracts.
-3. Run relevant local tests and configured build/type/package checks; record discovery and actual pass/fail/skip counts. A defect fix needs isolated red/green evidence; challenge critical assertions with meaningful negative controls.
+3. Run all applicable required checks executable locally; record commands, results, and actual pass/fail/skip counts for the current candidate. Report unrun checks as pending, never passed. A defect fix needs isolated red/green evidence; challenge critical assertions with meaningful negative controls.
 4. Exercise the real development interface or built consumer, checking resulting state and forbidden effects. Inspect preview provenance and CI candidate/base/status/artifacts separately.
 5. Return material risks, contradictory evidence, and current proof to the caller's quality validation. When standalone, return the exact blocked check and next action. For repaired candidates or changed input/environment, rerun invalidated checks.
 
