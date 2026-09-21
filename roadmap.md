@@ -90,7 +90,7 @@ Reuse `plan-issues` for evidence-backed drafts and root-cause deduplication, and
 
 | ID | State | Result / remaining evidence |
 |---|---|---|
-| D01 | Implemented locally | Main-push and manual notification to `vllnt/stack`, with a fixed event and scoped credential requirement. Regression tests cover missing credentials, API failure, and payload independence. Credential provisioning and hosted dispatch/update/merge evidence remain pending. |
+| D01 | Deployed | Main-push and manual notification to `vllnt/stack` use a fixed event and scoped credential. Hosted source run `35645334592` delivered a real notification; Stack run `35645345833` correctly held the workflow/script changes without writing an update. The reviewed baseline was accepted through Stack PR #3. Stack owns the downstream ordinary-update, merge, and no-op evidence. |
 
 ## Maintenance
 

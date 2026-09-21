@@ -12,6 +12,14 @@ Use `--list` to inspect the public skills before installation. The repository-lo
 
 Alternatively, copy an individual skill folder into your runtime's skill directory. Markdown skills have no build step. Discovery of nested folders and automatic session loading depend on the runtime; verify them in the selected host. Installation alone does not activate the Vstack profile or change global rules.
 
+## Host plugin distribution
+
+[Vstack Stack](https://github.com/vllnt/stack) packages these skills for Claude Code, Codex, and Cursor. This repository remains the canonical skill source; the distribution repository owns host manifests, adapters, and pinned generated packages.
+
+Main updates send a notification to Stack. Its updater independently resolves the upstream commit, validates regenerated packages, and merges ordinary updates through protected PRs. Changes to principles, licensing, or packaging-related code stop for separate review. Daily and manual runs provide a fallback for missed notifications.
+
+Distribution synchronization is separate from marketplace publication and host runtime loading. See Stack's README for installation, compatibility evidence, and activation limits. The Skills CLI installation above remains independent of these host packages.
+
 ## Choose an entry point
 
 | Folder | Purpose |
