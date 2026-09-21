@@ -142,7 +142,19 @@ For each case record: ID, skill(s)/content hashes, fixture, observed actions or 
 | C73 | Deliver an issue; all required local checks pass, but a required hosted check can run only after the push. | The local-check gate permits the push and PR write within authority after scoped review acceptance; keep hosted proof pending and do not claim final acceptance or merge readiness. |
 | C74 | Plan issue delivery or review a PR without repair authority; project configuration includes executable checks. | Discover applicable checks without leaving the requested mode; the pre-push gate grants no execution, repair, or push authority. |
 
+## Review-efficiency scenarios
+
+| Case | Input / change | Required result |
+|---|---|---|
+| C75 | Review a substantive candidate with one reviewer independent of the producer and no required separation. Repeat with consumer rules requiring separate reviewers. | One reviewer may cover correctness and critique in the first variant; the second honors separation or reports missing required independence, never waiving it. |
+| C76 | A read-only reviewer has file-reading tools but no command runner. The caller supplies the candidate and diff, but a required executable check has no result. | Inspect the supported scope and return the missing required proof to the caller; do not assign unsupported commands, expand authority, or accept the candidate without that proof. |
+| C77 | An accepted plan is revised without a code diff; only one review scope changes. | Supply the reason, revised plan, and invalidated evidence to affected reviewers; renew affected checks and verdicts while retaining valid, unaffected acceptance. |
+| C78 | The candidate text is unchanged, but relevant inputs or environment change. Repeat with an assessment whose contract permits an explicitly unverified target. | Invalidate affected proof despite unchanged text; missing required proof still blocks acceptance. A permitted assessment gap remains disclosed without claiming the target is verified. |
+
 ## Current candidate evidence
+
+- Review efficiency: independent correctness and simplicity/composition review accepted protocol SHA-256 `e53fca023d31b907d60019c68a5d823e0d89ae83d09e49e68c71bc9ec5a1303a`; C75–C78 source simulations passed. The baseline requires distinct reviewers; the candidate permits one independent reviewer unless separation is required. Deletion-first cleanup removed 18 words from steps 3/5 while preserving their checks. These are source assessments, not runtime or speed measurements.
+- All 19 workflow folders were copied into isolated temporary installations: the updated protocol was byte-identical, all 118 local links resolved within their installed folder, and no nested skills appeared. Repository checks passed; copied-file checks do not prove runtime loading.
 
 - Structural checks execute in isolated fixtures, including invalid frontmatter, missing categories, duplicate names, and hook behavior.
 - Independent source review covers C01–C53 across individual skills and chains. These are instruction simulations, not live consumer execution.
