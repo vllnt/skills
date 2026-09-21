@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Document manual notification resends and distinguish successful delivery from a verified downstream merge.
 - Document canonical skill ownership, multi-host distribution, and the protected automatic-update boundary.
 - Notify Vstack distribution after main updates through a fixed cross-repository event, with fail-closed credential checks and regression tests.
 - fix(delivery): require current project-defined local checks before issue-delivery pushes and PR writes or repair pushes
