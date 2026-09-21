@@ -133,6 +133,15 @@ For each case record: ID, skill(s)/content hashes, fixture, observed actions or 
 | C69 | Follow a conditional domain reference during a read-only plan. | Inspect relevant criteria only; preserve caller mode and pass bounded evidence to the single validation owner. |
 | C70 | Delegate one specialist review. | Pass only its scope, current evidence, criteria, and necessary references; do not load the complete library or start another review pool. |
 
+## Delivery pre-push scenarios
+
+| Case | Input / change | Required result |
+|---|---|---|
+| C71 | Deliver an issue; project instructions require a formatting check runnable locally. Tests pass but formatting has not run. Repeat with CI also running it, and with the requirement only in project instructions. | Discover and run the formatting check before pushing commits or creating/updating the PR in both variants; missing or failing results block those actions. |
+| C72 | Repair an existing PR; checks passed before the repair, which changes a checked file. | Rerun invalidated required local checks before pushing; reuse only evidence still valid for the repaired candidate. |
+| C73 | Deliver an issue; all required local checks pass, but a required hosted check can run only after the push. | The local-check gate permits the push and PR write within authority after scoped review acceptance; keep hosted proof pending and do not claim final acceptance or merge readiness. |
+| C74 | Plan issue delivery or review a PR without repair authority; project configuration includes executable checks. | Discover applicable checks without leaving the requested mode; the pre-push gate grants no execution, repair, or push authority. |
+
 ## Current candidate evidence
 
 - Structural checks execute in isolated fixtures, including invalid frontmatter, missing categories, duplicate names, and hook behavior.

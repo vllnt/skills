@@ -13,6 +13,7 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Delivery pre-push gates: discover project-defined checks and require current passing local evidence before issue-delivery pushes/PR writes and repair pushes. Repository checks and independent review/critique passed, including source scenarios for missing, stale, and remote-only proof and mode boundaries; no live consumer execution is claimed.
 - Root Skills CLI discovery: mark the local maintainer internal so it does not suppress recursive public-skill discovery. Regression checks cover the original one-skill failure and the corrected public inventory; remote root discovery requires this branch to merge.
 
 | ID | State | Result / remaining evidence |
