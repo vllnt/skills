@@ -153,7 +153,7 @@ For each case record: ID, skill(s)/content hashes, fixture, observed actions or 
 
 ## Current candidate evidence
 
-- Review efficiency: independent correctness and simplicity/composition assessments accepted protocol SHA-256 `cc15dfae9b0cc3ed990843a77841c0132dd293696707a94ffc0ed3ac9eea3a47`. C75–C78 instruction-following simulations matched their acceptance criteria. For C75, the baseline's distinct-subagent requirement rejects one reviewer, while the revised source permits one independent reviewer for both perspectives; required separation remains binding. These are source simulations, not host execution or measured speedups.
+- Review efficiency: independent correctness and simplicity/composition review accepted protocol SHA-256 `e53fca023d31b907d60019c68a5d823e0d89ae83d09e49e68c71bc9ec5a1303a`; C75–C78 source simulations passed. The baseline requires distinct reviewers; the candidate permits one independent reviewer unless separation is required. Deletion-first cleanup removed 18 words from steps 3/5 while preserving their checks. These are source assessments, not runtime or speed measurements.
 - All 19 workflow folders were copied into isolated temporary installations: the updated protocol was byte-identical, all 118 local links resolved within their installed folder, and no nested skills appeared. Repository checks passed; copied-file checks do not prove runtime loading.
 
 - Structural checks execute in isolated fixtures, including invalid frontmatter, missing categories, duplicate names, and hook behavior.
