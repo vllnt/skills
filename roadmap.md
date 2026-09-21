@@ -13,6 +13,8 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Review efficiency: allow one independent reviewer to cover correctness and critique, match delegated checks to tools and authority, and renew only affected proof. Repository checks and independent correctness/critique passed, including source scenarios C75–C78 and isolated copied-distribution checks for all workflows. Runtime behavior and timing improvements are unmeasured.
+
 - Delivery pre-push gates: discover project-defined checks and require current passing local evidence before issue-delivery pushes/PR writes and repair pushes. Repository checks and independent review/critique passed, including source scenarios for missing, stale, and remote-only proof and mode boundaries; no live consumer execution is claimed.
 - Root Skills CLI discovery: mark the local maintainer internal so it does not suppress recursive public-skill discovery. Regression checks cover the original one-skill failure and the corrected public inventory; remote root discovery requires this branch to merge.
 
