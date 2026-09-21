@@ -16,7 +16,7 @@ Alternatively, copy an individual skill folder into your runtime's skill directo
 
 [Vstack Stack](https://github.com/vllnt/stack) packages these skills for Claude Code, Codex, and Cursor. This repository remains the canonical skill source; the distribution repository owns host manifests, adapters, and pinned generated packages.
 
-Main updates send a notification to Stack. Its updater independently resolves the upstream commit, validates regenerated packages, and merges ordinary updates through protected PRs. Changes to principles, licensing, or packaging-related code stop for separate review. Daily and manual runs provide a fallback for missed notifications.
+Main updates send a notification to Stack. Its updater independently resolves the upstream commit, validates regenerated packages, and merges ordinary updates through protected PRs. Changes to principles, licensing, or packaging-related code stop for separate review. Daily and manual runs provide a fallback for missed notifications. Maintainers can resend from the **Notify Vstack distribution** workflow's manual action on `main`. An unchanged upstream pin is a no-op. A successful notification proves delivery, not a downstream merge; inspect the receiver's run and PR result separately.
 
 Distribution synchronization is separate from marketplace publication and host runtime loading. See Stack's README for installation, compatibility evidence, and activation limits. The Skills CLI installation above remains independent of these host packages.
 
