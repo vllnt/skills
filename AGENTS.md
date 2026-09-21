@@ -75,7 +75,7 @@ Do not hardcode evolving catalogs or versions as scope. Dated findings are evide
 
 ## Repository checks
 
-1. Maintain valid flat, single-line string frontmatter: `name` matches the folder; a specific single-line `description` has at least 20 characters.
+1. Maintain valid flat, single-line string frontmatter: `name` matches the folder; a specific single-line `description` has at least 20 characters. The local maintainer alone requires nested `metadata: { internal: true }` (written as a YAML block) to exclude it from default Skills CLI discovery.
 2. Run `bash scripts/test-validate-frontmatter.sh`, `bash scripts/validate-frontmatter.sh`, `bash scripts/test-pre-commit.sh`, `python3 scripts/test-validate-docs.py`, `python3 scripts/validate-docs.py`, `python3 scripts/test-bundle-references.py`, `python3 scripts/bundle-references.py --check`, and `git diff --check`.
 3. Check changed references, catalogs, standalone behavior, and relevant success/failure scenarios. Distinguish source simulations from executed consumer tests and actual runtime loading.
 4. Update [CHANGELOG.md](CHANGELOG.md) under `Unreleased` for each PR. Use `scripts/changelog-add.sh` when appending an entry.

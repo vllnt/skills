@@ -5,11 +5,10 @@ Opinionated, portable workflows for building and maintaining projects with **[vl
 ## Install
 
 ```bash
-npx skills add https://github.com/vllnt/skills/tree/main/workflows
-npx skills add https://github.com/vllnt/skills/tree/main/mandatory
+npx skills add vllnt/skills
 ```
 
-Install from these category paths to exclude the repository-local maintainer. Use `--list` to inspect a category before installation. Local discovery and isolated folder-copy installation are tested; remote category installation remains to be verified in the selected runtime.
+Use `--list` to inspect the public skills before installation. The repository-local maintainer has `metadata.internal: true`, which excludes it from default Skills CLI discovery; this is not an access restriction. Category URLs ending in `/tree/main/workflows` or `/tree/main/mandatory` remain available for selective discovery. Remote category installation and byte-identical copied bundles have been verified with Skills CLI 1.5.26; automatic runtime loading remains host-specific.
 
 Alternatively, copy an individual skill folder into your runtime's skill directory. Markdown skills have no build step. Discovery of nested folders and automatic session loading depend on the runtime; verify them in the selected host. Installation alone does not activate the Vstack profile or change global rules.
 

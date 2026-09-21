@@ -42,7 +42,7 @@ def scalar(value: str) -> str | None:
 
 
 def validate_local_frontmatter(root: Path, path: Path, errors: list[str]) -> None:
-    """Apply the collection's flat frontmatter contract to local maintenance."""
+    """Validate local metadata, including its required Skills CLI exclusion."""
     relative = path.relative_to(root).as_posix()
     content = path.read_text(encoding="utf-8")
     if not content.startswith("---\n"):
@@ -53,8 +53,16 @@ def validate_local_frontmatter(root: Path, path: Path, errors: list[str]) -> Non
         fail(errors, f"{relative}: frontmatter block missing or unterminated")
         return
 
+    header = content[4:end]
+    internal = "metadata:\n  internal: true"
+    if header.splitlines().count("metadata:") != 1 or internal not in header:
+        fail(errors, f"{relative}: local maintainer requires metadata.internal: true")
+    # Only this exact nested field is supported; validate all other fields normally.
+    header = header.replace(internal, "", 1)
     fields: dict[str, str] = {}
-    for line in content[4:end].splitlines():
+    for line in header.splitlines():
+        if not line:
+            continue
         match = FLAT_FIELD.fullmatch(line)
         if not match:
             fail(errors, f"{relative}: frontmatter must be a flat mapping of single-line strings")
