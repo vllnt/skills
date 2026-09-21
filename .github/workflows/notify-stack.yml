@@ -23,7 +23,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "${GH_TOKEN:-}" ]; then
-            echo "::error::Configure STACK_UPDATE_TOKEN with vllnt/stack-only Contents and Pull requests write access."
+            echo "::error::Configure STACK_UPDATE_TOKEN using the least-privilege setup documented in vllnt/stack."
             exit 1
           fi
           gh api --method POST repos/vllnt/stack/dispatches --raw-field event_type=skills-updated
