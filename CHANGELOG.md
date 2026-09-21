@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- refactor(skills): require evidence for simplification findings and compare test protection before additions or replacements
 - refactor(review): make reviewer coverage proportional, capability-aware, and incremental
 - docs(collaboration): clarify concise outcomes and actionable blocker handoffs
 - Document manual notification resends and distinguish successful delivery from a verified downstream merge.
