@@ -86,6 +86,12 @@ Reuse `plan-issues` for evidence-backed drafts and root-cause deduplication, and
 | I01–I02 | Proposed | Extend issue inputs; distinguish instrumentation gaps from incidents, deduplicate existing issues, and verify selected writes. |
 | I03–I04 | Proposed | Independently review the chain and update public examples/catalogs; preserve standalone use. |
 
+## Distribution notifications
+
+| ID | State | Result / remaining evidence |
+|---|---|---|
+| D01 | Implemented locally | Main-push and manual notification to `vllnt/stack`, with a fixed event and scoped credential requirement. Regression tests cover missing credentials, API failure, and payload independence. Credential provisioning and hosted dispatch/update/merge evidence remain pending. |
+
 ## Maintenance
 
 1. Preserve task IDs and actual decision history; update evidence after work, not before.
