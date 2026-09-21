@@ -105,7 +105,7 @@ def local_skill(root: Path) -> Path:
     path = root / ".agents/skills/manage-skill/SKILL.md"
     write(
         path,
-        "---\nname: manage-skill\ndescription: Maintain this skill collection with clear contracts and validation.\n---\n"
+        "---\nname: manage-skill\ndescription: Maintain this skill collection with clear contracts and validation.\nmetadata:\n  internal: true\n---\n"
         + body_for("workflows"),
     )
     return path
@@ -116,6 +116,13 @@ def main() -> int:
         root = Path(directory)
         entries = fixture(root)
         local = local_skill(root)
+        run(root)
+
+        for metadata in ("", "metadata:\n  internal: false\n", 'metadata:\n  internal: "true"\n'):
+            original = local.read_text(encoding="utf-8")
+            write(local, original.replace("metadata:\n  internal: true\n", metadata))
+            run(root, "local maintainer requires metadata.internal: true")
+            local = local_skill(root)
         run(root)
 
         local.unlink()

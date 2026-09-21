@@ -1,6 +1,8 @@
 ---
 name: manage-skill
 description: Create, change, organize, or delete this collection's skills through concise procedures, observable completion criteria, and independent review and critique.
+metadata:
+  internal: true
 ---
 
 ## Goal

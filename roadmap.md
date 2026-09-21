@@ -13,6 +13,8 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Root Skills CLI discovery: mark the local maintainer internal so it does not suppress recursive public-skill discovery. Regression checks cover the original one-skill failure and the corrected public inventory; remote root discovery requires this branch to merge.
+
 | ID | State | Result / remaining evidence |
 |---|---|---|
 | F01 | Implemented | Concise authoring, ownership, naming, and convergence rules. |

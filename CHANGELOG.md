@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fix root Skills CLI discovery by excluding the repository-local maintainer with internal metadata; validate the exclusion and test public discovery.
 - refactor: distribute internal procedures as on-demand workflow references, keeping only workflows and principles discoverable
 - Adopt family-specific agent-facing templates across every skill and the local maintainer; validate structure and strengthen evidence, effect boundaries, and targeted failure handling.
 

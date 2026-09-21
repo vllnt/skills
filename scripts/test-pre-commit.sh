@@ -13,7 +13,13 @@ cp "$ROOT/scripts/validate-frontmatter.sh" "$ROOT/scripts/validate-docs.py" "$RO
 
 skill() {
   mkdir -p "$REPO/$1"
-  printf '%s\n' '---' "name: $2" 'description: A sufficiently specific fixture for validation.' '---' > "$REPO/$1/SKILL.md"
+  {
+    printf '%s\n' '---' "name: $2" 'description: A sufficiently specific fixture for validation.'
+    if [[ "$2" == manage-skill ]]; then
+      printf '%s\n' 'metadata:' '  internal: true'
+    fi
+    printf '%s\n' '---'
+  } > "$REPO/$1/SKILL.md"
   if [[ "$1" == mandatory/* ]]; then
     printf '%s\n' '## Principles' '' '- A current principle.' >> "$REPO/$1/SKILL.md"
   else
