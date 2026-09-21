@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
 - Document manual notification resends and distinguish successful delivery from a verified downstream merge.
 - Document canonical skill ownership, multi-host distribution, and the protected automatic-update boundary.
 - Notify Vstack distribution after main updates through a fixed cross-repository event, with fail-closed credential checks and regression tests.

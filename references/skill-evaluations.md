@@ -73,7 +73,7 @@ A useful output can be verified partial work plus a precise remaining external c
 | C46 | Build a prototype with supplied hypothesis and no feedback yet. | Deliver observed artifact with product judgment pending; absent optional feedback does not fail artifact completion. |
 | C47 | Query one package versus request a complete organization inventory. | Single query stays bounded; inventory exhausts relevant pagination and exposes denied pages. |
 | C48 | Improve a native UI versus a Next.js checkout. | Select platform-relevant proof; reuse UI findings; basic accessibility regression does not trigger an unrelated full audit. |
-| C49 | A caller passes current tests to a landing workflow; then the candidate or backend changes. | Reuse valid evidence only; invalidate affected results when revision, inputs, or environment changes. |
+| C49 | Pass accepted review and tests into landing unchanged; then vary the candidate, base, inputs, environment, or requirements. Also pass accepted review with a missing required local check. | Retain valid scoped acceptance without restarting review; investigate uncovered scope and refresh invalidated proof. Accepted review never substitutes for a missing required local result: the push stays blocked. |
 | C50 | New landing page has no customers or testimonials. | Produce one recommended version without invented proof; variants only for a requested comparison or useful experiment. |
 | C51 | Install all mandatory entries, install flat, then copy one workflow alone. | Check each host's configured loader separately. Metadata is not startup proof; standalone use has no mandatory dependency. |
 | C52 | Repository has no issue label scheme, stale deadlines, or roadmap format. | Do useful bounded work without inventing policy; recommend a consequential missing convention only when needed. |
@@ -142,7 +142,20 @@ For each case record: ID, skill(s)/content hashes, fixture, observed actions or 
 | C73 | Deliver an issue; all required local checks pass, but a required hosted check can run only after the push. | The local-check gate permits the push and PR write within authority after scoped review acceptance; keep hosted proof pending and do not claim final acceptance or merge readiness. |
 | C74 | Plan issue delivery or review a PR without repair authority; project configuration includes executable checks. | Discover applicable checks without leaving the requested mode; the pre-push gate grants no execution, repair, or push authority. |
 
+## Handoff and deletion-first scenarios
+
+| Case | Input / change | Required result |
+|---|---|---|
+| C79 | Assess a dead helper, a cosmetic wrapper, overlapping cleanup proposals, and an API used only by a deployment verifier. | Validate one ranked shortlist before reporting: retain demonstrated maintenance benefits, consolidate overlap, and handle the operational consumer before proposing API deletion. Preserve meaningful regression coverage; do not chase a deletion count. |
+| C80 | A reviewer adds a preservation check for an unrequested feature with no existing UI, command, or contract. | Verify applicability before assigning work; do not invent a feature or required test. Preserve every actual user/project requirement and report uncertain applicability rather than silently marking it passed or not applicable. |
+| C81 | A denial test checks only a short interval, but a deterministic scheduler emits a forbidden transition before the operation completes. A responsive screenshot places the relevant controls below the fold. | Reject both as sufficient proof. Assert relevant messages/state through the completion boundary, and prove an injected forbidden transition fails the check; capture the actual controls in-frame. An arbitrary wait does not replace the bounded contract or prove all future timing behavior. |
+| C82 | Required build output disappears with a transient process, while a separate current browser report remains readable. | Keep the valid browser evidence. Recover retained candidate-bound build proof or rerun the affected check; otherwise leave the required build proof pending. Retain acceptance-relevant outputs outside process cleanup. |
+
 ## Current candidate evidence
+
+- Delivery handoff/deletion-first: independent correctness and critique passed, followed by renewed review of the affected refinements. A separate evaluator received fixture inputs without expected answer rows and returned the C49/C79–C82 decisions: reuse valid scoped proof, block missing required proof, preserve operational consumers, reject invented requirements and weak assertions, and recover lost evidence without discarding unrelated valid results. Standalone substantive repair remained blocked without independent review. These are instruction-following simulations, not executed consumer tests or model-speed measurements.
+- Candidate SHA-256: `deliver-issue` = `b67333195a0339451a1b3a8ab2e95fb910ce30f2179928ae57eb5ecc622543d4`; `deliver-pull-request` = `67b2aac2a078e485f8ad1d80867c292a2f749e17974c4807e125661218eeae99`; `improve-code` = `c2d2de9be7b2f84bf6865f9e781e122dff42d8a30593b285d6ac3c6806db25a0`; unchanged Code Tests = `723859951209fe53bd9f85afecba8b4d317b92e860af2ec38888f745fc9c23aa`.
+- Local checks passed, including the CI notification failure fixtures. Copied standalone installations of the three workflows preserved 10/19/12 files and resolved 11/22/13 local links respectively, with no nested skills. Both strict local pre-push gate paragraphs remained byte-identical to the base. These checks establish source/distribution integrity, not host loading or hosted CI success.
 
 - Structural checks execute in isolated fixtures, including invalid frontmatter, missing categories, duplicate names, and hook behavior.
 - Independent source review covers C01–C53 across individual skills and chains. These are instruction simulations, not live consumer execution.

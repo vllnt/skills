@@ -13,6 +13,7 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Delivery handoff and deletion-first assessment: carry accepted scope, proof, and gaps into landing without restarting valid review; preserve every required local pre-push check. Refactoring proposals account for operational consumers and validate a ranked shortlist before handoff. C49 and C79–C82 cover validity, applicability, assertion strength, and retained evidence. Local checks, copied installations, independent source review/critique, and instruction-following simulations passed; consumer runtime and model-speed gains remain unmeasured. Shared reviewer-count changes remain separate in PR #11.
 - Delivery pre-push gates: discover project-defined checks and require current passing local evidence before issue-delivery pushes/PR writes and repair pushes. Repository checks and independent review/critique passed, including source scenarios for missing, stale, and remote-only proof and mode boundaries; no live consumer execution is claimed.
 - Root Skills CLI discovery: mark the local maintainer internal so it does not suppress recursive public-skill discovery. Regression checks cover the original one-skill failure and the corrected public inventory; remote root discovery requires this branch to merge.
 
