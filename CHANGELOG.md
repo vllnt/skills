@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- docs(evaluations): remove candidate-specific file-hash inventory
+- fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
+- docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
+- refactor(skills): require evidence for simplification findings and compare test protection before additions or replacements
+- refactor(review): make reviewer coverage proportional, capability-aware, and incremental
+- docs(collaboration): clarify concise outcomes and actionable blocker handoffs
 - Document manual notification resends and distinguish successful delivery from a verified downstream merge.
 - Document canonical skill ownership, multi-host distribution, and the protected automatic-update boundary.
 - Notify Vstack distribution after main updates through a fixed cross-repository event, with fail-closed credential checks and regression tests.

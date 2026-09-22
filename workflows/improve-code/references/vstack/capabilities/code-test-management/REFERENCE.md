@@ -15,9 +15,9 @@
 
 1. Map contracts, personas, state, callers, and discovery with [coverage](references/coverage.md). Record unknown coverage. In audit mode, return the coverage plan and gaps without creating, pruning, or executing tests.
 2. When authorized, run a scoped baseline and distinguish existing failures, skips, missing setup, and new regressions.
-3. In authorized test-work mode, prioritize real journeys, boundaries, denials, retries, concurrency, recovery, persistence, and cross-persona handoffs. Prefer real owned collaborators and isolated state.
+3. In authorized test-work mode, compare existing protection for the affected contracts before adding or changing tests. Use [pruning](references/pruning.md) to keep, improve, consolidate, replace, or remove within authority. Prioritize real journeys, boundaries, denials, retries, concurrency, recovery, persistence, and cross-persona handoffs. Prefer real owned collaborators and isolated state.
 4. For unavoidable doubles in authorized test work, apply [test-doubles](references/test-doubles.md): document the boundary, verify its contract separately, enforce strict behavior, and retain the integration gap.
-5. In authorized test work, verify discovery and sensitivity. Bug tests need isolated red/green evidence; challenge important assertions with a plausible negative control. Before pruning, apply [pruning](references/pruning.md).
+5. In authorized test work, verify discovery and sensitivity. Bug tests need isolated red/green evidence; challenge important assertions with a plausible negative control.
 6. Return material risks, uncertainties, and current evidence to the caller's quality validation. When standalone, return the prioritized gap and next check. After authorized repairs, rerun invalidated tests and negative controls.
 
 ## Pitfalls
