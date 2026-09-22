@@ -13,6 +13,8 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Delivery handoff and deletion-first assessment: carry accepted scope, proof, and gaps into landing without restarting valid review; preserve every required local pre-push check. Refactoring proposals account for operational consumers and validate a ranked shortlist before handoff. C49 and C79–C82 cover validity, applicability, assertion strength, and retained evidence. Integrated current review and test-management rules, including explicit checks for unevidenced review perspectives. Candidate-bound validation belongs in the PR; consumer runtime and model-speed gains remain unmeasured.
+- Portability cleanup: remove historical candidate evidence and file-hash inventories from the evaluation reference, retaining reusable scenarios. Workflow checks and optional stack procedures derive their applicability from the consumer project.
 - Review efficiency: allow one independent reviewer to cover correctness and critique, match delegated checks to tools and authority, and renew only affected proof. Repository checks and independent correctness/critique passed, including source scenarios C75–C78 and isolated copied-distribution checks for all workflows. Runtime behavior and timing improvements are unmeasured.
 
 - Collaboration handoffs: replaced three closing/reporting bullets with two explicit outcome and blocker principles, without adding a skill. Local checks and independent source review/critique passed, covering successful completion, missing access, unknown causes, bounded assessments, and remaining authorized work through instruction-following simulations. Automatic runtime loading remains V02.
