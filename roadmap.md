@@ -13,6 +13,8 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Session refocusing: implemented optional `improve-session` to recover the current contract, ground consequential claims, simplify the approach, and resume the same owner's authorized work. C91–C100 instruction-following simulations, repository checks, Skills CLI discovery, and isolated copy/link failure-recovery checks passed. Independent correctness and simplicity review passed; automatic runtime loading, live continuation behavior, and speed or hallucination-rate improvements remain unverified.
+
 - Review efficiency: allow one independent reviewer to cover correctness and critique, match delegated checks to tools and authority, and renew only affected proof. Repository checks and independent correctness/critique passed, including source scenarios C75–C78 and isolated copied-distribution checks for all workflows. Runtime behavior and timing improvements are unmeasured.
 
 - Collaboration handoffs: replaced three closing/reporting bullets with two explicit outcome and blocker principles, without adding a skill. Local checks and independent source review/critique passed, covering successful completion, missing access, unknown causes, bounded assessments, and remaining authorized work through instruction-following simulations. Automatic runtime loading remains V02.
@@ -53,7 +55,7 @@ The shared [quality validation protocol](references/protocols/quality-validation
 
 | ID | State | Result / remaining evidence |
 |---|---|---|
-| F15 | Reviewed | Public discovery is 19 workflows and 3 mandatory skills; 23 internal procedures are on-demand references. Conditional bundles, isolated Improve UI/Build Project copy installations, and independent composition, ownership, and tooling review pass. Automatic runtime loading remains V02. |
+| F15 | Reviewed | Public discovery exposes workflows and mandatory skills; internal procedures are on-demand references. Conditional bundles, isolated Improve UI/Build Project copy installations, and independent composition, ownership, and tooling review pass. Automatic runtime loading remains V02. |
 
 ## Established structure
 
