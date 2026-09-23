@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(skills): reassess growing repair chains, triage findings before repair, and reuse validated test setup
 - fix(skills): reconcile existing task changes during session refocusing without reverting unrelated work
 - feat(skills): add on-demand session refocusing with grounded decisions and preserved quality gates
 - refactor(skills): require evidence for simplification findings and compare test protection before additions or replacements
