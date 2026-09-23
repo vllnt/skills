@@ -13,6 +13,8 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Session change reconciliation: updated `improve-session` to inspect already-made task changes against the latest authorized goal and remove verified unnecessary task-owned work with targeted edits. Mixed ownership, unavailable baselines, read-only modes, necessary supporting changes, and invalidated proof remain explicit boundaries. C101–C105 and affected grounding/fallback/no-change simulations passed, as did repository and isolated distribution checks. Independent correctness and simplicity review passed; live cleanup behavior and complete detection remain unverified.
+
 - Session refocusing: implemented optional `improve-session` to recover the current contract, ground consequential claims, simplify the approach, and resume the same owner's authorized work. C91–C100 instruction-following simulations, repository checks, Skills CLI discovery, and isolated copy/link failure-recovery checks passed. Independent correctness and simplicity review passed; automatic runtime loading, live continuation behavior, and speed or hallucination-rate improvements remain unverified.
 
 - Review efficiency: allow one independent reviewer to cover correctness and critique, match delegated checks to tools and authority, and renew only affected proof. Repository checks and independent correctness/critique passed, including source scenarios C75–C78 and isolated copied-distribution checks for all workflows. Runtime behavior and timing improvements are unmeasured.
