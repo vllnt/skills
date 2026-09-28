@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
 - fix(skills): reconcile existing task changes during session refocusing without reverting unrelated work
 - feat(skills): add on-demand session refocusing with grounded decisions and preserved quality gates
 - refactor(skills): require evidence for simplification findings and compare test protection before additions or replacements
