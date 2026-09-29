@@ -28,7 +28,7 @@ Distribution synchronization is separate from marketplace publication and host r
 | `references/` | On-demand procedures and supporting guidance; workflows load only the references relevant to the request. |
 | `mandatory/` | Lightweight session principles: [Thinking](mandatory/vllnt-thinking-principles/SKILL.md), [Orchestration](mandatory/vllnt-orchestration-principles/SKILL.md), [Collaboration](mandatory/vllnt-collaboration-principles/SKILL.md). |
 
-Configure the runtime's user/project instructions to read installed mandatory entries at session start and after context loss. Their descriptions express the trigger; they do not enforce loading. A standalone workflow remains useful without other skills. Invoke `improve-session` on demand to refocus current work, check consequential claims, and simplify the next steps without changing permissions or weakening required proof.
+Configure the runtime's user/project instructions to read installed mandatory entries at session start and after context loss. Their descriptions express the trigger; they do not enforce loading. When loaded, Thinking requires a contract-preserving reduction pass before code commits or uncommitted handoff; the shared validation procedure carries its detailed check into workflow bundles. This is an agent instruction, not a Git hook or a guarantee for runtimes that do not load it. A standalone workflow remains useful without other skills. Invoke `improve-session` on demand to refocus current work, check consequential claims, and simplify the next steps without changing permissions or weakening required proof.
 
 ## Build with Vstack
 
