@@ -63,11 +63,11 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | [explain-subject](workflows/explain-subject/SKILL.md) | Explain a real subject with a simple verified mental model and clear limits. |
 | [explore-decisions](workflows/explore-decisions/SKILL.md) | Sharpen an artifact or decision through focused evidence-based questions and concrete alternatives. |
 | [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments while preserving observable contracts and affected consumers. |
-| [improve-codebase](workflows/improve-codebase/SKILL.md) | Directly refactor source code and client/server data paths toward measured reduction and efficiency while preserving behavior. |
-| [improve-dx](workflows/improve-dx/SKILL.md) | Directly reduce measured build, lint, script, and CI friction without hiding failures or skipping required checks. |
+| [improve-codebase](workflows/improve-codebase/SKILL.md) | Directly refactor source code and data paths toward measured reduction and efficiency while preserving behavior. |
+| [improve-dx](workflows/improve-dx/SKILL.md) | Speed up verified work for developers and agents by improving native build, lint, script, and CI workflows without weakening checks. |
 | [improve-project](workflows/improve-project/SKILL.md) | Adapt an existing repository to applicable stack preferences through small verified stages. |
 | [improve-session](workflows/improve-session/SKILL.md) | Refocus a session at any point on its requested outcome, grounded decisions, simplicity, required quality, and efficient execution. |
-| [improve-tests](workflows/improve-tests/SKILL.md) | Directly simplify and speed up a test suite while retaining contract coverage, defect detection, and useful diagnostics. |
+| [improve-tests](workflows/improve-tests/SKILL.md) | Improve a whole test suite by consolidating cross-file duplication and reducing execution cost while preserving coverage and defect detection. |
 | [improve-ui](workflows/improve-ui/SKILL.md) | Improve an interface’s hierarchy, consistency, responsiveness, and accessibility while preserving journeys. |
 | [manage-defects](workflows/manage-defects/SKILL.md) | Diagnose a reported failure, isolate its cause, and apply authorized repairs with regression evidence. |
 | [manage-issues](workflows/manage-issues/SKILL.md) | Triage GitHub issues into an evidence-backed, atomic, actionable backlog and apply authorized changes. |
