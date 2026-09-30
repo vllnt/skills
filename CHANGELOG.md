@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
 - feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
 - fix(skills): measure developer and agent task speed, discover native stacks, and assess test duplication across the whole suite
 - feat(skills): add direct codebase, test-suite, and developer-workflow improvement skills that prioritize measured gains one scope at a time without weakening contracts or checks

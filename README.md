@@ -77,6 +77,7 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | [manage-vision](workflows/manage-vision/SKILL.md) | Create, update, locate, or audit an evidence-backed project vision anchor and decision test. |
 | [plan-issues](workflows/plan-issues/SKILL.md) | Assess a codebase and prepare a source-backed, deduplicated issue backlog for human review. |
 | [plan-work](workflows/plan-work/SKILL.md) | Maintain a read-only planning session that returns an actionable plan without local or remote side effects. |
+| [review-pull-request-qa](workflows/review-pull-request-qa/SKILL.md) | Test a pull request in a full local or preview environment and return candidate-bound backend, frontend, and end-to-end QA evidence. |
 | [review-ui](workflows/review-ui/SKILL.md) | Assess an interface for evidence-backed usability, responsiveness, consistency, and accessibility findings without changing it. |
 
 ## On-demand procedures
