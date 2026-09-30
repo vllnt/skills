@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
+- fix(skills): measure developer and agent task speed, discover native stacks, and assess test duplication across the whole suite
+- feat(skills): add direct codebase, test-suite, and developer-workflow improvement skills that prioritize measured gains one scope at a time without weakening contracts or checks
 - fix(skills): reconcile existing task changes during session refocusing without reverting unrelated work
 - feat(skills): add on-demand session refocusing with grounded decisions and preserved quality gates
 - refactor(skills): require evidence for simplification findings and compare test protection before additions or replacements

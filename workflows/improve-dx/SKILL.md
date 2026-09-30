@@ -1,0 +1,28 @@
+---
+name: improve-dx
+description: Speed up verified work for developers and agents by improving native build, lint, script, and CI workflows without weakening checks.
+---
+
+## Goal
+
+Help developers and agents finish work faster in authorized change mode by selecting the highest-supported gain and changing one bounded scope at a time. Optimize time to a verified result, not command duration alone. Preserve outputs, diagnostics, required checks, and trusted execution.
+
+### Definition of Done
+
+- The revision, native tools, representative developer and agent tasks, required checks, baseline time to verified results, and requested targets are recorded.
+- The selected scope has the strongest evidenced gain relative to effort and risk; each authorized change and verification finish before the next.
+- Changed builds, lint rules, scripts, or CI still produce supported artifacts and diagnostics, propagate failures, and respect cache and permission boundaries.
+- Representative developer and agent workflows reach verified results faster under comparable conditions, including setup, waiting, retries, and manual steps; neither shifts work to the other. Unmeasured workflows remain unverified.
+- Quality validation accepts the selected mode; achieved gain, tradeoffs, shortfall, and unverified gaps are explicit. An assessment makes no changes or test runs.
+
+## Boundaries
+
+- Remote workflow changes, paid infrastructure, privileged secrets, and deployments follow consumer authority. Measure locally or with authorized hosted evidence; missing provider proof stays unverified.
+
+## Workflow
+
+1. Resolve mode, scope, consumer rules, authority, requested target, and required validation. Discover the repository's languages, native tools, commands, and configured CI; do not impose a framework, runner, or provider to use this skill. Select representative developer and agent tasks, define their start and verified endpoint, and baseline each separately. Fix revision, runner/toolchain, workload, resources, cache state, units, and exclusions before changing tasks. Separate queue from execution time, and cold from warm build/lint or CI runs. In read-only mode, inspect through step 2, skip steps 3–4, then validate the assessment in step 5 without edits or test runs.
+2. Trace scripts, task prerequisites, produced artifacts, consumers, lint file/rule scope, CI triggers, critical path, selection, permissions, and caches. Inspect setup, feedback, diagnosis, retries, and manual or interactive steps in those tasks. Rank opportunities by repeatable time saved to a verified result relative to effort and failure risk; if uncertain, take the cheapest discriminating measurement in change mode or propose it in read-only mode. Use [CI optimization](references/vstack/capabilities/ci-optimization/REFERENCE.md) for CI changes, [Workspace Turborepo](references/vstack/capabilities/workspace-turborepo/REFERENCE.md) only when its runner applies, and [ESLint configuration](references/vstack/capabilities/eslint-configuration/REFERENCE.md) only for ESLint config changes, passing mode and evidence. Without these references or runners, inspect native scripts/configuration and required checks directly; do not infer speed or safety from a green run alone.
+3. In change mode, choose one bounded scope and apply the smallest measured fix: remove redundant setup or scripts, reduce unnecessary interaction, repair task ordering, avoid repeated work without losing affected dependents, or improve trusted cache inputs and outputs. Preserve script interfaces, build artifacts, lint diagnostics and file scope, required CI check identities, and fail-closed behavior on failed, missing, cancelled, or unexpected skipped work. If affected work is unknown after a deletion, missing base, or task-graph gap, choose conservative full relevant validation rather than skip possible dependents. Do not mask slow work by excluding files, tests, or dependent tasks, or let untrusted code poison privileged caches.
+4. In change mode, compare each representative developer and agent task before and after, from its defined start to a verified result; include setup, waiting, retries, and manual steps. A faster subcommand or fewer scripts alone is insufficient. Preserve usable human diagnostics and agent noninteractive operation. Compare relevant cold/warm outputs, changed source, locks, configuration, environment inputs, and deliberately failing native checks. Where CI exists, verify selection and failure propagation; otherwise exercise the native local path without adding CI. Record samples, variability, cache invalidation, queue and critical-path effects separately; simulated human use does not establish observed developer time. Re-rank after the verified stage and continue only while another supported gain is worth its cost, one scope at a time. Update owning task configuration and necessary documentation; avoid a new standing process without need.
+5. For substantive work, including assessments, use [Quality validation](references/vstack/protocols/quality-validation.md) with mode, candidate, and evidence; if unavailable, self-assess, obtain independent review and critique where required, triage findings, and renew affected verdicts directly. Rerun invalidated checks after repairs. Report developer and agent time-to-result changes separately, supporting command timings, any measured script-size reduction in its fixed unit, targets missed, and remaining gaps. Missing workflow evidence cannot establish a productivity gain. Stop short of any target that requires weaker required checks or diagnostics; assessment gains are projected, not achieved.
