@@ -14,6 +14,7 @@ Canonical procedures are on-demand guidance, not discoverable skills. A workflow
 | Code tests | [REFERENCE.md](capabilities/code-tests/REFERENCE.md) |
 | Compliance review | [REFERENCE.md](capabilities/compliance-review/REFERENCE.md) |
 | Convex components | [REFERENCE.md](capabilities/convex-components/REFERENCE.md) |
+| Delivery handoff | [REFERENCE.md](capabilities/delivery-handoff/REFERENCE.md) |
 | ESLint configuration | [REFERENCE.md](capabilities/eslint-configuration/REFERENCE.md) |
 | Infrastructure costs | [REFERENCE.md](capabilities/infrastructure-costs/REFERENCE.md) |
 | Infrastructure review | [REFERENCE.md](capabilities/infrastructure-review/REFERENCE.md) |
