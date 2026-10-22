@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(skills): add basic machine privacy workflow that audits identifiers, DNS and network leaks, telemetry, permissions, sharing, browser tracking, and file metadata, lists every recommendation with its benefit, risk, and undo, then applies and verifies only user-selected changes
 - feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
 - feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
 - fix(skills): measure developer and agent task speed, discover native stacks, and assess test duplication across the whole suite
