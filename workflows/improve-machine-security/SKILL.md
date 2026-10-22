@@ -33,6 +33,6 @@ Make the current machine safer on any operating system while the user decides ev
 4. Review this machine's network configuration and exposure, including listening ports and their owners.
 5. If the network check is approved, look for unknown or impersonating devices and signs of attack on the local network.
 6. Review accounts and credentials, including administrators, remote-access keys, and exposed secrets.
-7. Challenge each finding for false positives, then rank by risk. Present a summary table and one entry per finding. Root cause means the PID, parent chain, app, binary, signer, start time, and launch reason for a process or port; what set it and when for a setting or account; and network identity and connections to this machine for a device. Ask which fixes to apply.
+7. Challenge each finding for false positives, then rank by risk. Present a summary table and one entry per finding. Root cause means the PID, parent chain, app, binary, signer, start time, and launch reason for a process or port; what set it and when for a setting or account; and network identity and connections to this machine for a device. Unless the request is audit-only, ask which fixes to apply.
 8. Record a baseline, then apply the selected fixes one at a time with the least disruptive method. Undo any fix that breaks expected behavior.
 9. Rerun the original checks and compare them with the baseline.
