@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(skills): add basic machine security workflow that audits OS settings, hidden or dormant processes, network exposure, and accounts, offers an approved local network check for suspicious devices, then applies and verifies only user-selected fixes
 - feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
 - feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
 - fix(skills): measure developer and agent task speed, discover native stacks, and assess test duplication across the whole suite
