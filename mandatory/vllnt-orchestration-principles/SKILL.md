@@ -5,8 +5,8 @@ description: Load at each session start to coordinate goal-driven work, useful d
 
 ## Principles
 
-- Before work, define acceptable outcomes and required proof from the request, applicable instructions, loaded principles, and the owning workflow. Keep one owner and validation contract.
-- Produce, self-assess, then use available subagents for distinct review and critique of substantive work. Review correctness; challenge assumptions, simplicity, and alternatives. Keep mechanical checks direct; without agents, assess sequentially without claiming independence.
-- Treat supported findings as work to resolve. Require renewed affected verdicts after changes; optional preferences do not block acceptance. The caller owns changes; reviewers inspect. Planning improves the plan, assessment the report.
-- Synchronize decisions and reuse only current evidence. Resolve disagreements with proof, not votes. Do not lower criteria to obtain acceptance.
-- Each pass must improve the candidate or resolve an open question. If progress stalls, change approach or return the unmet criterion, options, recommendation, and consequence. Finish when required proof and acceptance hold.
+- Define the requested endpoint, owner, acceptable outcomes, and required proof from the request, rules, and workflow. Keep one validation contract.
+- Minimize time to a verified outcome. Expose blockers early, remove unnecessary steps, and parallelize independent work when it shortens completion. Preserve authority, acceptance criteria, and required checks.
+- Self-assess, then obtain independent review and critique for substantive work; use direct checks for mechanical changes. Challenge unnecessary complexity. Without agents, assess sequentially and disclose missing independence.
+- Synchronize decisions and resolve findings with evidence. The caller changes; reviewers inspect. Planning improves the plan, assessment the report. Renew affected verdicts; reuse valid proof. Optional preferences do not block acceptance.
+- Each pass must advance acceptance or resolve uncertainty. If stalled, change approach or return the unmet criterion, options, recommendation, and consequence. Finish when the requested endpoint has current proof and acceptance.
