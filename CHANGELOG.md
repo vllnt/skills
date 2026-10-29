@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- docs(evaluations): keep reusable guidance free of revision-specific hashes and historical run reports
 - feat(skills): prioritize verified outcomes and add optional autonomous task-scoped refocusing reminders
 - feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
 - feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
