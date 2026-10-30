@@ -1,0 +1,9 @@
+# Regexes matched against "path:line:content" of a denylist hit. Keep entries narrow.
+
+# Addresses on reserved or noreply domains
+@[A-Za-z0-9-]+\.(test|invalid|example)\b
+@example\.(com|org|net)\b
+@users\.noreply\.github\.com\b
+
+# Generic copywriting example, not a real figure
+copywriting-formulas\.md:[0-9]+:.*hit \$10k MRR

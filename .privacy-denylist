@@ -1,0 +1,29 @@
+# Structural privacy patterns (extended regex, case-insensitive). Generic only:
+# never put names, clients, hosts, or credentials here; this file is public.
+# Private terms go in the untracked .privacy-denylist.local or the
+# PRIVACY_DENYLIST_EXTRA CI secret. See scripts/privacy-denylist.sh.
+
+# Tailnet hostnames and the CGNAT range tailnets use
+[a-z0-9-]+\.ts\.net\b
+\b100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.[0-9]{1,3}\.[0-9]{1,3}\b
+
+# Private network addresses
+\b10\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b
+\b192\.168\.[0-9]{1,3}\.[0-9]{1,3}\b
+\b172\.(1[6-9]|2[0-9]|3[01])\.[0-9]{1,3}\.[0-9]{1,3}\b
+
+# Machine-specific home and editor store paths
+/home/[a-z_][a-z0-9_-]*/
+/Users/[A-Za-z0-9._-]+/
+/cursor/stores
+
+# UUIDs (account, bot, and device ids)
+\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b
+
+# Email addresses and phone numbers
+[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}
+(^|[^0-9A-Za-z])\+[0-9]{1,3}[ .-]?[0-9]([ .-]?[0-9]){7,12}\b
+
+# Revenue and pricing figures
+\b(MRR|ARR|revenue|turnover)\b[^.]{0,24}[$€£][0-9]
+[$€£][0-9][0-9,.]*[kKmM]?[ ]?(MRR|ARR)\b
