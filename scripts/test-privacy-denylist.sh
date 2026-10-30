@@ -111,7 +111,27 @@ printf '[unclosed\n' > "$REPO/.privacy-allowlist"
 check "invalid allowlist regex is an error, not a pass" 2 NOOP=1
 printf 'zzz|\n' > "$REPO/.privacy-allowlist"
 check "allowlist matching empty string is an error, not a pass" 2 NOOP=1
+cp "$REPO/allow.bak" "$REPO/.privacy-allowlist"
+
+plant "host: $TAILNET"
+printf '.*' > "$REPO/.privacy-allowlist"
+check "unterminated last allowlist line is still validated" 2 NOOP=1
+printf '^.+$\n' > "$REPO/.privacy-allowlist"
+check "over-broad allowlist entry is an error, not a pass" 2 NOOP=1
 mv "$REPO/allow.bak" "$REPO/.privacy-allowlist"
+
+check "zero-width private pattern is an error" 2 'PRIVACY_DENYLIST_EXTRA=\b'
+printf '\\b' > "$REPO/.privacy-denylist.local"
+check "unterminated zero-width local pattern is an error" 2 NOOP=1
+rm "$REPO/.privacy-denylist.local"
+
+printf '\0/ho''me/someone\n' > "$REPO/doc.md"
+check "nul-delimited token is not dropped by the allowlist filter" 1 NOOP=1
+
+printf 'acme' > "$REPO/.privacy-denylist.local"
+plant "only foo here"
+check "local file and secret patterns stay separate" 1 PRIVACY_DENYLIST_EXTRA=foo
+rm "$REPO/.privacy-denylist.local"
 
 rm "$REPO/.privacy-denylist"
 check "missing denylist file is an error" 2 NOOP=1

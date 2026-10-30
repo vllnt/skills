@@ -13,6 +13,10 @@
 # Matched content and pattern text are never printed: CI logs of a public
 # repository are public.
 #
+# Limits: only tracked files at the checked-out revision are scanned, not the
+# commits of a pull request (gitleaks covers secret-shaped data in all history).
+# UTF-16 text is not matched, and the allowlist file itself is not scanned.
+#
 # Exit codes: 0 clean, 1 match found, 2 misuse or invalid pattern.
 
 set -u
@@ -32,11 +36,13 @@ kept="$(mktemp)"
 trap 'rm -f "$tracked" "$extra" "$patterns" "$allow_patterns" "$hits" "$kept"' EXIT
 
 strip() { sed -E '/^[[:space:]]*(#|$)/d'; }
+# lines <file>: the file with a guaranteed final newline.
+lines() { cat "$1"; printf '\n'; }
 
 # valid_regexes <file> <label>: every line must compile and must not match the empty string.
 valid_regexes() {
-  local file="$1" label="$2" n=0 line status
-  while IFS= read -r line; do
+  local file="$1" label="$2" n=0 line status probe
+  while IFS= read -r line || [[ -n "$line" ]]; do
     n=$((n + 1))
     printf '\n' | grep -qE -e "$line" 2> /dev/null
     status=$?
@@ -48,6 +54,12 @@ valid_regexes() {
       echo "error: $label pattern #$n matches the empty string" >&2
       return 1
     fi
+    # Zero-width patterns (\b, ^, $) match inside real text but report nothing.
+    probe="$(printf 'a b\n' | grep -oE -e "$line" 2> /dev/null)"
+    if [[ -z "$probe" ]] && printf 'a b\n' | grep -qE -e "$line" 2> /dev/null; then
+      echo "error: $label pattern #$n is zero-width" >&2
+      return 1
+    fi
   done < "$file"
 }
 
@@ -55,13 +67,13 @@ if [[ ! -f "$DENY" ]]; then
   echo "error: $DENY is required" >&2
   exit 2
 fi
-strip < "$DENY" > "$tracked"
+lines "$DENY" | strip > "$tracked"
 {
-  [[ -f "$DENY.local" ]] && cat "$DENY.local"
+  [[ -f "$DENY.local" ]] && lines "$DENY.local"
   [[ -n "${PRIVACY_DENYLIST_EXTRA:-}" ]] && printf '%s\n' "$PRIVACY_DENYLIST_EXTRA"
 } | strip > "$extra"
 cat "$tracked" "$extra" > "$patterns"
-[[ -f "$ALLOW" ]] && strip < "$ALLOW" > "$allow_patterns"
+[[ -f "$ALLOW" ]] && lines "$ALLOW" | strip > "$allow_patterns"
 
 if [[ ! -s "$tracked" ]]; then
   echo "error: $DENY has no patterns" >&2
@@ -69,6 +81,10 @@ if [[ ! -s "$tracked" ]]; then
 fi
 valid_regexes "$patterns" "denylist" || exit 2
 valid_regexes "$allow_patterns" "allowlist" || exit 2
+if [[ -s "$allow_patterns" ]] && [[ -z "$(printf '%s\n' 'zz/canary.md:1:canary.ts''.net' | grep -avEf "$allow_patterns")" ]]; then
+  echo "error: allowlist is too broad; it would hide an obvious match" >&2
+  exit 2
+fi
 
 # -a scans binary files as text; -o reports each matched token on its own line.
 git grep -naoiE -f "$patterns" -- . ":(exclude)$DENY" ":(exclude)$ALLOW" ":(exclude)$SELF" > "$hits" 2> /dev/null
@@ -79,7 +95,7 @@ if (( status > 1 )); then
 fi
 
 if [[ -s "$allow_patterns" ]]; then
-  grep -vEf "$allow_patterns" "$hits" > "$kept"
+  grep -avEf "$allow_patterns" "$hits" > "$kept"
   status=$?
   if (( status > 1 )); then
     echo "error: allowlist filtering failed" >&2
