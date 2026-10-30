@@ -17,6 +17,9 @@ git -C "$REPO" config user.email test@example.invalid
 git -C "$REPO" config user.name test
 
 failures=0
+# plant <text>: write a fixture, assembled from fragments so this file never matches the denylist itself
+plant() { printf '%s\n' "$1" > "$REPO/doc.md"; }
+
 # check <name> <expected exit> [VAR=value ...]
 check() {
   local name="$1" expected="$2"; shift 2
@@ -36,21 +39,21 @@ check() {
 printf 'Plain documentation.\n' > "$REPO/doc.md"
 check "clean tree passes" 0 NOOP=1
 
-printf 'host: build-box.example-net.ts.net\n' > "$REPO/doc.md"
+plant "host: build-box.example-net.ts"".net"
 check "tailnet hostname fails" 1 NOOP=1
 grep -q 'doc.md:1' <<< "$LAST_OUTPUT" || { echo "FAIL hit location not reported" >&2; failures=$((failures + 1)); }
 grep -q 'ts.net' <<< "$LAST_OUTPUT" && { echo "FAIL matched content leaked to output" >&2; failures=$((failures + 1)); }
 
-printf 'id 123e4567-e89b-12d3-a456-426614174000\n' > "$REPO/doc.md"
+plant "id 123e4567-e89b-12d3-a456-4266""14174000"
 check "uuid fails" 1 NOOP=1
 
-printf 'path /home/someone/project/\n' > "$REPO/doc.md"
+plant "path /ho""me/someone/project/"
 check "home path fails" 1 NOOP=1
 
-printf 'mail fixture@example.test\n' > "$REPO/doc.md"
+plant "mail fixture@example.test"
 check "allowlisted reserved address passes" 0 NOOP=1
 
-printf 'mail someone@company.io\n' > "$REPO/doc.md"
+plant "mail someone@""company.io"
 check "real-looking address fails" 1 NOOP=1
 
 printf 'Plain documentation.\nacme-widget appears here\n' > "$REPO/doc.md"
