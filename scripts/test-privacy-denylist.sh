@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # test-privacy-denylist.sh — success and failure paths of privacy-denylist.sh
-# in a throwaway repository. Planted values are synthetic.
+# in a throwaway repository. Fixtures are assembled from fragments (adjacent
+# quoted strings) so this file never matches the denylist itself.
 
 set -u
 
@@ -17,50 +18,103 @@ git -C "$REPO" config user.email test@example.invalid
 git -C "$REPO" config user.name test
 
 failures=0
-# plant <text>: write a fixture, assembled from fragments so this file never matches the denylist itself
+LAST_OUTPUT=""
+
+# plant <text>: write a one-line fixture.
 plant() { printf '%s\n' "$1" > "$REPO/doc.md"; }
 
 # check <name> <expected exit> [VAR=value ...]
 check() {
   local name="$1" expected="$2"; shift 2
   git -C "$REPO" add -A
-  local output status
-  output="$(cd "$REPO" && env "$@" bash scripts/privacy-denylist.sh 2>&1)"
+  local status
+  LAST_OUTPUT="$(cd "$REPO" && env "$@" bash scripts/privacy-denylist.sh 2>&1)"
   status=$?
   if [[ "$status" != "$expected" ]]; then
-    printf 'FAIL %s: expected exit %s, got %s\n%s\n' "$name" "$expected" "$status" "$output" >&2
+    printf 'FAIL %s: expected exit %s, got %s\n%s\n' "$name" "$expected" "$status" "$LAST_OUTPUT" >&2
     failures=$((failures + 1))
     return
   fi
   printf 'OK    %s\n' "$name"
-  LAST_OUTPUT="$output"
 }
 
-printf 'Plain documentation.\n' > "$REPO/doc.md"
+# refute <name> <text>: the last output must not contain the text.
+refute() {
+  if grep -qF -- "$2" <<< "$LAST_OUTPUT"; then
+    printf 'FAIL %s\n' "$1" >&2
+    failures=$((failures + 1))
+  fi
+}
+
+TAILNET="box.example-net.ts"".net"
+
+plant "Plain documentation."
 check "clean tree passes" 0 NOOP=1
 
-plant "host: build-box.example-net.ts"".net"
+plant "host: $TAILNET"
 check "tailnet hostname fails" 1 NOOP=1
 grep -q 'doc.md:1' <<< "$LAST_OUTPUT" || { echo "FAIL hit location not reported" >&2; failures=$((failures + 1)); }
-grep -q 'ts.net' <<< "$LAST_OUTPUT" && { echo "FAIL matched content leaked to output" >&2; failures=$((failures + 1)); }
+refute "matched content leaked to output" "example-net"
 
 plant "id 123e4567-e89b-12d3-a456-4266""14174000"
 check "uuid fails" 1 NOOP=1
 
 plant "path /ho""me/someone/project/"
 check "home path fails" 1 NOOP=1
+plant "HOME=/ho""me/someone"
+check "home path without trailing slash fails" 1 NOOP=1
+plant "GET /api/us""ers/123/posts"
+check "url route segment passes" 0 NOOP=1
+plant "cwd /ho""me/runner/work/x"
+check "allowlisted runner home passes" 0 NOOP=1
 
 plant "mail fixture@example.test"
-check "allowlisted reserved address passes" 0 NOOP=1
-
+check "reserved-domain address passes" 0 NOOP=1
 plant "mail someone@""company.io"
 check "real-looking address fails" 1 NOOP=1
+plant "mail fixture@acme.test"".com"
+check "reserved label inside a real domain fails" 1 NOOP=1
+plant "git clone git@github.com:owner/repo.git"
+check "ssh remote user passes" 0 NOOP=1
+plant "pnpm add @scope/pkg@0.1.0-canary.bca5ab7"
+check "package version pin passes" 0 NOOP=1
 
-printf 'Plain documentation.\nacme-widget appears here\n' > "$REPO/doc.md"
+plant "call 415-555-""0132"
+check "grouped phone number fails" 1 NOOP=1
+plant "MR""R is 12k"
+check "bare revenue figure fails" 1 NOOP=1
+
+plant "ssh admin@example.com $TAILNET"
+check "allowed token does not hide another match on the line" 1 NOOP=1
+
+printf '\0host %s\n' "$TAILNET" > "$REPO/doc.md"
+check "binary file is scanned" 1 NOOP=1
+rm -f "$REPO/doc.md"
+plant "Plain documentation."
+
+printf 'acme-widget appears here\n' >> "$REPO/doc.md"
 check "extra pattern from environment fails" 1 'PRIVACY_DENYLIST_EXTRA=acme-widget'
-check "invalid extra pattern is an error, not a pass" 2 'PRIVACY_DENYLIST_EXTRA=(unbalanced'
-printf 'Plain documentation.\n' > "$REPO/doc.md"
+check "extra pattern is not echoed" 1 'PRIVACY_DENYLIST_EXTRA=acme-widget'
+refute "extra pattern text leaked to output" "acme-widget"
+plant "Plain documentation."
 check "extra pattern not present passes" 0 'PRIVACY_DENYLIST_EXTRA=acme-widget'
+check "missing private patterns warn under CI" 0 CI=true
+grep -q '::warning' <<< "$LAST_OUTPUT" || { echo "FAIL no warning when private patterns are absent in CI" >&2; failures=$((failures + 1)); }
+
+check "invalid private pattern is an error" 2 'PRIVACY_DENYLIST_EXTRA=Acme[Corp'
+refute "invalid pattern text leaked to output" "Acme"
+check "private pattern matching empty string is an error" 2 'PRIVACY_DENYLIST_EXTRA=acme|'
+
+cp "$REPO/.privacy-allowlist" "$REPO/allow.bak"
+plant "host: $TAILNET"
+printf '[unclosed\n' > "$REPO/.privacy-allowlist"
+check "invalid allowlist regex is an error, not a pass" 2 NOOP=1
+printf 'zzz|\n' > "$REPO/.privacy-allowlist"
+check "allowlist matching empty string is an error, not a pass" 2 NOOP=1
+mv "$REPO/allow.bak" "$REPO/.privacy-allowlist"
+
+rm "$REPO/.privacy-denylist"
+check "missing denylist file is an error" 2 NOOP=1
 
 if (( failures > 0 )); then
   printf '%s failure(s)\n' "$failures" >&2
