@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- chore(privacy): add privacy-guard workflow, gitleaks history scan, and structural denylist check with allowlist, optional private patterns, and withheld match content
+- feat(stack): default skills to published @vllnt packages (stable by default, canary-only pinned exactly, TypeScript and ESLint on 2.x) through one default-packages annex
 - feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
 - feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
 - fix(skills): measure developer and agent task speed, discover native stacks, and assess test duplication across the whole suite

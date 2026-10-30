@@ -13,7 +13,7 @@
 
 ## Procedure
 
-1. Define consumers, component-owned state/lifecycle, host-owned identity/domain data, public operations, failures, retention, pagination, tenant scope, and installed API assumptions. Reuse an official component when it fits.
+1. Define consumers, component-owned state/lifecycle, host-owned identity/domain data, public operations, failures, retention, pagination, tenant scope, and installed API assumptions. Reuse an official component when it fits; for Vstack projects, start with the matching `@vllnt/convex-*` component and `@vllnt/convex-helpers` from [default packages](../project-alignment/references/default-packages.md).
 2. Keep schema, functions, generated files, and schedules inside the component boundary. Host and siblings use generated references and `ctx.runQuery`, `ctx.runMutation`, or `ctx.runAction`; never hand-edit generated files.
 3. Validate exported arguments and returns at runtime. Keep queries read-only, mutations transactional, and external effects in actions; bound batches and make retries and partial external failure recoverable.
 4. Require the host to authenticate, derive trusted scope, and authorize before calls. Keep host secrets, schemas, and privileged wrappers outside the component.
