@@ -3,7 +3,7 @@
 Create or update `llms.txt` only when requested or required by the consumer. Keep source documents authoritative; the index links to them instead of copying their contents.
 
 1. Read repository instructions and the existing index or generator. Identify the project name, purpose, documentation, and intended publication scope from current sources.
-2. Select useful documents. Exclude secrets, private operational details, personal data, and unapproved sources; discovery alone does not authorize inclusion.
+2. For a Next.js site with no generator, default to `@vllnt/next-llms` at its pinned canary per [default packages](../../project-alignment/references/default-packages.md). Select useful documents. Exclude secrets, private operational details, personal data, and unapproved sources; discovery alone does not authorize inclusion.
 3. Preserve curated descriptions and organization. Use one project heading, a short introduction, and grouped Markdown links with concise descriptions. Include optional sections only when they contain relevant sources.
 4. Resolve each local link and verify public visibility before exposing remote links. For a monorepo, state whether the index covers one package or the collection.
 5. Compare the index with the selected source inventory. Remove dead entries, identify omissions, and check current version/install claims without rewriting historical facts.

@@ -7,7 +7,7 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 - The public catalog exposes only workflows and mandatory principles; repository-local maintenance is separate. Internal procedures are canonical references, bundled per workflow and loaded on demand.
 - Thinking, Orchestration, and Collaboration replace the single principle entry. Synchronization belongs to Orchestration.
 - The workflow owns its outcome and convergence. Reference procedures return bounded evidence; current proof is reused across handoffs.
-- Vstack prioritizes compatible [vllnt packages](references/vstack.md) through live discovery, not a maintained package list.
+- Vstack prioritizes compatible [vllnt packages](references/vstack.md): stable by default, canary-only packages pinned exactly, all verified through live discovery. The [default packages](references/capabilities/project-alignment/references/default-packages.md) annex is the only maintained list.
 - User/project/nested rules own configuration and permissions. Public examples contain no private operational evidence.
 - Keep repository-local maintenance under `.agents/` intentionally public and separate from the installable catalog.
 
