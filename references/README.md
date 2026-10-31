@@ -6,7 +6,9 @@ Canonical procedures are on-demand guidance, not discoverable skills. A workflow
 
 | Procedure | Canonical reference |
 |---|---|
+| Agent delegation | [agent-delegation.md](protocols/agent-delegation.md) |
 | Agent tooling review | [REFERENCE.md](capabilities/agent-tooling-review/REFERENCE.md) |
+| Capacity gating | [capacity-gating.md](protocols/capacity-gating.md) |
 | CI optimization | [REFERENCE.md](capabilities/ci-optimization/REFERENCE.md) |
 | Code architecture | [REFERENCE.md](capabilities/code-architecture/REFERENCE.md) |
 | Code review | [REFERENCE.md](capabilities/code-review/REFERENCE.md) |

@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(protocols): add agent delegation and capacity gating protocols, and per-angle reviewers with an independent second-harness critic in quality validation
 - feat(skills): add basic machine privacy workflow that audits identifiers, DNS and network leaks, telemetry, permissions, sharing, browser tracking, and file metadata, lists every recommendation with its benefit, risk, and undo, then applies and verifies only user-selected changes
 - feat(skills): add basic machine security workflow that audits OS settings, hidden or dormant processes, network exposure, and accounts, offers an approved local network check for suspicious devices, then applies and verifies only user-selected fixes
 - fix(privacy): validate denylist patterns with the git grep engine that scans them, reject PCRE-only escapes, normalize CRLF, and report invalid patterns by source and line only
