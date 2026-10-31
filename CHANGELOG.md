@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
+- docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
+- refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
 - fix(skills): reassess growing repair chains, triage findings before repair, and reuse validated test setup
 - feat(skills): add basic machine privacy workflow that audits identifiers, DNS and network leaks, telemetry, permissions, sharing, browser tracking, and file metadata, lists every recommendation with its benefit, risk, and undo, then applies and verifies only user-selected changes
 - feat(skills): add basic machine security workflow that audits OS settings, hidden or dormant processes, network exposure, and accounts, offers an approved local network check for suspicious devices, then applies and verifies only user-selected fixes
