@@ -16,7 +16,7 @@
 - Published package has no accessible source: retain it with registry evidence and a source gap.
 - Repository has a package manifest but registry returns 404: do not list it as published.
 - Latest points to a prerelease; canary is missing or older: preserve exact facts and explain the selected channel/fallback.
-- Canary is older but compatible and no freshness policy exists: report its date/version order, retain the preferred testing channel, and do not invent a staleness threshold.
+- Canary is older but compatible and no freshness policy exists: report its date/version order, keep the consumer's selected channel (an exact canary pin stays pinned), and do not invent a staleness threshold.
 - Shared configs require incompatible TypeScript peers: return the incompatible set and a compatible alternative or unresolved decision.
 - Consumer uses a canary range but its lockfile resolves another version: report both; do not claim the tag is installed.
 - Private package is denied or a recursive tree is truncated: return partial coverage rather than an empty or complete inventory.
