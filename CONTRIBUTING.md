@@ -14,6 +14,15 @@ The public catalog includes workflows and mandatory entries, each with a `SKILL.
 
 Follow [AGENTS.md](AGENTS.md) for naming, ownership, concise authoring, review, and completion. Preserve independent installation: missing peers use the underlying procedure. Consumer rules supply project-specific policy.
 
+## Promotion from incubation
+
+A new skill, protocol, or reference joins this collection only after it has been dogfooded:
+
+1. Incubate it in a private repository next to the concrete tool, model, and host mappings it was written for.
+2. Use it in real project sessions with agent harnesses or automated agents until its behavior is stable.
+3. Open the promotion PR with the generic, harness- and model-agnostic version only, and record the dogfooding evidence in its body: session or PR links and what changed as a result.
+4. Merge only with maintainer sign-off. Until then, keep it in incubation, or keep the promotion PR as a draft.
+
 ## Change process
 
 1. Create a branch or fork; keep the change focused on one coherent outcome.
