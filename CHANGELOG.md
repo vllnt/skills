@@ -7,6 +7,19 @@ All notable changes to this project will be documented in this file.
 - fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
 - docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
+- fix(skills): reassess growing repair chains, triage findings before repair, and reuse validated test setup
+- feat(skills): add basic machine privacy workflow that audits identifiers, DNS and network leaks, telemetry, permissions, sharing, browser tracking, and file metadata, lists every recommendation with its benefit, risk, and undo, then applies and verifies only user-selected changes
+- feat(skills): add basic machine security workflow that audits OS settings, hidden or dormant processes, network exposure, and accounts, offers an approved local network check for suspicious devices, then applies and verifies only user-selected fixes
+- fix(privacy): validate denylist patterns with the git grep engine that scans them, reject PCRE-only escapes, normalize CRLF, and report invalid patterns by source and line only
+- feat(stack): extend the default-packages annex with `@vllnt/convex-api-keys` (`^0.2.0`), `@vllnt/logger` (`^0.1.2`), and `@vllnt/analytics` (`^0.1.1`); mark `@vllnt/ui-core` and `@vllnt/ui-native` experimental opt-in and `@vllnt/dig` not yet default
+- chore(privacy): add privacy-guard workflow, gitleaks history scan, and structural denylist check with allowlist, optional private patterns, and withheld match content
+- feat(stack): default skills to published @vllnt packages (stable by default, canary-only pinned exactly, TypeScript and ESLint on 2.x) through one default-packages annex
+- feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
+- feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
+- fix(skills): measure developer and agent task speed, discover native stacks, and assess test duplication across the whole suite
+- feat(skills): add direct codebase, test-suite, and developer-workflow improvement skills that prioritize measured gains one scope at a time without weakening contracts or checks
+- fix(skills): reconcile existing task changes during session refocusing without reverting unrelated work
+- feat(skills): add on-demand session refocusing with grounded decisions and preserved quality gates
 - refactor(skills): require evidence for simplification findings and compare test protection before additions or replacements
 - refactor(review): make reviewer coverage proportional, capability-aware, and incremental
 - docs(collaboration): clarify concise outcomes and actionable blocker handoffs

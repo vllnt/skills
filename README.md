@@ -28,7 +28,7 @@ Distribution synchronization is separate from marketplace publication and host r
 | `references/` | On-demand procedures and supporting guidance; workflows load only the references relevant to the request. |
 | `mandatory/` | Lightweight session principles: [Thinking](mandatory/vllnt-thinking-principles/SKILL.md), [Orchestration](mandatory/vllnt-orchestration-principles/SKILL.md), [Collaboration](mandatory/vllnt-collaboration-principles/SKILL.md). |
 
-Configure the runtime's user/project instructions to read installed mandatory entries at session start and after context loss. Their descriptions express the trigger; they do not enforce loading. A standalone workflow remains useful without other skills.
+Configure the runtime's user/project instructions to read installed mandatory entries at session start and after context loss. Their descriptions express the trigger; they do not enforce loading. When loaded, Thinking requires a contract-preserving reduction pass before code commits or uncommitted handoff; the shared validation procedure carries its detailed check into workflow bundles. This is an agent instruction, not a Git hook or a guarantee for runtimes that do not load it. A standalone workflow remains useful without other skills. Invoke `improve-session` on demand to refocus current work, check consequential claims, and simplify the next steps without changing permissions or weakening required proof.
 
 ## Build with Vstack
 
@@ -51,6 +51,8 @@ Finish at the requested endpoint. A bounded report can finish with explicit gaps
 
 ### User workflows
 
+For broad improvement requests, compare the evidenced impact, effort, and risk across `improve-codebase`, `improve-tests`, and `improve-dx`; choose the owner of the strongest supported gain, verify one scope, then re-rank. Do not run all three at once.
+
 | Skill | Result |
 |---|---|
 | [build-landing-page](workflows/build-landing-page/SKILL.md) | Draft or review framework-independent landing-page structure and conversion copy for one primary action. |
@@ -61,7 +63,13 @@ Finish at the requested endpoint. A bounded report can finish with explicit gaps
 | [explain-subject](workflows/explain-subject/SKILL.md) | Explain a real subject with a simple verified mental model and clear limits. |
 | [explore-decisions](workflows/explore-decisions/SKILL.md) | Sharpen an artifact or decision through focused evidence-based questions and concrete alternatives. |
 | [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments while preserving observable contracts and affected consumers. |
+| [improve-codebase](workflows/improve-codebase/SKILL.md) | Directly refactor source code and data paths toward measured reduction and efficiency while preserving behavior. |
+| [improve-dx](workflows/improve-dx/SKILL.md) | Speed up verified work for developers and agents by improving native build, lint, script, and CI workflows without weakening checks. |
+| [improve-machine-privacy](workflows/improve-machine-privacy/SKILL.md) | Audit the current machine on any OS for privacy leaks in identifiers, network traffic, telemetry, permissions, sharing, browsers, and file metadata, list every recommendation with its benefit, risk, and undo, then apply and verify only user-selected changes. |
+| [improve-machine-security](workflows/improve-machine-security/SKILL.md) | Audit the current machine on any OS for weak security settings, hidden or dormant processes, network exposure, and account risks, offer an approved local network check, then apply and verify only user-selected fixes. |
 | [improve-project](workflows/improve-project/SKILL.md) | Adapt an existing repository to applicable stack preferences through small verified stages. |
+| [improve-session](workflows/improve-session/SKILL.md) | Refocus a session at any point on its requested outcome, grounded decisions, simplicity, required quality, and efficient execution. |
+| [improve-tests](workflows/improve-tests/SKILL.md) | Improve a whole test suite by consolidating cross-file duplication and reducing execution cost while preserving coverage and defect detection. |
 | [improve-ui](workflows/improve-ui/SKILL.md) | Improve an interface’s hierarchy, consistency, responsiveness, and accessibility while preserving journeys. |
 | [manage-defects](workflows/manage-defects/SKILL.md) | Diagnose a reported failure, isolate its cause, and apply authorized repairs with regression evidence. |
 | [manage-issues](workflows/manage-issues/SKILL.md) | Triage GitHub issues into an evidence-backed, atomic, actionable backlog and apply authorized changes. |
@@ -71,6 +79,7 @@ Finish at the requested endpoint. A bounded report can finish with explicit gaps
 | [manage-vision](workflows/manage-vision/SKILL.md) | Create, update, locate, or audit an evidence-backed project vision anchor and decision test. |
 | [plan-issues](workflows/plan-issues/SKILL.md) | Assess a codebase and prepare a source-backed, deduplicated issue backlog for human review. |
 | [plan-work](workflows/plan-work/SKILL.md) | Maintain a read-only planning session that returns an actionable plan without local or remote side effects. |
+| [review-pull-request-qa](workflows/review-pull-request-qa/SKILL.md) | Test a pull request in a full local or preview environment and return candidate-bound backend, frontend, and end-to-end QA evidence. |
 | [review-ui](workflows/review-ui/SKILL.md) | Assess an interface for evidence-backed usability, responsiveness, consistency, and accessibility findings without changing it. |
 
 ## On-demand procedures
