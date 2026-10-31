@@ -65,6 +65,7 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments while preserving observable contracts and affected consumers. |
 | [improve-codebase](workflows/improve-codebase/SKILL.md) | Directly refactor source code and data paths toward measured reduction and efficiency while preserving behavior. |
 | [improve-dx](workflows/improve-dx/SKILL.md) | Speed up verified work for developers and agents by improving native build, lint, script, and CI workflows without weakening checks. |
+| [improve-machine-privacy](workflows/improve-machine-privacy/SKILL.md) | Audit the current machine on any OS for privacy leaks in identifiers, network traffic, telemetry, permissions, sharing, browsers, and file metadata, list every recommendation with its benefit, risk, and undo, then apply and verify only user-selected changes. |
 | [improve-machine-security](workflows/improve-machine-security/SKILL.md) | Audit the current machine on any OS for weak security settings, hidden or dormant processes, network exposure, and account risks, offer an approved local network check, then apply and verify only user-selected fixes. |
 | [improve-project](workflows/improve-project/SKILL.md) | Adapt an existing repository to applicable stack preferences through small verified stages. |
 | [improve-session](workflows/improve-session/SKILL.md) | Refocus a session at any point on its requested outcome, grounded decisions, simplicity, required quality, and efficient execution. |
