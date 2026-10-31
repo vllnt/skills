@@ -13,7 +13,7 @@
 
 ## Procedure
 
-1. Set the consumer config, shared preset, or custom rule. Sample source, tests, configs, generated files, and framework files; inspect effective configuration with the installed CLI when available.
+1. Set the consumer config, shared preset, or custom rule. When a Vstack project has no shared preset, default to `@vllnt/eslint-config` 2.x per [default packages](../project-alignment/references/default-packages.md). Sample source, tests, configs, generated files, and framework files; inspect effective configuration with the installed CLI when available.
 2. Use installed flat-config forms and deliberate order. Scope rules, globals, parsers, environments, and ignores precisely; keep ordinary source outside generated-file exclusions.
 3. Enable typed linting only for files in the correct TypeScript project. Preserve public preset names, severity, peer dependencies, and formatter behavior; narrowly justify exceptions.
 4. For shared presets, test an isolated packed consumer. For custom rules, test valid/invalid forms, rule IDs, false positives, and safe autofix followed by a second lint pass.
