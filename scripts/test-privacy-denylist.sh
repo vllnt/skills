@@ -105,6 +105,21 @@ check "invalid private pattern is an error" 2 'PRIVACY_DENYLIST_EXTRA=Acme[Corp'
 refute "invalid pattern text leaked to output" "Acme"
 check "private pattern matching empty string is an error" 2 'PRIVACY_DENYLIST_EXTRA=acme|'
 
+# Constructs that grep -E accepts but git grep -E rejects or silently misreads.
+for construct in '(?i)acme' 'acme(?=x)' 'acme(?!x)' '\p{L}acme' 'a{32768}' '\d{3}acme' '\x41acme' '\Qacme\E'; do
+  check "unsupported construct $construct is an error" 2 "PRIVACY_DENYLIST_EXTRA=$construct"
+  refute "unsupported construct $construct leaked to output" "acme"
+  refute "unsupported construct $construct passed validation" "git grep failed"
+done
+check "invalid private pattern reports its source and line" 2 "PRIVACY_DENYLIST_EXTRA=$(printf 'foo\n\n(?i)acme')"
+grep -q 'extra pattern line 3' <<< "$LAST_OUTPUT" || { echo "FAIL invalid pattern source or line not reported" >&2; failures=$((failures + 1)); }
+check "escaped backslash before a letter is a literal" 0 'PRIVACY_DENYLIST_EXTRA=acme\\d'
+check "supported escapes and alternation pass" 0 'PRIVACY_DENYLIST_EXTRA=\bacme\s+(widget|gadget)\b'
+
+printf 'acme-widget appears here\n' >> "$REPO/doc.md"
+check "crlf and blank private lines are normalized" 1 "PRIVACY_DENYLIST_EXTRA=$(printf 'foo\r\n\r\n\nacme-widget\r\n')"
+plant "Plain documentation."
+
 cp "$REPO/.privacy-allowlist" "$REPO/allow.bak"
 plant "host: $TAILNET"
 printf '[unclosed\n' > "$REPO/.privacy-allowlist"

@@ -29,35 +29,56 @@ SELF=scripts/privacy-denylist.sh
 
 tracked="$(mktemp)"
 extra="$(mktemp)"
+local_raw="$(mktemp)"
+extra_raw="$(mktemp)"
 patterns="$(mktemp)"
 allow_patterns="$(mktemp)"
 hits="$(mktemp)"
 kept="$(mktemp)"
-trap 'rm -f "$tracked" "$extra" "$patterns" "$allow_patterns" "$hits" "$kept"' EXIT
+probe="$(mktemp -d)"
+trap 'rm -f "$tracked" "$extra" "$local_raw" "$extra_raw" "$patterns" "$allow_patterns" "$hits" "$kept"; rm -rf "$probe"' EXIT
+printf '\n' > "$probe/empty"
+printf 'a b\n' > "$probe/text"
 
-strip() { sed -E '/^[[:space:]]*(#|$)/d'; }
+strip() { tr -d '\r' | sed -E '/^[[:space:]]*(#|$)/d'; }
 # lines <file>: the file with a guaranteed final newline.
 lines() { cat "$1"; printf '\n'; }
 
-# valid_regexes <file> <label>: every line must compile and must not match the empty string.
+# Probes run a pattern with the engine and flags that later use it: git grep -iE for
+# the denylist scan, grep -E for the allowlist filter. The two dialects differ.
+# deny_probe/allow_probe <flag> <pattern> <probe file>
+deny_probe() { (cd "$probe" && git grep --no-index -h -iE "$1" -e "$2" -- "$3" 2> /dev/null); }
+allow_probe() { grep -E "$1" -e "$2" -- "$probe/$3" 2> /dev/null; }
+
+# A backslash before a letter or 0, other than \b \B \s \S \w \W, is a PCRE-style
+# escape (\d, \x41, \Q, \p{L}) that extended regex silently misreads.
+UNSUPPORTED_ESCAPE='(^|[^\])(\\\\)*\\[AC-RT-VX-Zac-rt-vx-z0]'
+
+# valid_regexes <file> <source> <probe>: every pattern line must compile with its
+# engine and must not match the empty string. Errors name the source and line only.
 valid_regexes() {
-  local file="$1" label="$2" n=0 line status probe
+  local file="$1" source="$2" probe_with="$3" n=0 line status
   while IFS= read -r line || [[ -n "$line" ]]; do
     n=$((n + 1))
-    printf '\n' | grep -qE -e "$line" 2> /dev/null
+    line="${line//$'\r'/}"
+    [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
+    if [[ "$line" =~ $UNSUPPORTED_ESCAPE ]]; then
+      echo "error: $source pattern line $n uses an escape extended regex does not support" >&2
+      return 1
+    fi
+    "$probe_with" -q "$line" empty
     status=$?
     if (( status > 1 )); then
-      echo "error: $label pattern #$n is not a valid regex" >&2
+      echo "error: $source pattern line $n is not a valid regex" >&2
       return 1
     fi
     if (( status == 0 )); then
-      echo "error: $label pattern #$n matches the empty string" >&2
+      echo "error: $source pattern line $n matches the empty string" >&2
       return 1
     fi
     # Zero-width patterns (\b, ^, $) match inside real text but report nothing.
-    probe="$(printf 'a b\n' | grep -oE -e "$line" 2> /dev/null)"
-    if [[ -z "$probe" ]] && printf 'a b\n' | grep -qE -e "$line" 2> /dev/null; then
-      echo "error: $label pattern #$n is zero-width" >&2
+    if [[ -z "$("$probe_with" -o "$line" text)" ]] && "$probe_with" -q "$line" text; then
+      echo "error: $source pattern line $n is zero-width" >&2
       return 1
     fi
   done < "$file"
@@ -67,11 +88,10 @@ if [[ ! -f "$DENY" ]]; then
   echo "error: $DENY is required" >&2
   exit 2
 fi
+[[ -f "$DENY.local" ]] && cat "$DENY.local" > "$local_raw"
+[[ -n "${PRIVACY_DENYLIST_EXTRA:-}" ]] && printf '%s\n' "$PRIVACY_DENYLIST_EXTRA" > "$extra_raw"
 lines "$DENY" | strip > "$tracked"
-{
-  [[ -f "$DENY.local" ]] && lines "$DENY.local"
-  [[ -n "${PRIVACY_DENYLIST_EXTRA:-}" ]] && printf '%s\n' "$PRIVACY_DENYLIST_EXTRA"
-} | strip > "$extra"
+{ lines "$local_raw"; lines "$extra_raw"; } | strip > "$extra"
 cat "$tracked" "$extra" > "$patterns"
 [[ -f "$ALLOW" ]] && lines "$ALLOW" | strip > "$allow_patterns"
 
@@ -79,8 +99,10 @@ if [[ ! -s "$tracked" ]]; then
   echo "error: $DENY has no patterns" >&2
   exit 2
 fi
-valid_regexes "$patterns" "denylist" || exit 2
-valid_regexes "$allow_patterns" "allowlist" || exit 2
+valid_regexes "$DENY" "tracked" deny_probe || exit 2
+valid_regexes "$local_raw" "local" deny_probe || exit 2
+valid_regexes "$extra_raw" "extra" deny_probe || exit 2
+[[ -f "$ALLOW" ]] && { valid_regexes "$ALLOW" "allowlist" allow_probe || exit 2; }
 if [[ -s "$allow_patterns" ]] && [[ -z "$(printf '%s\n' 'zz/canary.md:1:canary.ts''.net' | grep -avEf "$allow_patterns")" ]]; then
   echo "error: allowlist is too broad; it would hide an obvious match" >&2
   exit 2

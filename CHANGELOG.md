@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(privacy): validate denylist patterns with the git grep engine that scans them, reject PCRE-only escapes, normalize CRLF, and report invalid patterns by source and line only
 - feat(stack): extend the default-packages annex with `@vllnt/convex-api-keys` (`^0.2.0`), `@vllnt/logger` (`^0.1.2`), and `@vllnt/analytics` (`^0.1.1`); mark `@vllnt/ui-core` and `@vllnt/ui-native` experimental opt-in and `@vllnt/dig` not yet default
 - chore(privacy): add privacy-guard workflow, gitleaks history scan, and structural denylist check with allowlist, optional private patterns, and withheld match content
 - feat(stack): default skills to published @vllnt packages (stable by default, canary-only pinned exactly, TypeScript and ESLint on 2.x) through one default-packages annex
