@@ -28,6 +28,24 @@
    - Reuse a worker's proof while its candidate, inputs, and environment remain valid; re-verify only what changed, conflicts, or looks wrong.
 7. Steer an existing worker rather than starting a duplicate. When a worker is blocked on an approval or question, read it and answer within the manager's authority; escalate only what exceeds it. Close the workspaces, sessions, and processes you created when their work is merged, handed off, or abandoned; never close another owner's sessions.
 
+## Role routing
+
+Use the highest reasoning effort the runtime offers for every role.
+
+- **Check availability first:** check provider/account availability and quota before routing; fall back to another provider when one is exhausted or rate-limited, and spread load across available accounts.
+- **Builder** (default): routine code, fixes, refactors, tests, docs, review fixes, and bulk work, as narrowly scoped workers.
+- **Planner/manager:** multi-file and long-running goals, plans, architecture, and requirements; fans work out to parallel builders.
+- **Outside critic:** a model from a different provider or family, used to challenge and review, never as the main builder.
+  - Plan challenge before implementation.
+  - Independent diff review alongside parallel per-angle builder reviewers, consolidated into one report before merge.
+  - Root-cause analysis for hard bugs and incidents; the planner verifies.
+  - Security, infrastructure, data, and migration changes: the planner plans, the critic approves before execution, a builder executes.
+  - Business, pricing, and finance reasoning: the planner drafts, the critic challenges the numbers.
+- **Escalation:** builder stuck after two attempts → planner → critic.
+- **Priority tiers:** urgent work runs in parallel immediately with critic review after shipping; normal work follows this routing; low-priority work uses builders only, and only with spare capacity.
+- **Capacity gate:** run [Capacity gating](capacity-gating.md) before large sessions and cap parallel builders to the available headroom.
+- **Goal-prompt checklist:** every long-running goal prompt states the applicable critic steps: plan challenge before implementing, independent review before merge, critic root cause after two failed fix attempts, and critic approval before security, infrastructure, data, or migration execution.
+
 ## Pitfalls
 
 - A queued or delivered prompt is not proof of work; confirm state from the session or report.
