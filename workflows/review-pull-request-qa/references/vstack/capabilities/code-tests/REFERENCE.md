@@ -15,7 +15,7 @@
 ## Procedure
 
 1. Read project instructions, check configuration, and CI workflows to identify required checks. Set candidate identity, consumers, environments, acceptance cases, and permitted effects.
-2. Map success, denial, failure, state, and recovery paths. Choose the cheapest checks that exercise real contracts.
+2. Map success, denial, failure, state, and recovery paths. Choose the cheapest checks that exercise real contracts. Reuse the owning runner and known-good setup only while their inputs remain valid. After setup changes or failures, check readiness through the smallest relevant probe before a broad run; readiness does not replace required checks. Return recurring setup defects to their authorized owner instead of repeatedly rebuilding or changing product behavior to fit the fixture.
 3. Run all applicable required checks executable locally; record commands, results, and actual pass/fail/skip counts for the current candidate. Report unrun checks as pending, never passed. A defect fix needs isolated red/green evidence; challenge critical assertions with meaningful negative controls.
 4. Exercise the real development interface or built consumer, checking resulting state and forbidden effects. Inspect preview provenance and CI candidate/base/status/artifacts separately.
 5. Return material risks, contradictory evidence, and current proof to the caller's quality validation. When standalone, return the exact blocked check and next action. For repaired candidates or changed input/environment, rerun invalidated checks.
