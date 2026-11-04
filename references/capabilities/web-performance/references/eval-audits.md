@@ -1,29 +1,10 @@
 # Page audit snippets
 
-Run these heuristic resource and timing snippets through an available browser evaluator. The optional agent-browser syntax below must match installed help; equivalent browser tools work. They are not scores or conformance checks. Inspect and sanitize all outputs before sharing, including page text and resource URLs.
+Run these heuristic resource and timing snippets through an available browser evaluator. They are not scores or conformance checks. Inspect and sanitize all outputs before sharing, including page text and resource URLs.
 
-## How to run (avoid shell-quoting pain)
+## How to run
 
-Complex JS breaks on nested quotes. Prefer a file + `--stdin`:
-
-```bash
-# write the snippet to a file, pipe it in
-agent-browser open https://example.com
-agent-browser eval --stdin < audit.js
-```
-
-Or base64 (no escaping at all):
-
-```bash
-B64=$(base64 < audit.js | tr -d '\n')
-agent-browser eval -b "$B64"
-```
-
-Inline single-line works for short checks (single quotes outside, none inside):
-
-```bash
-agent-browser eval 'document.querySelectorAll("img:not([alt])").length'
-```
+Save a snippet to a file and pass it to the browser tool's evaluate command; read the installed tool's help for how it accepts a script file or standard input, because inline quoting breaks on nested quotes.
 
 Each snippet ends in a `JSON.stringify(...)` so the result is machine-readable.
 
