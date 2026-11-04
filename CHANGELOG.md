@@ -4,11 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- refactor(workflows): merge build-project into init-project (`vstack` + `other`); retire build-project
-- refactor(init-project): requirements-only recipes — drop volatile JSON/version bodies; resolve Node, pnpm, packages, and tool flags at execution
-- feat(workflows): add init-project (run location, lifecycle, worktrees, Turborepo monorepos, harness questions); requirements and pass checks, not pinned config
-- feat(stack): default packages to latest release at run time; canary-only by publish time; Turbo task graph and CI target in workspace Turborepo reference
-- chore(skills): capability refs use latest @vllnt presets; defer CLI flags and API snippets to installed tool docs
+- fix(stack): default-packages lists packages only — drop stable/canary-only labels; agents pick release (prefer LTS/non-prerelease) at execution
+- refactor(workflows): merge build-project into init-project (vstack + other paths); retire build-project
+- fix(stack): default-packages annex names channels only — drop majors, caret ranges, and canary SHAs; resolve versions at execution
+- feat(workflows): add init-project, which detects where the project runs (local-only, cloud, or hybrid), asks what to build, then scaffolds, installs, and verifies a Next.js, Convex, Expo, library, or CLI project on the enforced @vllnt baseline (7-day package age with @vllnt exempt, hooks, changelog, agent files), with the full development lifecycle, safe parallel worktrees, and requirements plus pass checks instead of pinned versions or config bodies
+- feat(stack): resolve package releases at run time from the registry; add a Turbo task graph and CI target to the workspace Turborepo reference
+- chore(skills): default capability references to the latest @vllnt preset releases instead of a fixed major, and replace browser-tool CLI flags, npm command options, and browser or test API snippets with requirements that defer to the installed tool's help and official docs
+- refactor(init-project): one turbo owner (DoD + layouts); drop duplicate Goal/description slogans, prefer rules, and pkg#task exception
+- fix(init-project): sync README catalog description with Turborepo clause; remove private org examples from layouts
+- feat(init-project): harness-agnostic AskUserQuestion order in Goal; turbo-affected verify:changed for fast pre-push (pre-commit stays irreversibility-only)
+- feat(init-project): require Turborepo for every monorepo (turbo.json schema, stream UI, transit tasks, ...turbo on all workspaces) and default Q3 to monorepo
+- fix(stack): pin @vllnt/next-llms to its current canary (0.1.0-canary.b0bb621); the latest tag points at an older canary, and the pinned build no longer exports the llms-full.txt generator
+- feat(workflows): add init-project, which asks what to build and then scaffolds, installs, and verifies a Next.js, Convex, Expo, library, or CLI project on the enforced @vllnt baseline (7-day package age, hooks, CI, changelog, agent files)
 - fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
 - docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.

@@ -4,14 +4,14 @@ This file states requirements. Take configuration keys, flags, and file formats 
 
 ## Package lines
 
-No version is written in this skill. Every package defaults to its latest release, resolved at install time. For a package outside `@vllnt/*`, "latest" means the newest release at least 7 days old; `@vllnt/*` packages are exempt from that gate. The [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex owns the channel for each `@vllnt/*` package.
+No version is written in this skill. Resolve every package at install time from the registry. For a package outside `@vllnt/*`, prefer the newest non-prerelease at least 7 days old; `@vllnt/*` is exempt from that age gate. The [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex names preferred packages only — never channels or versions.
 
 ### Resolve versions
 
 1. Write the [supply-chain policy](#supply-chain) before the first `pnpm add`: in `pnpm-workspace.yaml` for a single app, and in the full workspace file (`packages:`, `catalog:` and that policy, see [pnpm-workspace.yaml](layouts.md#pnpm-workspaceyaml)) for a monorepo.
 2. Add packages by name, without a version (`pnpm add next`). Under the release-age policy, pnpm installs the newest release that is old enough and records a range.
 3. Respect published peer ranges. When a selected package peers a dependency (for example, the `@vllnt` presets peer `typescript`, `eslint`, and `prettier`), read the range from the registry at run time and add the newest version inside it. Never let a newer major break a preset's peer range.
-4. Do not pre-pin exact versions read from the registry: the newest release may be too young, and the install then fails. The exceptions are prereleases (see [Canary packages](#canary-packages)) and tools that need an exact version, such as `packageManager`.
+4. Do not pre-pin exact versions read from the registry: the newest release may be too young, and the install then fails. The exceptions are prereleases (see [Resolve release](#resolve-release)) and tools that need an exact version, such as `packageManager`.
 5. If a package resolves to nothing, stop and ask.
 6. After installing, report the versions actually installed, read from the lockfile or the installed package list.
 
@@ -25,17 +25,9 @@ No version is written in this skill. Every package defaults to its latest releas
 
 Before generating `import x from "@vllnt/<pkg>/<sub>"`, read the published `exports` map of the version you install and confirm `./<sub>` exists. The map proves only that the subpath exists: before generating a call, confirm each named export in the installed package's `.d.ts`. Published versions often lag the source repositories, and some subpaths shown in READMEs exist only on canary builds.
 
-### Canary packages
+### Resolve release
 
-Use stable releases. A canary is allowed only:
-- when the package has no stable release and the user picked the feature, or
-- when the default-packages annex lists the package as canary-only.
-
-To install one:
-1. Check whether a stable release now exists. If it does, use it instead.
-2. Otherwise install the newest canary by publish time, as an exact version without a range. Compare publish times instead of trusting the `latest` tag, which can point at an older prerelease.
-3. Check exports (see above) against that exact version.
-4. Report the version in the plan, and record it with its reason under "Prereleases" in the generated `AGENTS.md` (see [Agent files](#agent-files)).
+At execution, query the registry (dist-tags, version list, publish times). Prefer the newest non-prerelease / LTS that satisfies peers and policy. If none exists and the user selected the feature, install the newest usable prerelease as an exact version. Do not invent "stable" or "canary-only" from this skill. Compare publish times; do not trust `latest` alone. Check exports against the chosen version. Report any prerelease and its reason under "Prereleases" in the generated `AGENTS.md` (see [Agent files](#agent-files)).
 
 ### Not offered
 

@@ -56,7 +56,7 @@ Offer `@vllnt/ui-native` only after an availability check:
 If either check fails, scaffold `plain` and add a "native UI library pending" line to `AGENTS.md`.
 
 When it is available:
-- Install it as in [Canary packages](baseline.md#canary-packages) and mount its theme provider at the root, following the system color scheme.
+- Install it per [Resolve release](baseline.md#resolve-release) and mount its theme provider at the root, following the system color scheme.
 - Satisfy the peers its installed version declares. It needs no Tailwind, NativeWind, Babel or Metro changes.
 - Take component names and props from its README and `exports`. Components take React Native styles and accessibility props, not class names.
 - Never use `@vllnt/ui` (web) or `@vllnt/analytics` in mobile.

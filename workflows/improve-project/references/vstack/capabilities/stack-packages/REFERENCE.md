@@ -1,13 +1,13 @@
 ## Contract
 
-- Input: A requested package or inventory scope, authorized owners, source hosts, registries, channel policy, and target consumers.
-- Output: Current scoped inventory, latest or canary evidence, consumer constraints, compatibility gaps, and coverage ledger.
+- Input: A requested package or inventory scope, authorized owners, source hosts, registries, and target consumers.
+- Output: Current scoped inventory, release evidence, consumer constraints, compatibility gaps, and coverage ledger.
 - Effects: Read-only discovery. Do not install, publish, retag, edit configuration, change access, or maintain a fixed package list.
 
 ### Acceptance
 
 - The report identifies owners, registries, scope, exclusions, time, pagination coverage, visibility, and access gaps.
-- Each candidate has accessible source or source-gap evidence plus current tags, versions, dates, deprecation, peers, engines, and channel eligibility.
+- Each candidate has accessible source or source-gap evidence plus current tags, versions, dates, deprecation, peers, and engines.
 - Relevant consumer declarations and lock resolutions are compared without claiming installation or runtime compatibility.
 - The result remains read-only package evidence and does not select versions or recommend adoption.
 
@@ -17,11 +17,11 @@
 2. Paginate each selected source owner within scope. Inspect revisions, root or workspace manifests, and publish configuration. Resolve truncated trees and label archives, forks, examples, and private evidence. Enumerate all accessible owners only for an explicitly account-wide inventory.
 3. Paginate registry listings and scoped search. Union source, publication, consumer manifest, and lockfile names; deduplicate by registry and name while retaining registry-only candidates.
 4. Read candidate tags, versions, dates, deprecation, exports, peers, engines, and available integrity or provenance. Distinguish not found, denied, transport failure, and source-only evidence.
-5. Compare tags, dates, releases, and permitted channel policy. Report missing canaries, prereleases under latest, unpublished sources, and deprecation. Call a canary stale only under an applicable freshness policy.
+5. Compare tags, dates, and releases. Prefer non-prerelease / LTS when present; report prereleases under `latest`, unpublished sources, and deprecation. Do not invent channel labels.
 6. Compare consumer declarations and lock resolutions with candidates. Intersect peer, engine, runtime, and platform constraints; leave missing metadata or resolution unverified.
 7. Return the coverage ledger and next read for every gap. Send material discovery or compatibility uncertainties and evidence to the caller's Quality Validation pool. Use [GitHub/npm procedure](references/github-npm.md) only for those providers.
 
 ## Pitfalls
 
-- Latest and canary tags are mutable evidence, not compatibility proof.
+- Dist-tags are mutable evidence, not compatibility proof.
 - Pagination, denied access, and source-only packages change coverage. Do not report a complete inventory beyond the stated accessible scope.

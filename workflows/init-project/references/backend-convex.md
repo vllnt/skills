@@ -80,7 +80,7 @@ Use vitest with the environment and `convex-test` inline deps current Convex / c
 
 ## Feature bundles
 
-Install the components the user picked in the [backend feature bundles question](questions.md#questions). The [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex lists each component's function and channel.
+Install the components the user picked in the [backend feature bundles question](questions.md#questions). The [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex lists each component's function; resolve the release at execution.
 
 | Bundle | Packages | Pairing and caveats |
 |---|---|---|
@@ -106,7 +106,7 @@ How components behave:
 - Components never read host tables or env. The host passes opaque string refs.
 - React hooks from a component take the host's own exported query refs, so generate the wrapper query whenever you generate a hook.
 
-PREVIEW packages are the ones the annex lists as canary-only; check first whether a stable release now exists. Install one only when the user picks it, as in [Canary packages](baseline.md#canary-packages), and label it PREVIEW in the plan and in the generated `AGENTS.md` with its exact version.
+If the registry only offers a prerelease for a selected feature, install it per [Resolve release](baseline.md#resolve-release), label it PREVIEW in the plan and generated `AGENTS.md` with the exact version, and only when the user picked that feature.
 
 ## Auth
 
@@ -121,7 +121,7 @@ Requirements:
 - Install `better-auth` at the newest version inside the adapter's published peer range, in every workspace that uses it (via `catalog:` in a monorepo). Do not pre-seed patches.
 - Web proxies auth requests same-origin to the backend, and its backend client provider becomes the adapter's auth provider. Mobile uses the same server plus Better Auth's Expo client with secure storage, installed through `expo install` where it has native peers.
 - Session initialization (the anonymous sign-in on first load) comes from the installed README for web and Expo.
-- Trusted origins, cookie settings, and user rows come from `@vllnt/convex-helpers` subpaths when the installed version exports them. Check its exports (see [Check exports](baseline.md#check-exports)). If the subpaths are missing, ask the user: install the helpers canary (see [Canary packages](baseline.md#canary-packages)), or use the adapter's own defaults.
+- Trusted origins, cookie settings, and user rows come from `@vllnt/convex-helpers` subpaths when the installed version exports them. Check its exports (see [Check exports](baseline.md#check-exports)). If the subpaths are missing, ask the user: try another published helpers release that exports them ([Resolve release](baseline.md#resolve-release)), or use the adapter's own defaults.
 - Deployment env (set on the deployment, never in files): the auth secret, trusted origins, and site URL. Apps read the public backend and site URLs.
 
 Add these auth checks to the [verification checks](verification.md#checks) when auth is selected:

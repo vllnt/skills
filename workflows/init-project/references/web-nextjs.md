@@ -85,7 +85,7 @@ Apply this section when the analytics choice is `consent` or `consent+metrics` (
 
 Apply this section when the AI features include `llms.txt` (`@vllnt/next-llms`).
 
-- Install the channel the [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex sets. For a canary-only package, follow [Canary packages](baseline.md#canary-packages), and record the exact version and reason in the generated `AGENTS.md`.
+- Install from [default packages](vstack/capabilities/project-alignment/references/default-packages.md) using [Resolve release](baseline.md#resolve-release). Record any prerelease and reason in the generated `AGENTS.md`.
 - Serve `llms.txt` from a static route built with the generator the installed version exports (confirm it in its `exports` and `.d.ts`). The route handler must pass the preset's naming rules.
 - Add the markdown catch-all route only if the user has a content source. Its resolver receives the slug of the whole request path, so that resolver is the security boundary.
 
