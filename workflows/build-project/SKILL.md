@@ -1,11 +1,11 @@
 ---
 name: build-project
-description: Establish and verify a minimal project baseline from applicable stack and package preferences.
+description: Establish and verify a minimal project baseline from applicable stack preferences on stacks that init-project does not scaffold.
 ---
 
 ## Goal
 
-Establish the smallest authorized project baseline, or return its setup plan. Use `improve-project` to realign an established stack.
+Establish the smallest authorized project baseline, or return its setup plan. Use `init-project` to start a new Next.js, Convex, or Expo project or a TypeScript library or CLI on the Vstack stack, and `improve-project` to realign an established stack.
 
 ### Definition of Done
 

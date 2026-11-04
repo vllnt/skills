@@ -26,7 +26,7 @@ Use [.agents/skills/manage-skill/SKILL.md](.agents/skills/manage-skill/SKILL.md)
 
 ## Skill naming
 
-Use `build`, `deliver`, `explain`, `explore`, `improve`, `manage`, `plan`, or `review` for workflows. Reuse these verbs before introducing another. Reference domain and function are nouns. Internal procedures have no `SKILL.md`, routing name, or description metadata. Mandatory entries use `vllnt-<subject>-principles`.
+Use `build`, `deliver`, `explain`, `explore`, `improve`, `init`, `manage`, `plan`, or `review` for workflows. `init` is reserved for interactive creation of a new project from scratch. Reuse these verbs before introducing another. Reference domain and function are nouns. Internal procedures have no `SKILL.md`, routing name, or description metadata. Mandatory entries use `vllnt-<subject>-principles`.
 
 Names must match folders and be unique across public categories, including flat installations. Keep one canonical name, with no obsolete aliases. Prefixes describe intended use; they do not hide skills from a runtime.
 

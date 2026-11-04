@@ -1,6 +1,6 @@
 # Vstack Skills
 
-29 public skills discoverable through the documented category paths: 26 user workflows and 3 session principles. Reuse the [vllnt package ecosystem](https://github.com/vllnt) through the optional Vstack profile and live package discovery.
+30 public skills discoverable through the documented category paths: 27 user workflows and 3 session principles. Reuse the [vllnt package ecosystem](https://github.com/vllnt) through the optional Vstack profile and live package discovery.
 
 ## Session principles
 
@@ -26,6 +26,7 @@
 - [improve-session](workflows/improve-session/SKILL.md)
 - [improve-tests](workflows/improve-tests/SKILL.md)
 - [improve-ui](workflows/improve-ui/SKILL.md)
+- [init-project](workflows/init-project/SKILL.md)
 - [manage-defects](workflows/manage-defects/SKILL.md)
 - [manage-issues](workflows/manage-issues/SKILL.md)
 - [manage-roadmap](workflows/manage-roadmap/SKILL.md)

@@ -35,7 +35,7 @@ Configure the runtime's user/project instructions to read installed mandatory en
 The optional [Vstack profile](references/vstack.md) prefers Next.js for web, Tauri with a compatible Next.js frontend for desktop, Expo/React Native for mobile, Convex for durable backend state, and TypeScript/Effect for CLI or stateless APIs.
 
 1. Select the profile through applicable user/project instructions.
-2. Use `build-project` for a new baseline or `improve-project` for staged alignment.
+2. Use `init-project` to start a new web, backend, mobile, library, or CLI project; `build-project` for a minimal baseline on another stack; or `improve-project` for staged alignment.
 3. Shared alignment discovers relevant `@vllnt` packages, exact versions, stable/canary channels, and consumer compatibility through [Stack packages](references/capabilities/stack-packages/REFERENCE.md).
 4. Reuse compatible foundations before custom implementations. Preserve justified project exceptions and validate actual consumer behavior.
 
@@ -56,7 +56,7 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | Skill | Result |
 |---|---|
 | [build-landing-page](workflows/build-landing-page/SKILL.md) | Draft or review framework-independent landing-page structure and conversion copy for one primary action. |
-| [build-project](workflows/build-project/SKILL.md) | Establish and verify a minimal project baseline from applicable stack and package preferences. |
+| [build-project](workflows/build-project/SKILL.md) | Establish and verify a minimal project baseline from applicable stack preferences on stacks that init-project does not scaffold. |
 | [build-prototype](workflows/build-prototype/SKILL.md) | Build and iterate a focused local prototype using observed behavior and human product decisions. |
 | [deliver-issue](workflows/deliver-issue/SKILL.md) | Deliver a scoped issue through a verified pull request and authorized merge to its target branch. |
 | [deliver-pull-request](workflows/deliver-pull-request/SKILL.md) | Review a pull request, coordinate authorized repairs and verification, then merge it when permitted. |
@@ -71,6 +71,7 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | [improve-session](workflows/improve-session/SKILL.md) | Refocus a session at any point on its requested outcome, grounded decisions, simplicity, required quality, and efficient execution. |
 | [improve-tests](workflows/improve-tests/SKILL.md) | Improve a whole test suite by consolidating cross-file duplication and reducing execution cost while preserving coverage and defect detection. |
 | [improve-ui](workflows/improve-ui/SKILL.md) | Improve an interface’s hierarchy, consistency, responsiveness, and accessibility while preserving journeys. |
+| [init-project](workflows/init-project/SKILL.md) | Start a new project by asking what to build, then scaffold, install, and verify a Next.js, Convex, Expo, library, or CLI project on the enforced @vllnt baseline. |
 | [manage-defects](workflows/manage-defects/SKILL.md) | Diagnose a reported failure, isolate its cause, and apply authorized repairs with regression evidence. |
 | [manage-issues](workflows/manage-issues/SKILL.md) | Triage GitHub issues into an evidence-backed, atomic, actionable backlog and apply authorized changes. |
 | [manage-roadmap](workflows/manage-roadmap/SKILL.md) | Create, maintain, synchronize, or report a traceable roadmap that preserves direction and history. |

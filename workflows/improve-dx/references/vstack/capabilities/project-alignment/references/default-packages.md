@@ -21,7 +21,7 @@ Preferred foundations for Vstack projects, from the [@vllnt npm scope](https://w
 | Web UI components | `@vllnt/ui` | stable |
 | Structured logging for Node/Next.js server code, Convex actions, and CLIs (instead of `console` or a per-app pino setup) | `@vllnt/logger` | stable, `^0.1.2` |
 | Client-side product analytics and event tracking with consent, for web apps on the @vllnt stack | `@vllnt/analytics` | stable, `^0.1.1` |
-| `llms.txt`, `llms-full.txt`, and raw-markdown pages for Next.js | `@vllnt/next-llms` | canary-only, pin `0.1.0-canary.bca5ab7` |
+| `llms.txt` and raw-markdown pages for Next.js | `@vllnt/next-llms` | canary-only, pin `0.1.0-canary.b0bb621`; the `latest` tag points at an older canary without input hardening |
 
 `@vllnt/ui` and `@vllnt/analytics` are web packages; do not infer mobile support from React compatibility.
 

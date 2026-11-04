@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(stack): pin @vllnt/next-llms to its current canary (0.1.0-canary.b0bb621); the latest tag points at an older canary, and the pinned build no longer exports the llms-full.txt generator
+- feat(workflows): add init-project, which asks what to build and then scaffolds, installs, and verifies a Next.js, Convex, Expo, library, or CLI project on the enforced @vllnt baseline (7-day package age, hooks, CI, changelog, agent files)
 - fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
 - docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
