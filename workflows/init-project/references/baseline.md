@@ -180,7 +180,7 @@ With a web app, CI runs the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) a
 - Dev servers bind to loopback (localhost) on the worktree's ports. Physical-device Expo development may opt into LAN or a tunnel explicitly; record the opt-in in `AGENTS.md`.
 - One browser for end-to-end tests. No Storybook, bundle analyzers or extra quality tools by default.
 - No per-package task overrides, and no hand-listed test files: test runners find tests by glob.
-- `verify` is the one command that matches CI, and the pre-push hook runs it.
+- `verify` is the shared contract CI runs before its [CI-only gates](lifecycle.md#ci), and the pre-push hook runs it.
 - The Convex local backend runs only on demand. Tests use convex-test, which needs no running backend.
 
 ## Gitignore
@@ -198,7 +198,7 @@ Ignore dependencies, build and framework output, caches and test reports, compil
 
 1. The project name and one sentence on what it is.
 2. **Stack:** one row per surface with its path and technology; the package manager and Node version files; **Prereleases:** each exact prerelease with its reason, or "none".
-3. **Commands:** prerequisites (the secret scanner the pre-commit hook needs), install (which also installs the hooks), `dev`, `verify` (same as CI), `format`, and the [lifecycle scripts](lifecycle.md#lifecycle).
+3. **Commands:** prerequisites (the secret scanner the pre-commit hook needs), install (which also installs the hooks), `dev`, `verify` (what CI runs, plus its CI-only gates), `format`, and the [lifecycle scripts](lifecycle.md#lifecycle).
 4. **Constraints:** verify first; done means `pnpm verify` passed; strict TypeScript with no escape hatches or unexplained suppressions; no narrative comments (with the [upcoming rule](#no-comments-rule-upcoming) status); `@vllnt/logger` instead of `console`, never logging headers, cookies, tokens or identity; fail closed, with the failure path tested; backend rules, with components mounted only in `convex.config.ts`; `.env.example` holds names only and backend secrets live on the deployment; every user-visible string in every catalog; the 7-day release-age gate with `@vllnt/*` exempt and a reason for every exception; a changelog line for every user-visible change; branch, PR, merge, never pushing to the default branch or rewriting shared history; localhost dev servers unless an opt-in is recorded.
 5. **Lifecycle:** the steps from [Lifecycle](lifecycle.md#lifecycle), one line each, with the run location.
 6. **Parallel work:** one agent per worktree; never edit the main checkout; create and remove worktrees only with `wt:new` and `wt:rm`; rebase on the default branch before opening a PR; remove the worktree after merge; heavy work stays under the shared machine-wide cap.
