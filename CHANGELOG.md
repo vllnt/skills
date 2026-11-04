@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 - feat(stack): Turbo task graph and CI target in workspace Turborepo reference; resolve package releases at run time
 - chore(skills): capability refs defer CLI flags and API snippets to installed tool docs
 
+- fix(ci): retry the privacy guard with the tracked denylist when the optional extra-pattern secret is invalid, while a denylist match or scanner error still fails the check
+- chore(skills): default capability references to the latest @vllnt preset releases instead of a fixed major, and replace browser-tool CLI flags, npm command options, and browser or test API snippets with requirements that defer to the installed tool's help and official docs
 - fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
 - docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
