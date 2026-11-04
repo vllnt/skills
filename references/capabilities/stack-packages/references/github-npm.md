@@ -3,9 +3,9 @@
 1. Read the requested package or inventory scope, the consumer's selected GitHub owners, and npm registries/scopes. Confirm available credentials without displaying tokens or complete credential configuration.
 2. List repositories for each selected owner through the supported API or CLI with pagination. Include authorized private repositories; record inaccessible scope. Enumerate an account and its accessible organizations only for an account-wide request, then deduplicate repositories.
 3. Read each default-branch revision and tree. If a recursive tree is truncated, traverse the omitted directories; do not call it complete. Inspect package manifests, workspace definitions, and publication configuration. Exclude dependencies/vendor outputs from source scanning; retain evidence for intentionally excluded examples/private packages.
-4. Use the installed npm CLI's supported read-only package-access listing, such as `npm access list packages <scope> --json`, when authorized and available. Confirm its actual account visibility; access listings do not prove unseen private packages are absent. Do not use access-changing subcommands.
+4. Use the installed npm CLI's supported read-only package-access listing, when authorized and available. Confirm its actual account visibility; access listings do not prove unseen private packages are absent. Do not use access-changing subcommands.
 5. Supplement with paginated public registry search, filtering exact scope boundaries. Union results with discovered source and consumer package names, including unscoped packages only where ownership is evidenced. npm search is an index, not an authoritative full-scope ledger. GitHub Packages is a different registry from npmjs.org.
-6. For every name, query its explicitly selected registry's metadata endpoint or `npm view <package> dist-tags versions time --json --registry <registry>`. Read each candidate exact version's peers, engines, exports, deprecated flag, and distribution metadata. Do not use `npx`, install, lifecycle scripts, or publish to inspect metadata.
+6. For every name, query its explicitly selected registry's metadata (dist-tags, versions, and publish times) through the registry endpoint or the installed npm CLI's read-only view command, taking its options from the CLI's help. Read each candidate exact version's peers, engines, exports, deprecated flag, and distribution metadata. Do not use `npx`, install, lifecycle scripts, or publish to inspect metadata.
 7. Resolve latest and canary independently. Record an absent tag rather than inventing one. Compare version publication timestamps and semver; a canary can be older than latest, and latest can itself be a prerelease. Follow the consumer's channel policy and document any fallback.
 8. Inspect consumer manifests and lockfiles without rewriting them. Distinguish declared ranges, resolved versions, source/workspace links, overrides, and missing lock evidence. Check compatible peer intersections, including framework/TypeScript/native targets; keep private repository names out of public summaries.
 9. Return an evidence table and coverage ledger with read time and scope. Report any rate limits, timeouts, missing auth, incomplete pages/trees, or unsupported registries. Retry only when the cause changes; continue unaffected sources.
@@ -27,5 +27,5 @@
 
 - [GitHub repositories and pagination](https://docs.github.com/en/rest/repos/repos)
 - [npm access listing](https://docs.npmjs.com/cli/access/)
-- [npm view metadata](https://docs.npmjs.com/cli/v11/commands/npm-view/)
+- [npm view metadata](https://docs.npmjs.com/cli/commands/npm-view/)
 - [npm scope and visibility](https://docs.npmjs.com/package-scope-access-level-and-visibility/)
