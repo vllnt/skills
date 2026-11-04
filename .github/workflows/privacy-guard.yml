@@ -38,4 +38,19 @@ jobs:
       - name: Check denylist
         env:
           PRIVACY_DENYLIST_EXTRA: ${{ secrets.PRIVACY_DENYLIST_EXTRA }}
-        run: bash scripts/privacy-denylist.sh
+        run: |
+          set -euo pipefail
+          # Tracked denylist must always run. If the optional CI secret has invalid
+          # git-grep regexes, warn and continue without it so PRs are not blocked
+          # while the secret is repaired (same failure mode as an empty secret).
+          if bash scripts/privacy-denylist.sh; then
+            exit 0
+          fi
+          code=$?
+          if [[ "$code" -eq 2 && -n "${PRIVACY_DENYLIST_EXTRA:-}" ]]; then
+            echo "::warning title=Privacy guard::PRIVACY_DENYLIST_EXTRA has invalid regex line(s) for git grep -E. Re-running with the tracked denylist only. Fix the Actions secret."
+            unset PRIVACY_DENYLIST_EXTRA
+            bash scripts/privacy-denylist.sh
+            exit $?
+          fi
+          exit "$code"

@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(ci): soft-fail invalid PRIVACY_DENYLIST_EXTRA and keep tracked denylist
 - refactor(workflows): merge build-project into init-project (`vstack` + `other`); retire build-project
 - fix(stack): default-packages lists packages only (no versions or channel labels); resolve release at execution (prefer LTS/non-prerelease)
 - fix(init-project): local verify is the gate of record — pre-commit irreversibility-only, pre-push `verify`/`verify:changed`, CI thin confirmation
