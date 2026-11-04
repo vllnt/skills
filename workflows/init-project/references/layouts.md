@@ -1,4 +1,4 @@
-Load this file when you lay out the project tree, and again when you create shared packages or the root files of a monorepo.
+Load when laying out the tree, shared packages, or monorepo root files.
 
 The layout follows what `@vllnt/eslint-config` enforces. The installed preset is the authority: read its README and the effective config ([check 5](verification.md#checks)) rather than this file when they differ, and report the difference. Rules the preset does not enforce yet are listed as review rules with a pass check; never add a custom lint rule for them, because they belong upstream.
 
@@ -28,7 +28,7 @@ The layout follows what `@vllnt/eslint-config` enforces. The installed preset is
   AGENTS.md  CLAUDE.md  CHANGELOG.md  README.md  SECURITY.md  CONTRIBUTING.md  [LICENSE]
 ```
 
-Plus the root dotfiles from the [baseline](baseline.md): Node version, ignore files, Prettier config, and `.env.example`. `LICENSE` exists when the project is public. A single app still gets a `pnpm-workspace.yaml`, used only for the [supply-chain policy](baseline.md#supply-chain).
+Plus the root dotfiles from the [baseline](baseline.md): Node version, ignore files, Prettier config, and `.env.example`. `LICENSE` exists when the project is public. A single app still gets a `pnpm-workspace.yaml`, holding only the [supply-chain](baseline.md#supply-chain) settings and no `packages:` key.
 
 ## Monorepo
 
@@ -41,7 +41,7 @@ Plus the root dotfiles from the [baseline](baseline.md): Node version, ignore fi
   packages/client/         @<name>/client    optional
   packages/shared/         @<name>/shared    optional
   packages/<lib>/          @<name>/<lib>     published library (library-cli.md)
-  scripts/  .githooks/  .github/
+  scripts/  .githooks/  .github/       scripts/ holds verify-changed for the pre-push gate
   package.json  pnpm-workspace.yaml  turbo.json
   AGENTS.md  CLAUDE.md  CHANGELOG.md  README.md  SECURITY.md  CONTRIBUTING.md  [LICENSE]
 ```
@@ -58,6 +58,12 @@ Rules:
 - No root ESLint config and no root tsconfig: each workspace owns its own, so the root runs Turbo only.
 
 Pass checks: the task graph has no cycles and no package depends on an app ([check 18](verification.md#checks)); every internal dependency edge follows the allowed directions above, a search finds no deep import into another workspace's `src/` or `convex/`, and no web-only package is in mobile's dependency closure ([check 21](verification.md#checks)). The preset's `boundaries` option stays off until it ships element definitions upstream.
+
+### Monorepo root
+
+- Root `package.json`: private, `packageManager` with the resolved pnpm, `engines.node` from the [runtime preflight](baseline.md#runtime-preflight), and the [baseline scripts](baseline.md#baseline-scripts) through Turbo, including `verify:changed`. Concurrency caps live in the root scripts. With mobile, `verify` and CI include `check:expo`. Root dev dependencies are only the shared tooling, through `catalog:`.
+- `pnpm-workspace.yaml`: the workspace globs, a `catalog:` entry for every shared dependency resolved at install time (with mobile, `react` matches the version Expo selects, so one copy exists), and the [supply-chain](baseline.md#supply-chain) keys, written before the first `pnpm add`.
+- `turbo.json` follows the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md): stream output instead of the interactive UI, global inputs for env files, every environment variable a task reads declared, `dev` persistent and uncached, and lint, typecheck, and test of source-first packages not waiting on upstream builds.
 
 ## Shared packages
 

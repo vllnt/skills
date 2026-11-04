@@ -4,14 +4,14 @@ This file states requirements. Take configuration keys, flags, and file formats 
 
 ## Package lines
 
-No version is written in this skill. Every package defaults to its latest release, resolved at install time. For a package outside `@vllnt/*`, "latest" means the newest release at least 7 days old; `@vllnt/*` packages are exempt from that gate. The [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex owns the channel for each `@vllnt/*` package.
+No version is written in this skill. Resolve every package at install time from the registry. For a package outside `@vllnt/*`, prefer the newest non-prerelease at least 7 days old; `@vllnt/*` is exempt from that age gate. The [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex names preferred packages only — never channels or versions.
 
 ### Resolve versions
 
 1. Write the [supply-chain policy](#supply-chain) before the first `pnpm add`: in `pnpm-workspace.yaml` for a single app, and in the full workspace file (`packages:`, `catalog:` and that policy, see [Monorepo](layouts.md#monorepo)) for a monorepo.
 2. Add packages by name, without a version (`pnpm add next`). Under the release-age policy, pnpm installs the newest release that is old enough and records a range.
 3. Respect published peer ranges. When a selected package peers a dependency (for example, the `@vllnt` presets peer `typescript`, `eslint`, and `prettier`), read the range from the registry at run time and add the newest version inside it. Never let a newer major break a preset's peer range.
-4. Do not pre-pin exact versions read from the registry: the newest release may be too young, and the install then fails. The exceptions are prereleases (see [Canary packages](#canary-packages)) and tools that need an exact version, such as `packageManager`.
+4. Do not pre-pin exact versions read from the registry: the newest release may be too young, and the install then fails. The exceptions are prereleases (see [Resolve release](#resolve-release)) and tools that need an exact version, such as `packageManager`.
 5. If a package resolves to nothing, stop and ask.
 6. After installing, report the versions actually installed, read from the lockfile or the installed package list.
 
@@ -25,17 +25,10 @@ No version is written in this skill. Every package defaults to its latest releas
 
 Before generating an import from a package subpath, read the published `exports` map of the version you install and confirm `./<sub>` exists. The map proves only that the subpath exists: before generating a call, confirm each named export in the installed package's `.d.ts`. Published versions often lag the source repositories, and some subpaths shown in READMEs exist only on canary builds.
 
-### Canary packages
+### Resolve release
 
-Use stable releases. A canary is allowed only:
-- when the package has no stable release and the user picked the feature, or
-- when the default-packages annex lists the package as canary-only.
+At execution, query the registry (dist-tags, version list, publish times). Prefer the newest non-prerelease / LTS that satisfies peers and policy. If none exists and the user selected the feature, install the newest usable prerelease as an exact version. Do not invent "stable" or "canary-only" from this skill. Compare publish times; do not trust `latest` alone. Check exports against the chosen version. Report any prerelease and its reason under "Prereleases" in the generated `AGENTS.md` (see [Agent files](#agent-files)).
 
-To install one:
-1. Check whether a stable release now exists. If it does, use it instead.
-2. Otherwise install the newest canary by publish time, as an exact version without a range. Compare publish times instead of trusting the `latest` tag, which can point at an older prerelease.
-3. Check exports (see above) against that exact version.
-4. Report the version in the plan, and record it with its reason under "Prereleases" in the generated `AGENTS.md` (see [Agent files](#agent-files)).
 
 ### Not offered
 
@@ -116,10 +109,12 @@ Expected contract of the upstream rule (unpublished, unverified), so templates s
 
 ## Git hooks
 
-- No hook manager. A `prepare` script points git's hooks path at the tracked `.githooks/` on install, and tolerates checkouts without git. Hooks work in every worktree, because worktrees share the repository configuration ([check 15](verification.md#checks) proves it).
-- `pre-commit` stays fast (about a second) and holds only checks that are hard to undo after a commit: refuse env files other than `.env.example`, check whitespace errors in the staged diff, and scan the staged changes for secrets with `gitleaks` or an equivalent scanner. The scanner is a documented prerequisite in `AGENTS.md`; when it is missing, the hook fails closed with the reason, and the scaffold reports the gate blocked rather than passed.
-- `pre-push` runs `pnpm verify`.
-- Both hooks honor one explicit opt-out variable for emergencies, and both are executable. Pushes stay slow on purpose and commits stay fast, so nobody reaches for the bypass flag.
+Local verification is the gate of record. CI only confirms; it is not the first place to learn about lint, type, or test failures.
+
+- No hook manager. A `prepare` script points git's hooks path at the tracked `.githooks/` on install, and tolerates checkouts without git. Hooks work in every worktree (shared repo config; [check 15](verification.md#checks)).
+- `pre-commit` stays ~1s and holds only irreversible checks: refuse env files other than `.env.example`, whitespace errors in the staged diff, secret scan of staged changes (`gitleaks` or equivalent). Scanner is a documented prerequisite; missing → fail closed / gate blocked. Never put `verify`, lint, typecheck, test, or build here.
+- `pre-push` runs the local gate: monorepo → `pnpm verify:changed` (affected from merge-base of the push; full graph when the base is missing or a root input changed — same rules as [task graph](vstack/capabilities/workspace-turborepo/references/task-graph-target.md)); single app → `pnpm verify`. Fail closed. Do not push with a red local gate.
+- Both hooks honor one emergency opt-out variable and are executable. Commits stay fast; pushes carry the proof so CI can stay thin.
 
 ## Supply chain
 
@@ -163,7 +158,7 @@ Cheap at creation and costly later, so every project gets them. Each has an owne
 
 ### End-to-end job
 
-With a web app, CI runs the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) against the production build: it repeats the setup steps (jobs do not share build output), uses the main job's placeholder environment except the backend URL, which points at the backend the [smoke](web-nextjs.md#end-to-end-smoke) requires, installs one browser, and runs `test:e2e`. The smoke's spec files are `tests/e2e/*.spec.ts` in both layouts, and the unit test runner never includes them.
+With a web app, the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) is generated with its dependency, config, specs, `test:e2e`, and CI job together. The CI job repeats the setup steps (jobs do not share build output), uses the primary job's placeholder environment except the backend URL, which points at the backend the smoke requires, builds the web app, installs one browser, and runs `test:e2e`. The smoke's spec files are `tests/e2e/*.spec.ts` in both layouts, and the unit test runner never includes them. It stays outside the default pre-push gate ([Tests](#tests), [CI](lifecycle.md#ci)).
 
 ## Changelog
 
@@ -171,17 +166,42 @@ With a web app, CI runs the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) a
 
 `AGENTS.md` rule: a user-visible change adds a line under `[Unreleased]`.
 
+## Tests
+
+Goal-oriented. Agents choose runner config from the surface’s current docs; this section states outcomes, not file recipes.
+
+### Goal
+
+Every package and app has its own test setup. Tests sit close to the code they protect. Scaffolded and owned public behavior has strong coverage, including failure paths. Agents extend by copying nearby examples — not by inventing a parallel test layout.
+
+### Definition of Done
+
+- Each workspace that ships code has a working `test` script; root `verify` / `verify:changed` runs those tests.
+- Discovery is by glob (no hand-listed files). Layout is consistent inside a package so the next test has an obvious neighbor to copy.
+- Every seeded public behavior has at least one success case and one failure/denial/edge case that would catch a real regression.
+- New public exports or handlers land with tests in the same change. Untested public surface is a gap, not done.
+- Coverage is maximized for owned behavior within capacity (≤2 workers). If the stack’s coverage tool is wired, treat regressions in coverage of owned code as fail; unlabeled drops are not allowed. Missing coverage tooling is an evidence gap, not permission to skip tests.
+- `pnpm test` (or turbo `test`) is green on day one and before push.
+
+### Rules
+
+- **Per package:** own runner config + scripts; do not rely on a sibling’s tests.
+- **Colocate:** unit/examples next to the module or in that domain’s `tests/` folder (backend domains under `convex/<domain>/tests/`). App-level pure helpers: `*.test.ts` beside the helper or under the package’s agreed unit glob — pick one pattern per package and keep it.
+- **Examples first:** scaffold ships small real examples agents (and humans) copy; do not add helpers only to inflate coverage.
+- **Fail closed:** auth, env, validation, and CLI errors need negative tests. Flakes get diagnosed, not silenced.
+- **No theater:** do not add dead code or test-only production routes for coverage.
+- **Surface runners:** web/shared/library → Vitest (current docs); backend → Vitest + convex-test, no live backend; mobile → Expo’s test stack from `expo install`. The web [end-to-end smoke](web-nextjs.md#end-to-end-smoke) is required but outside the default pre-push gate ([lifecycle CI](lifecycle.md#ci)).
+- **Capacity:** max 2 test workers; backend tests need no running Convex process.
+
 ## Lean defaults
 
-- **Capacity:**
-  - Heavy parallelism is capped at 2 (task runner and test workers), and builds run one at a time, after the checks. The caps hold across every worktree on the machine (see [Parallel worktrees](lifecycle.md#parallel-worktrees)).
-  - 2 is a default, not a law: lower it when a measured run hits low free memory.
-- Lint and compiler caches stay inside the worktree, out of git and out of lint scope; [Gitignore](#gitignore) covers them.
-- Dev servers bind to loopback (localhost) on the worktree's ports. Physical-device Expo development may opt into LAN or a tunnel explicitly; record the opt-in in `AGENTS.md`.
-- One browser for end-to-end tests. No Storybook, bundle analyzers or extra quality tools by default.
+- **Capacity:** heavy parallelism capped at 2 (task runner and test workers); builds one at a time after checks; caps are machine-wide across worktrees. Lower when free memory is low.
+- Lint/compiler caches stay inside the worktree (see [Gitignore](#gitignore)).
+- Dev servers bind to loopback on the worktree’s ports. Physical-device Expo may opt into LAN/tunnel; record opt-in in `AGENTS.md`.
+- One browser for e2e when that recipe exists. No Storybook, bundle analyzers, or extra quality tools by default.
+- Local gate of record: `verify` / `verify:changed` before push and before `pr`. CI confirms via the same scripts + cache, plus its [CI-only gates](lifecycle.md#ci); it is not the first lint/type/test loop.
 - No per-package task overrides, and no hand-listed test files: test runners find tests by glob.
-- `verify` is the shared contract CI runs before its [CI-only gates](lifecycle.md#ci), and the pre-push hook runs it.
-- The Convex local backend runs only on demand. Tests use convex-test, which needs no running backend.
+- Convex local backend on demand only.
 
 ## Gitignore
 
@@ -198,8 +218,8 @@ Ignore dependencies, build and framework output, caches and test reports, compil
 
 1. The project name and one sentence on what it is.
 2. **Stack:** one row per surface with its path and technology; the package manager and Node version files; **Prereleases:** each exact prerelease with its reason, or "none".
-3. **Commands:** prerequisites (the secret scanner the pre-commit hook needs), install (which also installs the hooks), `dev`, `verify` (what CI runs, plus its CI-only gates), `format`, and the [lifecycle scripts](lifecycle.md#lifecycle).
-4. **Constraints:** verify first; done means `pnpm verify` passed; strict TypeScript with no escape hatches or unexplained suppressions; no narrative comments (with the [upcoming rule](#no-comments-rule-upcoming) status); `@vllnt/logger` instead of `console`, never logging headers, cookies, tokens or identity; fail closed, with the failure path tested; backend rules, with components mounted only in `convex.config.ts`; `.env.example` holds names only and backend secrets live on the deployment; every user-visible string in every catalog; the 7-day release-age gate with `@vllnt/*` exempt and a reason for every exception; a changelog line for every user-visible change; branch, PR, merge, never pushing to the default branch or rewriting shared history; localhost dev servers unless an opt-in is recorded.
+3. **Commands:** prerequisites (the secret scanner the pre-commit hook needs), install (which also installs the hooks), `dev`, `verify` and `verify:changed` (what CI runs, plus its CI-only gates), `format`, and the [lifecycle scripts](lifecycle.md#lifecycle).
+4. **Constraints:** local verify first (pre-push / `pr`); done means the local gate passed — CI is not the first lint/type/test signal; tests per [Tests](#tests) (per-package setup, colocated examples, maximize owned coverage, failure paths required); strict TypeScript with no escape hatches or unexplained suppressions; no narrative comments (with the [upcoming rule](#no-comments-rule-upcoming) status); `@vllnt/logger` through the allowlisting wrapper instead of `console`, never logging headers, cookies, tokens or identity; fail closed, with the failure path tested; backend rules, components only in `convex.config.ts`; `.env.example` names only; every user-visible string in every catalog; 7-day release-age gate with `@vllnt/*` exempt and reasons for exceptions; changelog line for every user-visible change; branch, PR, merge — never push default branch or rewrite shared history; localhost dev servers unless an opt-in is recorded.
 5. **Lifecycle:** the steps from [Lifecycle](lifecycle.md#lifecycle), one line each, with the run location.
 6. **Parallel work:** one agent per worktree; never edit the main checkout; create and remove worktrees only with `wt:new` and `wt:rm`; rebase on the default branch before opening a PR; remove the worktree after merge; heavy work stays under the shared machine-wide cap.
 7. **Convex rules:** the bullets of [Convex rules](backend-convex.md#convex-rules), verbatim.
@@ -228,6 +248,7 @@ Every package or app defines the same script names, so agents, hooks and CI neve
 | `test` | every workspace | the surface's test runner with at most 2 workers |
 | `format`, `format:check` | single-app root or monorepo root | Prettier write / check |
 | `verify` | single-app root or monorepo root | `format:check`, then lint, typecheck and test (and `check:expo` when mobile exists), then build |
+| `verify:changed` | monorepo root | same contract as `verify`, but Turbo-affected from merge-base (full graph on missing base or root-input change); used by pre-push |
 | `check:expo` | mobile app | Expo's dependency alignment check |
 | `codegen` | wherever `convex/` lives | one-shot Convex code generation |
 | `prepare` | single-app root or monorepo root | points git at `.githooks/` |
@@ -247,4 +268,5 @@ The library and CLI recipes are in [library-cli.md](library-cli.md).
 - Secret split: backend secrets live on the backend deployment, each deploy key only in the host's settings per environment, and backend URLs come from the public environment, never hard-coded.
 - No staging tier by default: the tiers are `dev`, `preview`, and `production`.
 - Nothing environment-specific in committed config: hostnames, project ids, and analytics keys stay out of committed files.
-- Every surface ships with passing tests of its generated behavior, including one failure path, so `pnpm test` is green on day one.
+- Tests follow [Tests](#tests): per-package setup, colocated examples, owned behavior + failure paths covered, `pnpm test` green on day one.
+- Public variables are read by their full literal name: Next.js and Expo inline only direct references, so a dynamic lookup returns nothing.

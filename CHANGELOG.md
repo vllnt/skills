@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- feat(workflows): add init-project, which detects where the project runs (local-only, cloud, or hybrid), asks what to build, then scaffolds, installs, and verifies a Next.js, Convex, Expo, library, or CLI project on the enforced @vllnt baseline (7-day package age with @vllnt exempt, hooks, changelog, agent files), with the full development lifecycle, safe parallel worktrees, a lint-derived folder and test layout, mandatory security and hygiene primitives, and requirements plus pass checks instead of pinned versions or config bodies
-- feat(stack): default every package to its latest release resolved at run time, with canary-only @vllnt packages on their newest canary instead of pinned versions, and add a Turbo task graph and CI target (exact task graph and cache keys, shared remote cache, affected-only pull requests) to the workspace Turborepo reference
-- chore(skills): default capability references to the latest @vllnt preset releases instead of a fixed major, and replace browser-tool CLI flags, npm command options, and browser or test API snippets with requirements that defer to the installed tool's help and official docs
+- fix(ci): soft-fail invalid PRIVACY_DENYLIST_EXTRA and keep tracked denylist
+- refactor(workflows): merge build-project into init-project (`vstack` + `other`); retire build-project
+- fix(stack): default-packages lists packages only (no versions or channel labels); resolve release at execution (prefer LTS/non-prerelease)
+- fix(init-project): local verify is the gate of record — pre-commit irreversibility-only, pre-push `verify`/`verify:changed`, CI thin confirmation
+- fix(init-project): tests as goals — per-package setup, colocated examples, maximize owned coverage; agents choose runner details
+- feat(workflows): add init-project (run location, lifecycle, worktrees, Turborepo monorepos); requirements and pass checks, not pinned config
+- feat(init-project): derive the folder, file, and test layout from what @vllnt/eslint-config enforces, and add mandatory primitives (typed configuration, input validation, allowlisted logging, error sink, security headers, health checks, accessibility smoke, secret and advisory gates, change hygiene, community files)
+- feat(stack): Turbo task graph and CI target in workspace Turborepo reference; resolve package releases at run time
+- chore(skills): capability refs defer CLI flags and API snippets to installed tool docs
+
 - fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
 - docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
@@ -14,9 +21,9 @@ All notable changes to this project will be documented in this file.
 - feat(skills): add basic machine privacy workflow that audits identifiers, DNS and network leaks, telemetry, permissions, sharing, browser tracking, and file metadata, lists every recommendation with its benefit, risk, and undo, then applies and verifies only user-selected changes
 - feat(skills): add basic machine security workflow that audits OS settings, hidden or dormant processes, network exposure, and accounts, offers an approved local network check for suspicious devices, then applies and verifies only user-selected fixes
 - fix(privacy): validate denylist patterns with the git grep engine that scans them, reject PCRE-only escapes, normalize CRLF, and report invalid patterns by source and line only
-- feat(stack): extend the default-packages annex with `@vllnt/convex-api-keys` (`^0.2.0`), `@vllnt/logger` (`^0.1.2`), and `@vllnt/analytics` (`^0.1.1`); mark `@vllnt/ui-core` and `@vllnt/ui-native` experimental opt-in and `@vllnt/dig` not yet default
+- feat(stack): extend the default-packages annex with `@vllnt/convex-api-keys`, `@vllnt/logger`, and `@vllnt/analytics`; mark `@vllnt/ui-core` and `@vllnt/ui-native` experimental opt-in and `@vllnt/dig` not yet default
 - chore(privacy): add privacy-guard workflow, gitleaks history scan, and structural denylist check with allowlist, optional private patterns, and withheld match content
-- feat(stack): default skills to published @vllnt packages (stable by default, canary-only pinned exactly, TypeScript and ESLint on 2.x) through one default-packages annex
+- feat(stack): default skills to published @vllnt packages through one default-packages annex (resolve releases at execution)
 - feat(qa): add standalone full-environment PR testing workflow with safe seeding and candidate-bound evidence
 - feat(skills): require contract-preserving reduction of task-owned additions before code commits or uncommitted handoff
 - fix(skills): measure developer and agent task speed, discover native stacks, and assess test duplication across the whole suite

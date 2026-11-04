@@ -25,9 +25,7 @@ Run in the app directory: the root for a single app, or `apps/mobile`.
 
 ### Source files
 
-- The root layout is a stack navigator; the index screen renders a greeting from a pure function in `lib/`, and `lib/*.test.ts` tests it with the Expo test preset.
-- `.env.example` holds the public backend URL name when the backend is selected.
-- Optional, on request: device end-to-end flows in one flow directory.
+Meet [Tests](baseline.md#tests). Seed a stack-navigator root layout, one screen, and a pure helper in `lib/` with colocated success and failure examples as `lib/*.test.ts` (Expo's test stack from `expo install`). `.env.example` names only when backend is selected. Device end-to-end flows only on request.
 
 ## Backend wiring
 
@@ -55,7 +53,7 @@ Offer `@vllnt/ui-native` only after an availability check:
 If either check fails, scaffold `plain` and add a "native UI library pending" line to `AGENTS.md`.
 
 When it is available:
-- Install it as in [Canary packages](baseline.md#canary-packages) and mount its theme provider at the root, following the system color scheme.
+- Install it as in [Resolve release](baseline.md#resolve-release) and mount its theme provider at the root, following the system color scheme.
 - Satisfy the peers its installed version declares. It needs no Tailwind, NativeWind, Babel or Metro changes.
 - Take component names and props from its README and `exports`. Components take React Native styles and accessibility props, not class names.
 - Never use `@vllnt/ui` (web) or `@vllnt/analytics` in mobile.

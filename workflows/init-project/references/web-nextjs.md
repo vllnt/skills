@@ -35,6 +35,8 @@ In a monorepo, take shared versions from `catalog:` (see [Monorepo](layouts.md#m
 - `.env.example` lists names only: the public site URL and `LOG_LEVEL`, then one entry per feature that needs one.
 - The vitest config includes `tests/unit/**/*.test.ts` with at most 2 workers. When the app also holds `convex/`, use the two-project form from the [backend tests](backend-convex.md#tests).
 
+Meet [Tests](baseline.md#tests).
+
 ## Logging
 
 Always apply this section.
@@ -85,13 +87,13 @@ Apply this section when the analytics choice is `consent` or `consent+metrics` (
 
 Apply this section when the AI features include `llms.txt` (`@vllnt/next-llms`).
 
-- Install the channel the [default packages](vstack/capabilities/project-alignment/references/default-packages.md) annex sets. For a canary-only package, follow [Canary packages](baseline.md#canary-packages), and record the exact version and reason in the generated `AGENTS.md`.
+- Install from [default packages](vstack/capabilities/project-alignment/references/default-packages.md) using [Resolve release](baseline.md#resolve-release). Record any prerelease and reason in the generated `AGENTS.md`.
 - Serve `llms.txt` from a static route built with the generator the installed version exports (confirm it in its `exports` and `.d.ts`). The route handler must pass the preset's naming rules.
 - Add the markdown catch-all route only if the user has a content source. Its resolver receives the slug of the whole request path, so that resolver is the security boundary.
 
 ## End-to-end smoke
 
-Every web app ships a browser smoke test of its production build, under `tests/e2e/*.spec.ts`, run by the `test:e2e` script locally and by the CI job in [End-to-end job](baseline.md#end-to-end-job). One browser, at most 2 workers locally. It asserts that:
+Every web app ships a browser smoke test of its production build, under `tests/e2e/*.spec.ts`, run by the `test:e2e` script locally and by the CI job in [End-to-end job](baseline.md#end-to-end-job). One browser, at most 2 workers locally. It is outside the default pre-push gate; CI runs it on every pull request. It asserts that:
 
 - the home page renders the project name;
 - an unknown URL shows the not-found page, and a forced render error shows the error page;
