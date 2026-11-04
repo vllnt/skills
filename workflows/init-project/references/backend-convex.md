@@ -94,11 +94,11 @@ Install the components the user picked in the [backend feature bundles question]
 |---|---|---|
 | Accounts and access | `convex-memberships`, `convex-invitations`, `convex-permissions`, `convex-api-keys`, `convex-tokens` | Authorization primitives, not sign-in. Pair `invitations` with `memberships`: accepting returns the grant and the host writes the membership |
 | Growth | `convex-analytics`, `convex-events`, `convex-experiments`, `convex-flags` | `analytics` HTTP routes are opt-in and key-gated. Pair `flags` with `events` for an audit trail |
-| Billing and limits | `convex-wallet`, `convex-metering`, `convex-quota` (PREVIEW) | The host verifies payments, then grants. Quota consumption is not idempotent, so pair it with `convex-idempotency` |
+| Billing and limits | `convex-wallet`, `convex-metering`, `convex-quota` | The host verifies payments, then grants. Quota consumption is not idempotent, so pair it with `convex-idempotency` |
 | Content | `convex-comments`, `convex-reactions`, `convex-slugs` | A slug availability check is a hint, not a reservation |
 | Messaging and privacy | `convex-email`, `convex-notifications`, `convex-suppression`, `convex-consent` | `email` is a durable queue; the host sends. Offer `suppression` and `consent` whenever `email` is picked |
-| Infra | `@vllnt/convex-helpers`, `convex-idempotency`, `convex-buckets` (PREVIEW) | `helpers` is always installed with a backend and is a library, not a component |
-| Domain-specific | `convex-progression` (PREVIEW), `convex-music` | Offer only when the product needs them. `music` takes provider secrets through its configuration call |
+| Infra | `@vllnt/convex-helpers`, `convex-idempotency`, `convex-buckets` | `helpers` is always installed with a backend and is a library, not a component |
+| Domain-specific | `convex-progression`, `convex-music` | Offer only when the product needs them. `music` takes provider secrets through its configuration call |
 
 Package names in the table are under the `@vllnt/` scope unless written in full.
 
