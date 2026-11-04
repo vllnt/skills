@@ -75,7 +75,7 @@ Usually a subset of LCP+TTFB causes.
 
 ## Network / resource findings → fixes
 
-From `agent-browser network requests` and the HAR / Lighthouse opportunities:
+From the browser tool's network log and the HAR / Lighthouse opportunities:
 
 | Finding | Fix |
 |---------|-----|

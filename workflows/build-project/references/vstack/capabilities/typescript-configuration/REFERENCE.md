@@ -14,7 +14,7 @@
 ## Procedure
 
 1. Inspect consumer instructions, scripts, lockfile, tsconfig inheritance, exports, compiler binaries, and fixtures. Record supported compiler, runtime, framework or bundler versions, module format, and emission owner.
-2. Capture every affected effective configuration with the installed compiler's `--showConfig`. Resolve inheritance before editing a shared base; inspect compiler-API consumers such as linters or build plugins separately from CLI compilation.
+2. Capture every affected effective configuration with the installed compiler's show-config option. Resolve inheritance before editing a shared base; inspect compiler-API consumers such as linters or build plugins separately from CLI compilation.
 3. Select settings by consumer: Node needs compatible module, resolution, and extensions; libraries need matching emitted JavaScript, declarations, and exports; bundled apps need supported JSX or resolution; framework-owned builds retain their required plugins and generated includes without competing emit.
 4. Keep bases small. When a Vstack project has no shared base, default to the latest `@vllnt/typescript` release per [default packages](../project-alignment/references/default-packages.md); verify its exports and peers first. Make consumers own layout-specific roots, outputs, includes, and ambient types. Treat strictness, target, lib, types, paths, inherited relative paths, and array replacement as explicit contracts.
 5. Identify the cause before using `skipLibCheck`, weaker strictness, or a compiler upgrade. State its tradeoff.

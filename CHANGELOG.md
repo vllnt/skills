@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- chore(skills): default capability references to the latest @vllnt preset releases instead of a fixed major, and replace browser-tool CLI flags with tool-neutral steps that defer to the installed tool's help
+- chore(skills): default capability references to the latest @vllnt preset releases instead of a fixed major, and replace browser-tool CLI flags, npm command options, and browser or test API snippets with requirements that defer to the installed tool's help and official docs
 - fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
 - docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.
