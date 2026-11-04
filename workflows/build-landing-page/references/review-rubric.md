@@ -6,22 +6,11 @@ How to audit any landing page and return prioritized, concrete fixes. Primary in
 
 ## URL Audit Workflow
 
-Use an installed browser tool for rendered/interactive evidence; the optional CLI examples below require matching installed help. If no browser works, continue static content/structure analysis and explicitly mark live layout, console, interaction and speed unknown. Do not demand one tool or invent an audit. Capture supported viewports, not a universal fixed device set.
+Use an installed browser tool for rendered/interactive evidence; take its commands from its current help. If no browser works, continue static content/structure analysis and explicitly mark live layout, console, interaction and speed unknown. Do not demand one tool or invent an audit. Capture supported viewports, not a universal fixed device set.
 
-```bash
-# 1. Load + structure/copy extraction
-agent-browser open <url>
-agent-browser snapshot -i                 # accessibility tree = section order, headings, CTAs, forms
-
-# 2. Visual hierarchy at the 3 breakpoints that matter
-agent-browser set viewport 1920 1080 && agent-browser screenshot lp-desktop.png
-agent-browser set viewport 768 1024  && agent-browser screenshot lp-tablet.png
-agent-browser set viewport 375 667   && agent-browser screenshot lp-mobile.png
-
-# 3. Is the page even healthy? (broken page = lost conversions)
-agent-browser console --level error
-agent-browser network --failed
-```
+1. Load the page and capture its accessibility tree: section order, headings, CTAs, forms.
+2. Screenshot desktop, tablet, and mobile viewports to judge visual hierarchy.
+3. Check health: console errors and failed network requests (a broken page loses conversions).
 
 Read-only. **Never submit forms or trigger a purchase during an audit.**
 
