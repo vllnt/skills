@@ -2,7 +2,7 @@
 
 Preferred foundations for Vstack projects, from the [@vllnt npm scope](https://www.npmjs.com/org/vllnt). For a listed function, use its package before custom code or a third-party alternative; packages under "Experimental, opt-in" and "Not yet default" are excluded. Keep an existing equivalent only when consumer rules or a contract in use require it, and record that exception.
 
-This annex names packages only. Never write versions, majors, caret ranges, or dist-tags here. At execution, query the registry and install the current release that fits peers and policy (prefer a non-prerelease / LTS when one exists; otherwise the newest usable publish). Verify before use. Record any prerelease and its reason.
+This annex names packages only. Never write versions, majors, caret ranges, or dist-tags here. At execution, query the registry and install the current release that fits peers and policy (prefer the newest stable (non-prerelease) release that passes the 7-day age gate, `@vllnt/*` exempt; otherwise the newest usable publish). Verify before use. Record any prerelease and its reason.
 
 ## Resolve at execution
 

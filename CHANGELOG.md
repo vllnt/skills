@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - refactor(workflows): merge build-project into init-project (`vstack` + `other`); retire build-project
-- fix(stack): default-packages lists packages only (no versions or channel labels); resolve release at execution (prefer LTS/non-prerelease)
+- fix(stack): default-packages lists packages only (no versions or channel labels); resolve release at execution (prefer the newest stable (non-prerelease) release that passes the 7-day age gate, `@vllnt/*` exempt)
 - fix(init-project): local verify is the gate of record — pre-commit irreversibility-only, pre-push `verify`/`verify:changed`, CI thin confirmation
 - fix(init-project): tests as goals — per-package setup, colocated examples, maximize owned coverage; agents choose runner details
 - feat(workflows): add init-project (run location, lifecycle, worktrees, Turborepo monorepos); requirements and pass checks, not pinned config

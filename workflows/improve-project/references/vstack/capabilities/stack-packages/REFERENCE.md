@@ -17,7 +17,7 @@
 2. Paginate each selected source owner within scope. Inspect revisions, root or workspace manifests, and publish configuration. Resolve truncated trees and label archives, forks, examples, and private evidence. Enumerate all accessible owners only for an explicitly account-wide inventory.
 3. Paginate registry listings and scoped search. Union source, publication, consumer manifest, and lockfile names; deduplicate by registry and name while retaining registry-only candidates.
 4. Read candidate tags, versions, dates, deprecation, exports, peers, engines, and available integrity or provenance. Distinguish not found, denied, transport failure, and source-only evidence.
-5. Compare tags, dates, and releases. Prefer non-prerelease / LTS when present; report prereleases under `latest`, unpublished sources, and deprecation. Do not invent channel labels.
+5. Compare tags, dates, and releases. Prefer the newest stable (non-prerelease) release that passes the 7-day age gate (`@vllnt/*` exempt); report prereleases under `latest`, unpublished sources, and deprecation. Do not invent channel labels.
 6. Compare consumer declarations and lock resolutions with candidates. Intersect peer, engine, runtime, and platform constraints; leave missing metadata or resolution unverified.
 7. Return the coverage ledger and next read for every gap. Send material discovery or compatibility uncertainties and evidence to the caller's Quality Validation pool. Use [GitHub/npm procedure](references/github-npm.md) only for those providers.
 
