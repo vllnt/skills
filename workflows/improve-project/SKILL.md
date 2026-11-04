@@ -5,7 +5,7 @@ description: Adapt an existing repository to applicable stack preferences throug
 
 ## Goal
 
-Realign an established project with applicable stack preferences in small verified stages, or return its staged plan.
+Realign an established project with applicable stack preferences in small verified stages, or return its staged plan. Use `init-project` to start a new project instead.
 
 ### Definition of Done
 

@@ -7,7 +7,7 @@ Source-level acceptance cases; executing a consumer project is separate evidence
 | New web app; rules prefer an organization's packages | Discover manifests and registry releases; select needed compatible packages, not every package in the organization. |
 | Existing API uses another stack; project rules deliberately retain it | Preserve the applicable exception. Do not infer permission to replace the backend from a general preference. |
 | Package source exists but registry lookup fails | Distinguish not-found from denied/unavailable access; mark installation unverified and continue other stages. |
-| Only prerelease versions exist; allowed channel is unresolved | Report the version and channel decision. Do not silently install a canary or claim a stable release exists. |
+| Only prerelease versions exist | Report the exact prerelease choice and reason. Do not silently install it or claim a non-prerelease exists. |
 | Framework and preferred config package require incompatible peers | Propose compatible versions or a bounded exception; do not force-install or disable required checks. |
 | Desktop frontend depends on server-only routes | Check the shell's supported execution model; keep server functions in an explicit backend or propose an authorized alternative. A web build does not prove desktop packaging. |
 | Mobile target; shared UI or analytics package imports DOM APIs | Inspect published exports and platform support; do not infer React Native support from React compatibility. |

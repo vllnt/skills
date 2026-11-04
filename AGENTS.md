@@ -26,7 +26,7 @@ Use [.agents/skills/manage-skill/SKILL.md](.agents/skills/manage-skill/SKILL.md)
 
 ## Skill naming
 
-Use `build`, `deliver`, `explain`, `explore`, `improve`, `manage`, `plan`, or `review` for workflows. Reuse these verbs before introducing another. Reference domain and function are nouns. Internal procedures have no `SKILL.md`, routing name, or description metadata. Mandatory entries use `vllnt-<subject>-principles`.
+Use `build`, `deliver`, `explain`, `explore`, `improve`, `init`, `manage`, `plan`, or `review` for workflows. `init` is reserved for interactive creation of a new project from scratch. Reuse these verbs before introducing another. Reference domain and function are nouns. Internal procedures have no `SKILL.md`, routing name, or description metadata. Mandatory entries use `vllnt-<subject>-principles`.
 
 Names must match folders and be unique across public categories, including flat installations. Keep one canonical name, with no obsolete aliases. Prefixes describe intended use; they do not hide skills from a runtime.
 
@@ -63,7 +63,7 @@ An assessment report may complete with bounded coverage gaps when its contract p
 
 Retrieve changing package, service, repository, version, and pricing data from authoritative sources at execution time. Bound discovery to the request; exhaust pagination within that scope. Reconcile sources, registries, and consumers, deduplicate identities, and distinguish denied access from empty results.
 
-Do not hardcode evolving catalogs or versions as scope. The one exception is the [default packages](references/capabilities/project-alignment/references/default-packages.md) annex: it names preferred packages and pins canary-only releases, and every entry is still verified before use. Dated findings are evidence, not future authority. Verify exact selected versions and compatibility before dependent actions; test additions, removals, changed channels, partial access, and multiple pages.
+Do not hardcode evolving catalogs or versions as scope. The [default packages](references/capabilities/project-alignment/references/default-packages.md) annex names preferred packages only (no versions, majors, or channel labels); agents query the registry at run time and prefer the newest stable (non-prerelease) release that passes the 7-day age gate (`@vllnt/*` exempt). Dated findings are evidence, not future authority. Verify exact selected versions and compatibility before dependent actions; test additions, removals, partial access, and multiple pages.
 
 ## Context and distribution
 

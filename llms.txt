@@ -11,7 +11,6 @@
 ## Workflows
 
 - [build-landing-page](workflows/build-landing-page/SKILL.md)
-- [build-project](workflows/build-project/SKILL.md)
 - [build-prototype](workflows/build-prototype/SKILL.md)
 - [deliver-issue](workflows/deliver-issue/SKILL.md)
 - [deliver-pull-request](workflows/deliver-pull-request/SKILL.md)
@@ -26,6 +25,7 @@
 - [improve-session](workflows/improve-session/SKILL.md)
 - [improve-tests](workflows/improve-tests/SKILL.md)
 - [improve-ui](workflows/improve-ui/SKILL.md)
+- [init-project](workflows/init-project/SKILL.md)
 - [manage-defects](workflows/manage-defects/SKILL.md)
 - [manage-issues](workflows/manage-issues/SKILL.md)
 - [manage-roadmap](workflows/manage-roadmap/SKILL.md)

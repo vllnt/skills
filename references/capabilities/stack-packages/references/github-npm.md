@@ -6,7 +6,7 @@
 4. Use the installed npm CLI's supported read-only package-access listing, when authorized and available. Confirm its actual account visibility; access listings do not prove unseen private packages are absent. Do not use access-changing subcommands.
 5. Supplement with paginated public registry search, filtering exact scope boundaries. Union results with discovered source and consumer package names, including unscoped packages only where ownership is evidenced. npm search is an index, not an authoritative full-scope ledger. GitHub Packages is a different registry from npmjs.org.
 6. For every name, query its explicitly selected registry's metadata (dist-tags, versions, and publish times) through the registry endpoint or the installed npm CLI's read-only view command, taking its options from the CLI's help. Read each candidate exact version's peers, engines, exports, deprecated flag, and distribution metadata. Do not use `npx`, install, lifecycle scripts, or publish to inspect metadata.
-7. Resolve latest and canary independently. Record an absent tag rather than inventing one. Compare version publication timestamps and semver; a canary can be older than latest, and latest can itself be a prerelease. Follow the consumer's channel policy and document any fallback.
+7. Compare dist-tags and the version list by publish time and semver. Prefer the newest stable (non-prerelease) release that passes the 7-day age gate (`@vllnt/*` exempt); otherwise report the newest usable prerelease. Record absent tags; do not invent them. `latest` can be a prerelease or older than another tag — report facts and the chosen release with reason.
 8. Inspect consumer manifests and lockfiles without rewriting them. Distinguish declared ranges, resolved versions, source/workspace links, overrides, and missing lock evidence. Check compatible peer intersections, including framework/TypeScript/native targets; keep private repository names out of public summaries.
 9. Return an evidence table and coverage ledger with read time and scope. Report any rate limits, timeouts, missing auth, incomplete pages/trees, or unsupported registries. Retry only when the cause changes; continue unaffected sources.
 
@@ -15,10 +15,10 @@
 - More than one page of repositories/packages: collect all pages and deduplicate repeated results.
 - Published package has no accessible source: retain it with registry evidence and a source gap.
 - Repository has a package manifest but registry returns 404: do not list it as published.
-- Latest points to a prerelease; canary is missing or older: preserve exact facts and explain the selected channel/fallback.
-- Canary is older but compatible and no freshness policy exists: report its date/version order, keep the consumer's selected channel (an exact canary pin stays pinned), and do not invent a staleness threshold.
+- `latest` is a prerelease or older than another publish: preserve exact facts and explain the selected release.
+- Only a prerelease exists: report version and reason; do not claim a non-prerelease exists.
 - Shared configs require incompatible TypeScript peers: return the incompatible set and a compatible alternative or unresolved decision.
-- Consumer uses a canary range but its lockfile resolves another version: report both; do not claim the tag is installed.
+- Declared range and lockfile disagree: report both; do not claim a tag is installed.
 - Private package is denied or a recursive tree is truncated: return partial coverage rather than an empty or complete inventory.
 - API and source metadata agree: still require the executing caller to prove installation and runtime behavior.
 - A single-package request: inspect the selected package and its declared consumers; do not enumerate unrelated owners or repositories.
