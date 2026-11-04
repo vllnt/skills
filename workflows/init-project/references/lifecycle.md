@@ -15,7 +15,7 @@ Default: `cloud` when the Git host and every selected hosted target are authenti
 | Mode | Behavior |
 |---|---|
 | `local-only` | Nothing leaves the machine. The backend is self-hosted in Docker, the hooks and `pnpm verify` are the gate, `preview` serves a local production build, and `deploy` runs the self-hosted stack. No hosted CI, previews, or remote cache are generated. |
-| `cloud` | Hosted CI on the Git host, a preview deploy per PR (web host preview plus a backend preview deployment), hosted production deploys from release tags, EAS for mobile, and a remote task cache. |
+| `cloud` | Hosted CI on the Git host and a remote task cache. Surfaces whose Q11 target is hosted also get a preview deploy per PR (web host preview, backend preview deployment) and production deploys from release tags; mobile uses EAS when its target is `eas`. Surfaces with target `none`, `docker`, or `self-hosted` keep that target. |
 | `hybrid` | Local development with local backends in every worktree, plus the `cloud` CI, previews, production, and remote cache. |
 
 ## Lifecycle
@@ -29,13 +29,13 @@ Every step has one script at the project root, so humans, agents, hooks, and CI 
 | Test | `test` | Runs the test suites (see [Baseline scripts](baseline.md#baseline-scripts)) | Exit 0 on the scaffold |
 | Verify | `verify` | The same contract CI runs | Exit 0 on the scaffold |
 | Open a PR | `pr` | Runs `verify`, pushes the branch, and opens a draft PR from the PR template, linking the issue. Issue and PR templates exist when the Git host supports them | Refuses on a failing `verify` or the default branch |
-| Preview | `preview` | `local-only`: builds and serves a production build locally on the worktree's port. `cloud`/`hybrid`: CI deploys a preview per PR and reports its URL on the PR | Local preview serves; preview job exists in CI |
+| Preview | `preview` | Builds and serves a production build locally on the worktree's port. For a surface with a hosted target in `cloud`/`hybrid`, CI also deploys a preview per PR and reports its URL on the PR | Local preview serves; with a hosted target, the preview job exists in CI |
 | Review | none | Multi-angle review before merge: correctness, security, tests, and UX and accessibility when there is a UI, by reviewers independent of the author; findings are resolved or rejected with a reason | `AGENTS.md` states the rule |
 | Merge | `pr:merge` | Squash-merges only after required checks and review pass, then deletes the branch | Refuses while checks are pending or failing |
 | Release | `release` | From the default branch: chooses the next SemVer version from the changelog, moves `[Unreleased]` under that version and date, bumps versions, and creates the tag. Publishing and production deploys run only from a release tag | Refuses off the default branch or with an empty `[Unreleased]` |
-| Deploy | `deploy` | `cloud`/`hybrid`: CI deploys production from the release tag. `local-only`: rebuilds and restarts the self-hosted stack | Deploy job runs only on tags |
+| Deploy | `deploy` | Per surface and Q11 target: a hosted target deploys production from the release tag in CI; a `docker` or `self-hosted` target rebuilds and restarts its stack; `none` has no deploy | A hosted deploy job runs only on tags; a local deploy refuses an unreleased commit |
 | Health | `health` | Checks the running app and backend (a backend health query and the web root) and fails on an error. Server code logs structured events through `@vllnt/logger` | Exit 0 against a running local stack |
-| Roll back | none | `docs/rollback.md` documents redeploying the previous release tag per surface, and that backend schema changes stay backward-compatible so a rollback never needs a data migration | The document exists |
+| Roll back | none | `docs/rollback.md` documents, per deployed surface, how to redeploy the previous release tag, its preconditions, and its recovery steps. A release whose backend schema change is not compatible with the previous release says so in its changelog entry, with the recovery path | The document exists |
 | Clean up | `wt:rm <slug>` | Removes a merged task's worktree and local branch | Refuses with uncommitted or unpushed work |
 
 Surfaces without a step drop it: no `deploy` or `health` for a library, and `release` publishes to npm only when Q11 is `npm` (see [Publish](library-cli.md#publish)).

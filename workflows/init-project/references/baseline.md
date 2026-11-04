@@ -50,7 +50,7 @@ Every `tsconfig.json` you write extends a `@vllnt/typescript` preset, chosen by 
 |---|---|
 | Next.js app | Next.js preset |
 | Convex (`convex/tsconfig.json`) | base preset, plus the options Convex documents |
-| Expo app | Expo's base config, then the base preset (later wins) |
+| Expo app | Expo preset if exported; otherwise Expo's base config, then the base preset (later wins) |
 | React shared package | React preset, no emit |
 | Pure TS shared package (source-first) | base preset, with bundler resolution |
 | Node service or CLI | Node.js preset, with source and output directories |
@@ -72,7 +72,7 @@ Every ESLint config is `eslint.config.mjs`, spreads named preset arrays from `@v
 |---|---|
 | Next.js app | `nextjs` (+ `convex` and the backend override when it holds `convex/`) (+ `turbo` in a monorepo) |
 | Backend package | `base` + `convex` + the backend override (+ `turbo`) |
-| Expo app | `react` |
+| Expo app | a React Native preset if exported, otherwise `react` |
 | React shared package | `react` |
 | Pure TS package / Node | `nodejs` |
 | Large monorepo boundaries | `boundaries`: opt-in only, needs element definitions |
@@ -120,7 +120,7 @@ Expected contract of the upstream rule (unpublished, unverified), so templates s
 ## Git hooks
 
 - No hook manager. A `prepare` script points git's hooks path at the tracked `.githooks/` on install, and tolerates checkouts without git. Hooks work in every worktree, because worktrees share the repository configuration ([check 15](verification.md#checks) proves it).
-- `pre-commit` stays fast (about a second) and holds only checks that are hard to undo after a commit: refuse env files other than `.env.example`, check whitespace errors in the staged diff, and scan the staged changes for secrets with `gitleaks` (or an equivalent scanner) when it is installed, reporting the skip otherwise.
+- `pre-commit` stays fast (about a second) and holds only checks that are hard to undo after a commit: refuse env files other than `.env.example`, check whitespace errors in the staged diff, and scan the staged changes for secrets with `gitleaks` or an equivalent scanner. The scanner is a documented prerequisite in `AGENTS.md`; when it is missing, the hook fails closed with the reason, and the scaffold reports the gate blocked rather than passed.
 - `pre-push` runs `pnpm verify`.
 - Both hooks honor one explicit opt-out variable for emergencies, and both are executable. Pushes stay slow on purpose and commits stay fast, so nobody reaches for the bypass flag.
 
@@ -128,7 +128,7 @@ Expected contract of the upstream rule (unpublished, unverified), so templates s
 
 Enforce, in `pnpm-workspace.yaml` (single app and monorepo alike), with the setting names from the current pnpm documentation:
 
-- A 7-day minimum release age, with `@vllnt/*` exempt. First-party `@vllnt/*` releases come from provenance-signed CI, and canaries are always younger than 7 days.
+- A 7-day minimum release age, with `@vllnt/*` exempt. First-party `@vllnt/*` releases come from provenance-signed CI, and their canaries are usually younger than 7 days.
 - Refuse versions whose publish trust is weaker than earlier versions.
 - Block git and tarball dependencies deep in the tree.
 - Fail the install when a dependency's install script has not been reviewed, and keep an explicit allow or deny list of reviewed build scripts.
@@ -189,7 +189,7 @@ Ignore dependencies, build and framework output, caches and test reports, compil
 
 1. The project name and one sentence on what it is.
 2. **Stack:** one row per surface with its path and technology; the package manager and Node version files; **Prereleases:** each exact prerelease with its reason, or "none".
-3. **Commands:** install (which also installs the hooks), `dev`, `verify` (same as CI), `format`, and the [lifecycle scripts](lifecycle.md#lifecycle).
+3. **Commands:** prerequisites (the secret scanner the pre-commit hook needs), install (which also installs the hooks), `dev`, `verify` (same as CI), `format`, and the [lifecycle scripts](lifecycle.md#lifecycle).
 4. **Constraints:** verify first; done means `pnpm verify` passed; strict TypeScript with no escape hatches or unexplained suppressions; no narrative comments (with the [upcoming rule](#no-comments-rule-upcoming) status); `@vllnt/logger` instead of `console`, never logging headers, cookies, tokens or identity; fail closed, with the failure path tested; backend rules, with components mounted only in `convex.config.ts`; `.env.example` holds names only and backend secrets live on the deployment; every user-visible string in every catalog; the 7-day release-age gate with `@vllnt/*` exempt and a reason for every exception; a changelog line for every user-visible change; branch, PR, merge, never pushing to the default branch or rewriting shared history; localhost dev servers unless an opt-in is recorded.
 5. **Lifecycle:** the steps from [Lifecycle](lifecycle.md#lifecycle), one line each, with the run location.
 6. **Parallel work:** one agent per worktree; never edit the main checkout; create and remove worktrees only with `wt:new` and `wt:rm`; rebase on the default branch before opening a PR; remove the worktree after merge; heavy work stays under the shared machine-wide cap.

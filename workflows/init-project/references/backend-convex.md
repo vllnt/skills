@@ -220,7 +220,7 @@ How components behave:
 - Components never read host tables or env. The host passes opaque string refs.
 - React hooks from a component take the host's own exported query refs, so generate the wrapper query whenever you generate a hook.
 
-PREVIEW packages have no stable release. Install one only when the user picks it, as in [Canary packages](baseline.md#canary-packages), and label it PREVIEW in the plan and in the generated `AGENTS.md` with its exact version.
+PREVIEW packages are the ones the annex lists as canary-only; check first whether a stable release now exists. Install one only when the user picks it, as in [Canary packages](baseline.md#canary-packages), and label it PREVIEW in the plan and in the generated `AGENTS.md` with its exact version.
 
 ## Auth
 
