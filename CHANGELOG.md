@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- feat(workflows): add init-project, which detects where the project runs (local-only, cloud, or hybrid), asks what to build, then scaffolds, installs, and verifies a Next.js, Convex, Expo, library, or CLI project on the enforced @vllnt baseline (7-day package age with @vllnt exempt, hooks, changelog, agent files), with the full development lifecycle, safe parallel worktrees, and requirements plus pass checks instead of pinned versions or config bodies
-- feat(stack): default every package to its latest release resolved at run time, with canary-only @vllnt packages on their newest canary instead of pinned versions, and add a Turbo task graph and CI target (exact task graph and cache keys, shared remote cache, affected-only pull requests) to the workspace Turborepo reference
-- chore(skills): default capability references to the latest @vllnt preset releases instead of a fixed major, and replace browser-tool CLI flags, npm command options, and browser or test API snippets with requirements that defer to the installed tool's help and official docs
+- refactor(workflows): merge build-project into init-project (`vstack` + `other`); retire build-project
+- refactor(init-project): requirements-only recipes — drop volatile JSON/version bodies; resolve Node, pnpm, packages, and tool flags at execution
+- feat(workflows): add init-project (run location, lifecycle, worktrees, Turborepo monorepos, harness questions); requirements and pass checks, not pinned config
+- feat(stack): default packages to latest release at run time; canary-only by publish time; Turbo task graph and CI target in workspace Turborepo reference
+- chore(skills): capability refs use latest @vllnt presets; defer CLI flags and API snippets to installed tool docs
 - fix(workflows): keep stack routing consumer-specific and reconcile delivery handoffs with current review and test-management rules
 - docs(evaluations): remove historical candidate evidence and file-hash inventories while retaining reusable scenarios
 - refactor(workflows): reuse valid delivery review, focus deletion-first assessments on real consumers, and add handoff verification scenarios without weakening local pre-push checks.

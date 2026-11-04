@@ -5,7 +5,7 @@ This file states what a library or CLI must satisfy. Take configuration keys and
 ## Layout
 
 - Single library or single CLI: the package is the repository root, with the root files from the [single-app layout](layouts.md#single-app) and no `app/`, `components/`, `public/`, or `messages/`. Code lives in `src/`, with tests next to it (`src/*.test.ts`).
-- Monorepo: a library lives in `packages/<lib>` as `@<name>/<lib>`, and a CLI in `apps/cli` as `@<name>/cli`. Dev dependencies use `catalog:`, the ESLint config appends `...turbo` from `@vllnt/eslint-config/turbo`, and `format`, `format:check`, `verify`, and `prepare` live only at the [monorepo root](layouts.md#monorepo-root).
+- Monorepo: a library lives in `packages/<lib>` as `@<name>/<lib>`, and a CLI in `apps/cli` as `@<name>/cli`. Dev dependencies use `catalog:`, the ESLint config appends `...turbo` from `@vllnt/eslint-config/turbo`, and `format`, `format:check`, `verify:changed`, `verify`, and `prepare` live only at the [monorepo root](layouts.md#monorepo-root).
 
 ```
 <name>/

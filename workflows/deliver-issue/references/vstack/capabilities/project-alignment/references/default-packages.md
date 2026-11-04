@@ -2,6 +2,8 @@
 
 Preferred foundations for Vstack projects, from the [@vllnt npm scope](https://www.npmjs.com/org/vllnt). For a listed function, use its package before custom code or a third-party alternative; packages under "Experimental, opt-in" and "Not yet default" are excluded. Keep an existing equivalent only when consumer rules or a contract in use require it, and record that exception.
 
+This annex names packages and channels only. Never write majors, caret ranges, or canary SHAs here. Resolve the exact version at execution from the registry and consumer peers, then verify before use.
+
 ## Channel rules
 
 - Default every package to its latest release, resolved at run time from the registry (its dist-tags and publish times), never from a version written in a skill.

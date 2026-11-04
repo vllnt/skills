@@ -31,37 +31,9 @@ In a monorepo, take shared versions from `catalog:` (see [pnpm-workspace.yaml](l
 - `css.d.ts` contains `declare module "*.css";`. It is needed because `@vllnt/typescript` enables `noUncheckedSideEffectImports`.
 - `.env.example` lists names only, with no values. Start with `NEXT_PUBLIC_SITE_URL=` and `LOG_LEVEL=`, then add one entry per feature that needs one.
 
-`vitest.config.ts`:
+Vitest: include `tests/unit/**/*.test.{ts,tsx}`, maxWorkers 2; when `convex/` is present, use the two-project form from [backend tests](backend-convex.md#tests).
 
-```ts
-import { defineConfig } from "vitest/config";
-
-export default defineConfig({
-  test: {
-    include: ["tests/unit/**/*.test.{ts,tsx}"],
-    maxWorkers: 2,
-  },
-});
-```
-
-When the app also holds `convex/`, use the two-project form from the [backend tests](backend-convex.md#tests).
-
-With a backend, add `tests/unit/environment.test.ts` for the failure path of `requireConvexUrl`. The module reads the variable when it loads, so the test stubs it and imports inside the test:
-
-```ts
-import { afterEach, expect, test, vi } from "vitest";
-
-afterEach(() => {
-  vi.unstubAllEnvs();
-  vi.resetModules();
-});
-
-test("requireConvexUrl throws when the variable is unset", async () => {
-  vi.stubEnv("NEXT_PUBLIC_CONVEX_URL", "");
-  const { requireConvexUrl } = await import("../../lib/environment");
-  expect(() => requireConvexUrl()).toThrow("NEXT_PUBLIC_CONVEX_URL is not set");
-});
-```
+With a backend, add `tests/unit/environment.test.ts` for the `requireConvexUrl` failure path: stub the env var empty, dynamic-import the module, assert it throws. Reset env stubs and modules after each test (vitest APIs from the installed version).
 
 ## Logging
 
