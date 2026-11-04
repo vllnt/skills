@@ -8,7 +8,7 @@ No version is written in this skill. Every package defaults to its latest releas
 
 ### Resolve versions
 
-1. Write the [supply-chain policy](#supply-chain) before the first `pnpm add`: in `pnpm-workspace.yaml` for a single app, and in the full workspace file (`packages:`, `catalog:` and that policy, see [pnpm-workspace.yaml](layouts.md#pnpm-workspaceyaml)) for a monorepo.
+1. Write the [supply-chain policy](#supply-chain) before the first `pnpm add`: in `pnpm-workspace.yaml` for a single app, and in the full workspace file (`packages:`, `catalog:` and that policy, see [Monorepo](layouts.md#monorepo)) for a monorepo.
 2. Add packages by name, without a version (`pnpm add next`). Under the release-age policy, pnpm installs the newest release that is old enough and records a range.
 3. Respect published peer ranges. When a selected package peers a dependency (for example, the `@vllnt` presets peer `typescript`, `eslint`, and `prettier`), read the range from the registry at run time and add the newest version inside it. Never let a newer major break a preset's peer range.
 4. Do not pre-pin exact versions read from the registry: the newest release may be too young, and the install then fails. The exceptions are prereleases (see [Canary packages](#canary-packages)) and tools that need an exact version, such as `packageManager`.
@@ -77,19 +77,16 @@ Every ESLint config is `eslint.config.mjs`, spreads named preset arrays from `@v
 | Pure TS package / Node | `nodejs` |
 | Large monorepo boundaries | `boundaries`: opt-in only, needs element definitions |
 
-### Traps
+### Lint-derived rules
 
-The presets set every rule to `error`. Templates must stay inside these limits:
-- **File and identifier names:**
-  - `unicorn/filename-case` wants kebab-case outside `.tsx` files.
-  - `unicorn/prevent-abbreviations` rejects `env.ts`, `util.ts` and an identifier named `args`. Write `environment.ts`, `utils.ts` and destructured parameters instead.
-- **Type style:** `type` aliases only (no `interface`), no `enum`, no `null` outside `.tsx`.
-- **Size limits:** at most 3 parameters, nesting depth 3, and functions of at most 30 lines (70 in `.tsx`).
-- **Loops:** no loop statements; use array methods.
-- **Ordering:** imports are sorted by `simple-import-sort` groups, and object keys are sorted naturally.
-- **Formatting:** Prettier is a lint error, using the repo's `.prettierrc.json`.
-- **Next.js API routes:** route files under `app/api/**` may export only `GET`, `POST`, `PUT` and `DELETE` functions.
-- **Flat-config overrides:** an override block *replaces* a rule's options rather than merging them. Do not override `no-restricted-syntax` or `@typescript-eslint/naming-convention` casually.
+The presets set every rule to an error, and the installed preset is the authority: read its README and the effective config rather than restating its rules. The ones that shape every template:
+
+- File, folder, and identifier names, abbreviations, and test-file suffixes follow [Naming](layouts.md#naming).
+- Type aliases instead of interfaces, no enums, and no `null` outside `.tsx`.
+- Small functions with few parameters and shallow nesting, and no loop statements; tests follow the same rules except the function-size limit.
+- Sorted imports, exports, and object keys, and Prettier formatting, all as lint errors.
+- Next.js API route files export only HTTP-verb handlers.
+- A flat-config override replaces a rule's options rather than merging them, so override only what a recipe prescribes.
 
 ### No-comments rule (upcoming)
 
@@ -141,20 +138,31 @@ Rules for keeping it:
 - Never write exact versions into the release-age exclude list; they go stale on every bump.
 - No `.npmrc` is needed.
 
+## Mandatory primitives
+
+Cheap at creation and costly later, so every project gets them. Each has an owner section and a pass check.
+
+| Primitive | Requirement | Owner | Pass check |
+|---|---|---|---|
+| Typed configuration | Each app validates every variable it needs at start-up and names the first missing one; backend code reads variables inside handlers | [web](web-nextjs.md#files), [mobile](mobile-expo.md#backend-wiring), [Convex rules](backend-convex.md#convex-rules) | Starting with a required variable unset fails, naming it |
+| Input boundaries | Route handlers, server actions, and parsers of outside responses validate input with a schema; backend functions use Convex validators | [web](web-nextjs.md#files), [Convex rules](backend-convex.md#convex-rules) | A test sends invalid input and gets a client error |
+| Structured logging | `@vllnt/logger` everywhere and `console` banned by every workspace's lint config; never log headers, cookies, tokens, bodies, or identity | [web logging](web-nextjs.md#logging), [Convex rules](backend-convex.md#convex-rules) | Lint fails on `console`; a test shows a log line with level and fields and no secret values |
+| Error path | Error page, not-found page, global error boundary, and one pluggable error sink | [web](web-nextjs.md#files) | The [end-to-end smoke](web-nextjs.md#end-to-end-smoke) |
+| Security headers | CSP, framing restriction, `nosniff`, referrer policy on every web response | [web](web-nextjs.md#files) | The end-to-end smoke |
+| Accessibility | The presets' accessibility lint in UI workspaces, plus an automated page check | [web](web-nextjs.md#end-to-end-smoke) | The end-to-end smoke reports no critical violations |
+| Secret scanning | Pre-commit scan, a CI scan, and the host's push protection when it offers one | [Git hooks](#git-hooks), [CI](lifecycle.md#ci) | The hook rejects a planted inert credential |
+| Vulnerability gate | CI fails on high-severity advisories in production dependencies | [CI](lifecycle.md#ci) | The gate step exists and passes on the scaffold |
+| Change hygiene | PR template; changelog entry required by CI for source changes; branch protection with required review and checks | [Lifecycle](lifecycle.md#lifecycle), [CI](lifecycle.md#ci) | CI fails a source change without a changelog line; the host shows the protection once applied |
+| Community files | README, SECURITY.md, and CONTRIBUTING.md always; LICENSE when public; CODEOWNERS when there is more than one maintainer | [Root documents](#root-documents) | The files exist with the required content, and every command they name is a real script |
+| Schema migrations | Expand, migrate, contract, with a tested backfill | [Convex rules](backend-convex.md#convex-rules) | Review: no required field is added to an existing table in one release |
+
 ## CI
 
 [Lifecycle](lifecycle.md#ci) owns the CI requirements.
 
 ### End-to-end job
 
-Optional. Generate an `e2e` job only when the project has a web app and the [optional Playwright setup](web-nextjs.md#end-to-end-optional) of the web recipe is generated with it (dependency, config, spec and the `test:e2e` script all together).
-- It repeats the setup steps (checkout, pnpm, node, frozen install), because jobs do not share `.next`.
-- It copies the `ci` job's `env` block, so the build sees the same backend URL placeholder.
-- It builds the web app itself: `pnpm --filter <web> build` in a monorepo, `pnpm build` in a single app.
-- It installs only chromium (`pnpm --filter <web> exec playwright install --with-deps chromium`, or `pnpm exec playwright install --with-deps chromium` in a single app) and runs `test:e2e` the same way.
-- `playwright.config.ts` sets `webServer.command: "pnpm start"`, `workers: process.env.CI ? 1 : 2`, and a single desktop chromium project.
-- `tests/e2e/home.spec.ts` asserts that the home page renders the project name.
-- The web app adds `@playwright/test` as a dev dependency. `playwright.config.ts` sets `testDir: "tests/e2e"`, and vitest's `include` never matches `tests/e2e`.
+With a web app, CI runs the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) against the production build: it repeats the setup steps (jobs do not share build output), uses the same placeholder environment as the main job, installs one browser, and runs `test:e2e`. The smoke's spec files are `tests/e2e/*.spec.ts` in both layouts, and the unit test runner never includes them.
 
 ## Changelog
 
@@ -200,11 +208,11 @@ When a framework writes its own managed block into `AGENTS.md`, commit it once a
 
 ### Root documents
 
-- `README.md`: the project name, its one-sentence purpose, and the commands from `AGENTS.md`.
-- Public projects also get:
-  - `LICENSE`: the SPDX license text for the chosen id, with the current year and the copyright holder. Ask for the holder; default to the owner.
-  - `SECURITY.md`: points to the host's private vulnerability reporting. Tell the user to enable it in the repository settings.
-  - `CONTRIBUTING.md`: a short pointer to the `AGENTS.md` commands and lifecycle.
+- `README.md`: the project name, its one-sentence purpose, and setup, run, verify, and deploy sections whose commands are real scripts.
+- `SECURITY.md`: a private reporting channel (the host's private vulnerability reporting when public; the owner's chosen contact when private) and a response time. Tell the user to enable private reporting in the repository settings.
+- `CONTRIBUTING.md`: the verify command, the lifecycle from task start to merge, and the review rule.
+- `LICENSE` when public: the SPDX license text for the chosen id, with the current year and the copyright holder, matching the manifest's license field. Ask for the holder; default to the owner.
+- `CODEOWNERS` when the user names more than one maintainer, covering at least the workflow and security files.
 
 ## Baseline scripts
 
@@ -229,16 +237,13 @@ The library and CLI recipes are in [library-cli.md](library-cli.md).
 
 ## Why these defaults
 
-Each default below gives the reason for a rule in this file or in a surface reference.
-
-- Workspace globs hold only `apps/*` and `packages/*`. Tool scripts live in `scripts/` or `tools/` at the root, so a script folder is never mistaken for a package.
-- One package scope for every workspace package: mixed scoped and unscoped names make imports and turbo filters inconsistent.
-- Every file under `convex/` deploys as a module, so domain code lives in `convex/<domain>/`, and test-only helpers stay in `*.test.ts` files or outside `convex/`.
-- Never give a file and a folder the same stem (`users.ts` next to `users/`): the module path becomes ambiguous.
-- Declare each dependency in the package that imports it, and keep shared versions in `catalog:`. pnpm's isolated layout does not share a sibling's dependencies.
-- `.env.example` per app, names only: without it, misconfiguration shows up only at runtime.
-- Read public variables by their full literal name (`process.env.NEXT_PUBLIC_CONVEX_URL`): Next.js and Expo inline only direct references, so a dynamic lookup returns `undefined`. A small typed `environment.ts` per app reads those literals and throws a clear error on the first missing value; no env library is needed.
-- Secret split: backend secrets live on the backend deployment, the deploy key lives only in the hosting dashboard per environment, and the backend URL comes from `NEXT_PUBLIC_CONVEX_URL` or `EXPO_PUBLIC_CONVEX_URL`, never hard-coded.
-- No staging tier by default: the tiers are `dev`, `preview` and `production`, carried in `CONVEX_ENV`.
-- Nothing environment-specific in committed config: hostnames, project ids and analytics keys stay out of files such as `eas.json` and `.env.example` comments.
+- Root tool scripts live in `scripts/`, never in a workspace glob, so a script folder is never mistaken for a package.
+- One package scope keeps imports and Turbo filters consistent.
+- Every file under `convex/` deploys as a module, so domain code lives in `convex/<domain>/` and test-only code stays in test files or outside `convex/`.
+- A file and a folder with the same stem make the module path ambiguous.
+- Each dependency is declared in the package that imports it, because pnpm's isolated layout does not share a sibling's dependencies.
+- `.env.example` per app with names only, and typed start-up validation of every variable, so misconfiguration fails at start, naming the variable.
+- Secret split: backend secrets live on the backend deployment, each deploy key only in the host's settings per environment, and backend URLs come from the public environment, never hard-coded.
+- No staging tier by default: the tiers are `dev`, `preview`, and `production`.
+- Nothing environment-specific in committed config: hostnames, project ids, and analytics keys stay out of committed files.
 - Every surface ships with passing tests of its generated behavior, including one failure path, so `pnpm test` is green on day one.

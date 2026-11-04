@@ -4,15 +4,9 @@ This file states what a library or CLI must satisfy. Take configuration keys and
 
 ## Layout
 
-- Single library or single CLI: the package is the repository root, with the root files from the [single-app layout](layouts.md#single-app) and no `app/`, `components/`, `public/`, or `messages/`. Code lives in `src/`, with tests next to it (`src/*.test.ts`).
-- Monorepo: a library lives in `packages/<lib>` as `@<name>/<lib>`, and a CLI in `apps/cli` as `@<name>/cli`. Dev dependencies use `catalog:`, the ESLint config appends `...turbo` from `@vllnt/eslint-config/turbo`, and `format`, `format:check`, `verify`, and `prepare` live only at the [monorepo root](layouts.md#monorepo-root).
-
-```
-<name>/
-  src/index.ts  src/index.test.ts          library
-  src/cli.ts  src/run.ts  src/run.test.ts  CLI
-  package.json  tsconfig.json  tsconfig.build.json  eslint.config.mjs  vitest.config.ts
-```
+- Single library or single CLI: the package is the repository root, with the root files from the [single-app layout](layouts.md#single-app) and no `app/`, `components/`, `public/`, or `messages/`. Code lives in `src/`, with tests next to it as `src/*.test.ts`.
+- Monorepo: a library lives in `packages/<lib>` as `@<name>/<lib>`, and a CLI in `apps/cli` as `@<name>/cli`, with `catalog:` dev dependencies, the Turbo ESLint preset appended, and the formatting, `verify`, and `prepare` scripts only at the [monorepo root](layouts.md#monorepo).
+- Files: `src/index.ts` and its test (library); `src/cli.ts`, `src/run.ts`, and the run test (CLI); plus the package manifest, the two tsconfigs, the ESLint config, and the vitest config.
 
 ## Commands
 

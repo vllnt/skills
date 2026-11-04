@@ -32,12 +32,13 @@ In a monorepo, run each check at the root unless it names a workspace; workspace
 | 17 | Lifecycle scripts | Every [lifecycle](lifecycle.md#lifecycle) script that applies exists, and each one that can run locally without outside effects passes its pass check, including its refusal case. Steps with outside effects (PR, merge, publish, deploy) are checked for presence and refusal only |
 | 18 | Task graph and cache | Monorepo: every workspace is in the task graph, no package depends on an app, and there are no cycles. Pass checks 1 and 2 of the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md) hold locally. Its CI check 3 stays unverified until CI runs on a pull request |
 | 19 | Feature checks | When selected: auth (see [Auth](backend-convex.md#auth)), MCP (see [MCP endpoint](backend-convex.md#mcp-endpoint)), and a valid self-hosted compose file (see [Self-hosted backend](backend-convex.md#self-hosted-backend)). A valid compose file proves syntax only: report the self-hosted runtime as unverified unless the stack starts and runs deployed code. Report client authentication as unverified unless it was exercised against the running backend |
-| 20 | End-to-end (optional) | Passes, or skipped-for-capacity with the reason |
+| 20 | End-to-end smoke (web) | The [end-to-end smoke](web-nextjs.md#end-to-end-smoke) passes against the production build. Only a capacity skip is allowed, with the reason, and it leaves the scaffold unverified |
+| 21 | Structure review | The rules the preset does not enforce yet hold: no deep import into another workspace's `src/` or `convex/`; no web-only package in mobile's dependency closure; the [Convex review rules](backend-convex.md#convex-rules); tests only in their [placements](backend-convex.md#tests), each test file collected by a runner and none outside one; no file and folder sharing a stem in one directory; every [mandatory primitive](baseline.md#mandatory-primitives) has its file or CI step |
 
 ### Capacity limits
 
 - Follow [Lean defaults](baseline.md#lean-defaults): never run two builds at once.
-- Skip check 20 and the mobile export when free memory is low, and say so.
+- When free memory is low, run check 20 alone after every build has finished; skip it or the mobile export only as a last resort, and report the scaffold unverified for that row.
 - Stop every local backend you started for checks 6 and 16. Its data stays in ignored local directories.
 
 ## Report

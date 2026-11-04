@@ -28,7 +28,7 @@ Every step has one script at the project root, so humans, agents, hooks, and CI 
 | Develop | `dev` | Starts the dev servers on the worktree's ports, bound to localhost | Responds on the worktree's port |
 | Test | `test` | Runs the test suites (see [Baseline scripts](baseline.md#baseline-scripts)) | Exit 0 on the scaffold |
 | Verify | `verify` | The same contract CI runs | Exit 0 on the scaffold |
-| Open a PR | `pr` | Runs `verify`, pushes the branch, and opens a draft PR from the PR template, linking the issue. Issue and PR templates exist when the Git host supports them | Refuses on a failing `verify` or the default branch |
+| Open a PR | `pr` | Runs `verify`, pushes the branch, and opens a draft PR from the PR template (what, why, verification), linking the issue. The PR template exists when the Git host supports one; issue forms are optional | Refuses on a failing `verify` or the default branch |
 | Preview | `preview` | Builds and serves a production build locally on the worktree's port. For a surface with a hosted target in `cloud`/`hybrid`, CI also deploys a preview per PR and reports its URL on the PR | Local preview serves; with a hosted target, the preview job exists in CI |
 | Review | none | Multi-angle review before merge: correctness, security, tests, and UX and accessibility when there is a UI, by reviewers independent of the author; findings are resolved or rejected with a reason | `AGENTS.md` states the rule |
 | Merge | `pr:merge` | Squash-merges only after required checks and review pass, then deletes the branch | Refuses while checks are pending or failing |
@@ -36,6 +36,7 @@ Every step has one script at the project root, so humans, agents, hooks, and CI 
 | Deploy | `deploy` | Per surface and Q11 target: a hosted target deploys production from the release tag in CI; a `docker` or `self-hosted` target rebuilds and restarts its stack; `none` has no deploy | A hosted deploy job runs only on tags; a local deploy refuses an unreleased commit |
 | Health | `health` | Checks the running app and backend (a backend health query and the web root) and fails on an error. Server code logs structured events through `@vllnt/logger` | Exit 0 against a running local stack |
 | Roll back | none | `docs/rollback.md` documents, per deployed surface, how to redeploy the previous release tag, its preconditions, and its recovery steps. A release whose backend schema change is not compatible with the previous release says so in its changelog entry, with the recovery path | The document exists |
+| Protect | `repo:protect` | Applies branch protection or rulesets on the default branch through the host's API: a required PR with review, the required CI checks, and blocked force-push and deletion, plus push protection for secrets where offered. Runs only when the user asks; otherwise the report lists the settings as pending | The host's API shows the settings after it runs |
 | Clean up | `wt:rm <slug>` | Removes a merged task's worktree and local branch | Refuses with uncommitted or unpushed work |
 
 Surfaces without a step drop it: no `deploy` or `health` for a library, and `release` publishes to npm only when Q11 is `npm` (see [Publish](library-cli.md#publish)).
@@ -46,7 +47,7 @@ Applies to `cloud` and `hybrid`. CI runs on the Git host's CI; for GitHub, GitHu
 
 - Triggers: pull requests to the default branch and pushes to it. Least-privilege permissions (read-only contents unless a job needs more) and a timeout on every job.
 - Superseded runs of the same PR are cancelled. Default-branch runs are never cancelled. No workflow-level path filters: they leave required checks pending.
-- Each run checks formatting, then runs the same contract as `verify`. In a monorepo, task selection, caching, and concurrency follow the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md). A single app or single package runs everything.
+- Each run checks formatting, then runs the same contract as `verify`. It also scans the changes for secrets, fails on high-severity advisories in production dependencies, fails a source change that adds no changelog line, and rejects a committed env file other than `.env.example`. In a monorepo, task selection, caching, and concurrency follow the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md). A single app or single package runs everything.
 - With mobile, CI also runs `check:expo`.
 - With a backend, the job sets a non-secret loopback placeholder for each public backend URL, so builds that construct the client succeed without a backend.
 - Pin every action to the full commit SHA of its latest release, resolved through the Git host's API at scaffold time, with the tag as a trailing comment. Never guess a SHA.

@@ -10,7 +10,7 @@ Run in the app directory: the root for a single app, or `apps/web`. Add packages
 - Development: `typescript`, `@types/node`, `@types/react`, `@types/react-dom`, `eslint`, `prettier`, `@vllnt/eslint-config`, `@vllnt/typescript`, `vitest`.
 - With a backend, also `convex`. Every app that imports the backend client declares `convex` itself, because pnpm's isolated layout does not let an app use a sibling package's dependency.
 
-In a monorepo, take shared versions from `catalog:` (see [pnpm-workspace.yaml](layouts.md#pnpm-workspaceyaml)).
+In a monorepo, take shared versions from `catalog:` (see [Monorepo](layouts.md#monorepo)).
 
 ## Files
 
@@ -19,49 +19,21 @@ In a monorepo, take shared versions from `catalog:` (see [pnpm-workspace.yaml](l
 - `eslint.config.mjs` spreads the `@vllnt/eslint-config` Next.js preset. It ignores build output, generated declarations, test reports, and config files that no tsconfig covers, because typed linting fails on them. `no-console` is an error, so logging goes through `@vllnt/logger`. When the app holds `convex/`, the [backend ESLint blocks](backend-convex.md#eslint) join the same file.
 - The Next.js config transpiles only packages that ship TypeScript source (check the installed package's entry points) and workspace packages, and enables standalone output only for the Docker target.
 - The root layout imports the global stylesheet. Providers wrap the children: theme (UI library), then backend client, then auth or analytics where selected.
-- Backend client: a client provider builds the backend client from the public backend URL. A small typed module, `lib/environment.ts` with `requireConvexUrl()`, reads the variable by its literal name (frameworks inline only direct references) and throws a clear error when it is missing. Mobile has the same module with `EXPO_PUBLIC_CONVEX_URL`.
+- Environment: one typed module, `lib/environment.ts`, reads every variable the app needs by its literal name (frameworks inline only direct references) and validates them all at start-up, failing with the name of the first missing or invalid one. `requireConvexUrl()` is its backend URL accessor. Mobile has the same module with `EXPO_PUBLIC_` names.
+- Backend client: a client provider builds the backend client from `requireConvexUrl()`.
+- Input boundaries: every route handler, server action, and parser of an outside service's response validates its input with a schema before use, and rejects invalid input with a client error. Backend functions already validate through their Convex validators.
+- Security headers: every response carries a Content Security Policy, a framing restriction, `nosniff`, and a referrer policy, set in one place as the Next.js documentation describes. The policy allows the backend and any selected vendor origins only.
+- Error path: an app-level error page, a global error boundary, and a not-found page exist. Server request errors go through the logging hook below, and client errors through one error-reporting function whose sink is pluggable (logger output now, a monitoring vendor later) without changing call sites.
 
 ### Pages, tests and support files
 
-- `app/page.tsx` is a minimal server component that renders the project name. It is the only page. Do not link to routes that do not exist.
-- `app/globals.css` always exists, because the layout imports it. With UI choice `none` it holds one minimal rule such as `body { margin: 0; }`. The UI sections below set its content otherwise.
-- `lib/site.ts` holds a `siteName` constant and `absoluteUrl(path)`, which returns `new URL(path, process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").toString()`. Use `||`, not `??`: a copied `.env.example` sets the variable to an empty string, and `new URL` throws on an empty base.
-- `tests/unit/site.test.ts` tests `absoluteUrl` with one passing vitest test, so `pnpm test` is green on day one.
-- Unit tests import with relative paths (`../../lib/site`). Vitest does not read the tsconfig `paths`, so an `@/` import fails there.
-- `css.d.ts` contains `declare module "*.css";`. It is needed because `@vllnt/typescript` enables `noUncheckedSideEffectImports`.
-- `.env.example` lists names only, with no values. Start with `NEXT_PUBLIC_SITE_URL=` and `LOG_LEVEL=`, then add one entry per feature that needs one.
-
-`vitest.config.ts`:
-
-```ts
-import { defineConfig } from "vitest/config";
-
-export default defineConfig({
-  test: {
-    include: ["tests/unit/**/*.test.{ts,tsx}"],
-    maxWorkers: 2,
-  },
-});
-```
-
-When the app also holds `convex/`, use the two-project form from the [backend tests](backend-convex.md#tests).
-
-With a backend, add `tests/unit/environment.test.ts` for the failure path of `requireConvexUrl`. The module reads the variable when it loads, so the test stubs it and imports inside the test:
-
-```ts
-import { afterEach, expect, test, vi } from "vitest";
-
-afterEach(() => {
-  vi.unstubAllEnvs();
-  vi.resetModules();
-});
-
-test("requireConvexUrl throws when the variable is unset", async () => {
-  vi.stubEnv("NEXT_PUBLIC_CONVEX_URL", "");
-  const { requireConvexUrl } = await import("../../lib/environment");
-  expect(() => requireConvexUrl()).toThrow("NEXT_PUBLIC_CONVEX_URL is not set");
-});
-```
+- `app/page.tsx` is a minimal server component that renders the project name. It is the only page; never link to routes that do not exist.
+- `app/globals.css` always exists, because the layout imports it; the UI sections set its content.
+- `lib/site.ts` holds the site name and an absolute-URL helper that falls back to localhost when the public site URL is empty, not only when it is unset (a copied `.env.example` sets it to an empty string).
+- `tests/unit/*.test.ts` covers the URL helper and, with a backend, the environment module's failure path (an unset variable throws, naming it). Unit tests import with relative paths unless the test runner is configured for the tsconfig alias.
+- A module declaration for CSS imports exists, because the preset checks side-effect imports.
+- `.env.example` lists names only: the public site URL and `LOG_LEVEL`, then one entry per feature that needs one.
+- The vitest config includes `tests/unit/**/*.test.ts` with at most 2 workers. When the app also holds `convex/`, use the two-project form from the [backend tests](backend-convex.md#tests).
 
 ## Logging
 
@@ -117,12 +89,17 @@ Apply this section when the AI features include `llms.txt` (`@vllnt/next-llms`).
 - Serve `llms.txt` from a static route built with the generator the installed version exports (confirm it in its `exports` and `.d.ts`). The route handler must pass the preset's naming rules.
 - Add the markdown catch-all route only if the user has a content source. Its resolver receives the slug of the whole request path, so that resolver is the security boundary.
 
-## End-to-end (optional)
+## End-to-end smoke
 
-Apply this section only when the plan includes end-to-end tests. Add all of it or none, so no script or file points at something missing:
-- `pnpm add -D @playwright/test`.
-- The script `"test:e2e": "playwright test"` in `package.json`.
-- `playwright.config.ts` and `tests/e2e/home.spec.ts`, as set out in [End-to-end job](baseline.md#end-to-end-job), which also owns the CI `e2e` job.
+Every web app ships a browser smoke test of its production build, under `tests/e2e/*.spec.ts`, run by the `test:e2e` script locally and by the CI job in [End-to-end job](baseline.md#end-to-end-job). One browser, at most 2 workers locally. It asserts that:
+
+- the home page renders the project name;
+- an unknown URL shows the not-found page, and a forced render error shows the error page;
+- the security headers above are present on the home page;
+- an automated accessibility check of the home page reports no critical violations;
+- with a backend, the health route or query answers.
+
+Take the runner and accessibility-check setup from their official docs.
 
 ## Deploy
 

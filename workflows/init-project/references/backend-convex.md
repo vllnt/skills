@@ -22,175 +22,67 @@ Install Convex's AI files with its `ai-files` command, then check their status a
 
 ```
 convex/
-  convex.config.ts         defineApp() + app.use(...): the ONLY component mount point
-  schema.ts                composes domain tables only
-  http.ts                  httpRouter(); routes only from selected features
+  convex.config.ts         the only component mount point
+  schema.ts                composes the domain table maps only
+  http.ts                  HTTP routes from selected features only
   crons.ts                 only when a feature needs it
-  tsconfig.json
+  tsconfig.json            the backend's own tsconfig
   system/
     queries.ts             health query (proves wiring)
     tests/system.queries.health.test.ts
+  <domain>/
+    queries.ts  mutations.ts  internal_mutations.ts  actions.ts  node_actions.ts
+    schemas.ts  validators.ts  helpers.ts
+    tests/<domain>.<kind>.<function>.test.ts
+  migrations/              when a schema change needs one
   _generated/              codegen output, committed
 ```
 
-`convex/convex.config.ts`:
-
-```ts
-import { defineApp } from "convex/server";
-
-const app = defineApp();
-
-export default app;
-```
-
-`convex/schema.ts`:
-
-```ts
-import { defineSchema } from "convex/server";
-
-export default defineSchema({});
-```
-
-Domains add tables through `convex/<domain>/schemas.ts`. They export a table map, and `schema.ts` spreads each one: `defineSchema({ ...usersTables })`.
-
-`convex/system/queries.ts`:
-
-```ts
-import { v } from "convex/values";
-
-import { query } from "../_generated/server";
-
-export const health = query({
-  args: {},
-  handler: (): string => "ok",
-  returns: v.string(),
-});
-```
-
-`convex/system/tests/system.queries.health.test.ts`:
-
-```ts
-import { convexTest } from "convex-test";
-import { expect, test } from "vitest";
-
-import { api } from "../../_generated/api";
-import schema from "../../schema";
-
-const modules = import.meta.glob([
-  "/convex/**/*.ts",
-  "/convex/**/*.js",
-  "!/convex/**/*.test.ts",
-  "!/convex/**/*.d.ts",
-]);
-
-test("health returns ok", async () => {
-  const t = convexTest(schema, modules);
-  await expect(t.query(api.system.queries.health, {})).resolves.toBe("ok");
-});
-```
-
-Keep the `import.meta.glob` call inside `*.test.ts` files. Convex deploys every other file under `convex/` as a function module, and a deployed module cannot use Vite's `import.meta.glob`. With many test files, repeat the glob in each; never move it into a shared non-test module.
-
-The patterns are rooted at the backend directory (Vite's root). The negated patterns keep test files and `.d.ts` files out of the module map. `_generated/` stays in, because convex-test finds the module root from it.
-
-`convex/tsconfig.json` (**extends the preset**; Convex's required options are added on top):
-
-```json
-{
-  "extends": "@vllnt/typescript/base.json",
-  "compilerOptions": {
-    "allowJs": true,
-    "jsx": "react-jsx",
-    "lib": ["ES2023", "dom"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noEmit": true,
-    "target": "ESNext",
-    "types": ["node", "vite/client"]
-  },
-  "include": ["./**/*"],
-  "exclude": ["./_generated"]
-}
-```
-
-Add `vite` as a dev dependency so `import.meta.glob` has types. If Convex codegen rewrites this file, restore the `extends` line and re-run codegen. The [verification checks](verification.md#checks) confirm that the line is present.
-
-`.env.example` lists names only: `CONVEX_DEPLOYMENT=`, `NEXT_PUBLIC_CONVEX_URL=` (web) and `EXPO_PUBLIC_CONVEX_URL=` (mobile). Its header says: "Backend secrets are set with `convex env set`, never here."
+- The root holds only the core files above; domain code lives in `convex/<domain>/`, and each domain exports its table map from `schemas.ts` for the root `schema.ts` to compose.
+- `system/queries.ts` exposes a health query with argument and return validators, and its test proves it through convex-test.
+- `convex/tsconfig.json` extends the `@vllnt/typescript` base preset and adds the options the Convex documentation requires, plus types for the test runner's module glob. If codegen rewrites it, restore the preset and rerun codegen; [check 6](verification.md#checks) confirms it.
+- `.env.example` lists names only: the deployment name and each app's public backend URL. Its header says backend secrets are set on the deployment, never in files.
 
 ## ESLint
 
-```js
-import { convex } from "@vllnt/eslint-config/convex";
-
-export default [
-  { ignores: ["convex/_generated/**", "node_modules/**", "*.config.{js,mjs,cjs,ts}"] },
-  ...convex,
-  {
-    files: ["convex/**/*.ts"],
-    rules: { "unicorn/filename-case": ["error", { case: "snakeCase" }] },
-  },
-];
-```
-
-How to combine this with other presets:
-
-- In a single app with web, add `...convex` and the override block after `...nextjs` in the same file.
-- In a standalone backend package, put `import { base } from "@vllnt/eslint-config"` and `...base` before `...convex`. The `base` preset is only on the root barrel.
-- On `@vllnt/eslint-config@2.0.0` with a `"use node"` file `convex/<domain>/node_actions.ts`, also turn off `convex-rules/standard-filenames` and `convex-rules/namespace-separation` for that file. 2.1.0 fixes this; drop the override once the pin is 2.1.0 or later.
+- The backend workspace spreads the `@vllnt/eslint-config` Node.js preset, then its Convex preset, then a block scoped to `convex/**` that switches file-name case to snake_case. The Node.js preset registers the file-name rule and wires the test relaxations, so the block loads and backend tests get test limits. Drop the block once the Convex preset sets snake_case itself.
+- In a single app with web, the Convex preset and the same block follow the Next.js preset in the app's one config.
+- In a monorepo, the backend package appends the Turbo preset.
+- Ignore `convex/_generated/` and config files outside every tsconfig.
+- If the installed preset flags a placement this file allows (for example `node_actions.ts`), add a file-scoped override for that rule only, record it in `AGENTS.md` with its removal condition, and report it.
 
 ## Convex rules
 
-Generated code must follow these rules. Lint enforces them.
+The Convex preset is the authority for what lint enforces; read its README for the installed version. Generated code follows both lists below.
 
-- **Files by function kind:**
-  - `query`, `internalQuery`: `queries.ts`.
-  - `mutation`: `mutations.ts`. `internalMutation`: `mutations.ts` or `internal_mutations.ts`.
-  - `action`, `internalAction`: `actions.ts`. Node runtime actions (`"use node"`) go in `node_actions.ts`, which `@vllnt/eslint-config@2.0.0` rejects without a file-scoped override of its two filename rules.
-  - File names are snake_case. Exempt: `convex.config.ts`, `auth.ts`, `auth.config.ts`.
-- **Domain layout:** domain code lives in `convex/<domain>/`; the root keeps only the core files. Function files are plural, next to `schemas.ts`, `helpers.ts` and `validators.ts`. Add a subdomain folder at 3 or more files.
+Enforced by the preset (lint fails otherwise):
+
+- **Files by function kind:** `query` and `internalQuery` in `queries.ts`; `mutation` and `internalMutation` in `mutations.ts` or `internal_mutations.ts`; `action` and `internalAction` in `actions.ts`, or `node_actions.ts` for the Node runtime (`"use node"`). File names do not enforce visibility.
+- **Names:** snake_case files and folders under `convex/` (see [Naming](layouts.md#naming)).
+- **Contracts:** every function has `args` and `returns` validators and an explicit return type. Destructure arguments instead of naming a parameter `args`.
+- **`v.any()`** only in `validators.ts` or tests.
+- **Reads:** no `.filter()` on a query (use an index) and no query inside a loop.
+
+Review rules (not lint-checked yet; [check 21](verification.md#checks) reviews them):
+
+- **Internal by default:** public functions only for paths the client calls; internal ones say so in their name or folder, since file names do not.
+- **Identity:** the user id always comes from the authenticated identity, never from arguments.
+- **Bounded reads:** every read is bounded (`.take`, `.paginate`, `.first`, or `.unique`), and index names start with `by_`.
+- **Layout:** no function files loose at the `convex/` root; never a file and a folder with the same stem; a subdomain folder once a domain has three or more function files.
+- **Environment:** read `process.env` inside handlers, never at module scope. Gate production-only work on a deployment variable for the tier (`dev`, `preview`, `production`).
+- **Handlers stay thin:** logic lives in `helpers.ts`, so handlers stay within the function-size limit.
 - **No test-only routes** in the production `http.ts`.
-- **Validators on every function:** each needs `args` and `returns`. Object keys in alphabetical order: `args`, `handler`, `returns`.
-- **No `args` identifier:** destructure instead, as in `handler: (ctx, { limit }) => ...`.
-- **`v.any()` only in `validators.ts`.**
-- **Reads:**
-  - Use `.withIndex()`, never `.filter()` on a query, and no queries inside loops.
-  - Bound every read with `.take(n)` or `.paginate()`.
-  - Name indexes `by_<field>[_<field>]`.
-- **Explicit return types** on exported functions.
-- **Internal by default:** public functions only for paths the client calls. The user id always comes from `ctx.auth.getUserIdentity()`, never from `args`.
-- **Environment:** read `process.env` inside handlers, never at module scope. Gate production-only work inside the handler on a `CONVEX_ENV` deployment variable (`dev`, `preview` or `production`).
-- **Logging:** `createConvexLogger("<domain>.<file>")` from `@vllnt/logger/convex`.
-- **Schema changes:** expand, migrate, contract. Never add a required field to an existing table in one release.
+- **Logging:** the Convex logger from `@vllnt/logger`, scoped `<domain>.<file>`.
+- **Schema changes:** expand, migrate, contract. A new required field starts optional, gets a tested backfill in `migrations/`, and becomes required in a later release.
 
 ## Tests
 
-The backend uses vitest with the `edge-runtime` environment and `server.deps.inline: ["convex-test"]`. When web unit tests share the vitest config (single app), use two projects:
-
-```ts
-import { defineConfig } from "vitest/config";
-
-export default defineConfig({
-  test: {
-    maxWorkers: 2,
-    projects: [
-      {
-        extends: true,
-        test: {
-          environment: "edge-runtime",
-          include: ["convex/**/*.test.ts"],
-          name: "backend",
-          server: { deps: { inline: ["convex-test"] } },
-        },
-      },
-      { extends: true, test: { include: ["tests/unit/**/*.test.{ts,tsx}"], name: "web" } },
-    ],
-  },
-});
-```
-
-Without web unit tests (standalone backend package, or mobile + backend single app), use the backend project alone: `defineConfig({ test: { environment: "edge-runtime", include: ["convex/**/*.test.ts"], maxWorkers: 2, server: { deps: { inline: ["convex-test"] } } } })`.
-
-Test files live at `convex/<domain>/tests/<domain>.<kind>.<function>.test.ts`. Component test helpers come from `@vllnt/convex-<name>/test`. They ship TypeScript source and need vitest. Their export name differs between versions (`register` or a named object), so check the pinned version.
+- Backend tests run under vitest in the edge runtime with convex-test, at most 2 workers. In a single app with web unit tests, one vitest config has two projects: backend (`convex/**/tests/**/*.test.ts`) and web (`tests/unit/**/*.test.ts`). A standalone backend package or a mobile plus backend app uses the backend project alone. Take the configuration from the convex-test and vitest docs.
+- Test files live only at `convex/<domain>/tests/<domain>.<kind>.<function>.test.ts`; vitest includes exactly that path, so a test placed anywhere else never runs ([check 10](verification.md#checks) counts them).
+- The module map that convex-test needs is built inside each `*.test.ts` file, never in a shared non-test module: Convex deploys every other file under `convex/` and the bundler-only glob fails there. It excludes tests and declaration files and keeps `_generated/`.
+- Test helpers stay inside test files or outside `convex/`; do not create a `convex/testing/` folder, because it would deploy.
+- Component test helpers come from each component's test export; check its name in the installed version.
+- Every backend surface has the health test plus one failure path, such as a protected function rejecting a call without identity.
 
 ## Feature bundles
 

@@ -25,10 +25,9 @@ Run in the app directory: the root for a single app, or `apps/mobile`.
 
 ### Source files
 
-- `app/_layout.tsx` is a `Stack` root.
-- `app/index.tsx` renders `greeting(name)` from `lib/greeting.ts`, a pure function the screen uses, and `lib/greeting.test.ts` tests it with jest.
-- `.env.example` holds `EXPO_PUBLIC_CONVEX_URL=` when the backend is selected.
-- Optional, on request: Maestro end-to-end flows in `.maestro/`.
+- The root layout is a stack navigator; the index screen renders a greeting from a pure function in `lib/`, and `lib/*.test.ts` tests it with the Expo test preset.
+- `.env.example` holds the public backend URL name when the backend is selected.
+- Optional, on request: device end-to-end flows in one flow directory.
 
 ## Backend wiring
 
