@@ -29,6 +29,7 @@ Before generating `import x from "@vllnt/<pkg>/<sub>"`, read the published `expo
 
 At execution, query the registry (dist-tags, version list, publish times). Prefer the newest non-prerelease / LTS that satisfies peers and policy. If none exists and the user selected the feature, install the newest usable prerelease as an exact version. Do not invent "stable" or "canary-only" from this skill. Compare publish times; do not trust `latest` alone. Check exports against the chosen version. Report any prerelease and its reason under "Prereleases" in the generated `AGENTS.md` (see [Agent files](#agent-files)).
 
+
 ### Not offered
 
 - `@vllnt/convex-mcp` is deprecated. Use the MCP subpath of `@vllnt/convex-helpers` instead.
@@ -111,10 +112,12 @@ Expected contract of the upstream rule (unpublished, unverified), so templates s
 
 ## Git hooks
 
-- No hook manager. A `prepare` script points git's hooks path at the tracked `.githooks/` on install, and tolerates checkouts without git. Hooks work in every worktree, because worktrees share the repository configuration ([check 15](verification.md#checks) proves it).
-- `pre-commit` stays fast (about a second) and holds only checks that are hard to undo after a commit: refuse env files other than `.env.example`, check whitespace errors in the staged diff, and scan the staged changes for secrets with `gitleaks` or an equivalent scanner. The scanner is a documented prerequisite in `AGENTS.md`; when it is missing, the hook fails closed with the reason, and the scaffold reports the gate blocked rather than passed.
-- `pre-push` runs `pnpm verify`.
-- Both hooks honor one explicit opt-out variable for emergencies, and both are executable. Pushes stay slow on purpose and commits stay fast, so nobody reaches for the bypass flag.
+Local verification is the gate of record. CI only confirms; it is not the first place to learn about lint, type, or test failures.
+
+- No hook manager. A `prepare` script points git's hooks path at the tracked `.githooks/` on install, and tolerates checkouts without git. Hooks work in every worktree (shared repo config; [check 15](verification.md#checks)).
+- `pre-commit` stays ~1s and holds only irreversible checks: refuse env files other than `.env.example`, whitespace errors in the staged diff, secret scan of staged changes (`gitleaks` or equivalent). Scanner is a documented prerequisite; missing → fail closed / gate blocked. Never put `verify`, lint, typecheck, test, or build here.
+- `pre-push` runs the local gate: monorepo → `pnpm verify:changed` (affected from merge-base of the push; full graph when the base is missing or a root input changed — same rules as [task graph](vstack/capabilities/workspace-turborepo/references/task-graph-target.md)); single app → `pnpm verify`. Fail closed. Do not push with a red local gate.
+- Both hooks honor one emergency opt-out variable and are executable. Commits stay fast; pushes carry the proof so CI can stay thin.
 
 ## Supply chain
 
@@ -139,14 +142,12 @@ Rules for keeping it:
 
 ### End-to-end job
 
-Optional. Generate an `e2e` job only when the project has a web app and the [optional Playwright setup](web-nextjs.md#end-to-end-optional) of the web recipe is generated with it (dependency, config, spec and the `test:e2e` script all together).
-- It repeats the setup steps (checkout, pnpm, node, frozen install), because jobs do not share `.next`.
-- It copies the `ci` job's `env` block, so the build sees the same backend URL placeholder.
-- It builds the web app itself: `pnpm --filter <web> build` in a monorepo, `pnpm build` in a single app.
-- It installs only chromium (`pnpm --filter <web> exec playwright install --with-deps chromium`, or `pnpm exec playwright install --with-deps chromium` in a single app) and runs `test:e2e` the same way.
-- `playwright.config.ts` sets `webServer.command: "pnpm start"`, `workers: process.env.CI ? 1 : 2`, and a single desktop chromium project.
-- `tests/e2e/home.spec.ts` asserts that the home page renders the project name.
-- The web app adds `@playwright/test` as a dev dependency. `playwright.config.ts` sets `testDir: "tests/e2e"`, and vitest's `include` never matches `tests/e2e`.
+Optional. Only when the web recipe’s e2e option is selected — add dependency, config, one smoke spec, `test:e2e`, and a matching CI job together, or none.
+
+- Same install/env contract as the primary CI job (including backend URL placeholder when needed).
+- Build the web app, install one browser per current Playwright docs, run `test:e2e`.
+- Smoke: home (or primary route) renders the project name. Unit runner must not pick up e2e files.
+- Outside the default pre-push gate ([Tests](#tests), [CI](lifecycle.md#ci)).
 
 ## Changelog
 
@@ -154,17 +155,41 @@ Optional. Generate an `e2e` job only when the project has a web app and the [opt
 
 `AGENTS.md` rule: a user-visible change adds a line under `[Unreleased]`.
 
+## Tests
+
+Goal-oriented. Agents choose runner config from the surface’s current docs; this section states outcomes, not file recipes.
+
+### Goal
+
+Every package and app has its own test setup. Tests sit close to the code they protect. Scaffolded and owned public behavior has strong coverage, including failure paths. Agents extend by copying nearby examples — not by inventing a parallel test layout.
+
+### Definition of Done
+
+- Each workspace that ships code has a working `test` script; root `verify` / `verify:changed` runs those tests.
+- Discovery is by glob (no hand-listed files). Layout is consistent inside a package so the next test has an obvious neighbor to copy.
+- Every seeded public behavior has at least one success case and one failure/denial/edge case that would catch a real regression.
+- New public exports or handlers land with tests in the same change. Untested public surface is a gap, not done.
+- Coverage is maximized for owned behavior within capacity (≤2 workers). If the stack’s coverage tool is wired, treat regressions in coverage of owned code as fail; unlabeled drops are not allowed. Missing coverage tooling is an evidence gap, not permission to skip tests.
+- `pnpm test` (or turbo `test`) is green on day one and before push.
+
+### Rules
+
+- **Per package:** own runner config + scripts; do not rely on a sibling’s tests.
+- **Colocate:** unit/examples next to the module or in that domain’s `tests/` folder (backend domains under `convex/<domain>/tests/`). App-level pure helpers: `*.test.ts` beside the helper or under the package’s agreed unit glob — pick one pattern per package and keep it.
+- **Examples first:** scaffold ships small real examples agents (and humans) copy; do not add helpers only to inflate coverage.
+- **Fail closed:** auth, env, validation, and CLI errors need negative tests. Flakes get diagnosed, not silenced.
+- **No theater:** do not add dead code or test-only production routes for coverage.
+- **Surface runners:** web/shared/library → Vitest (current docs); backend → Vitest + convex-test, no live backend; mobile → Expo’s test stack from `expo install`. E2E is optional and outside the default pre-push gate ([lifecycle CI](lifecycle.md#ci)).
+- **Capacity:** max 2 test workers; backend tests need no running Convex process.
+
 ## Lean defaults
 
-- **Capacity:**
-  - Heavy parallelism is capped at 2 (task runner and test workers), and builds run one at a time, after the checks. The caps hold across every worktree on the machine (see [Parallel worktrees](lifecycle.md#parallel-worktrees)).
-  - 2 is a default, not a law: lower it when a measured run hits low free memory.
-- Lint and compiler caches stay inside the worktree, out of git and out of lint scope; [Gitignore](#gitignore) covers them.
-- Dev servers bind to loopback (localhost) on the worktree's ports. Physical-device Expo development may opt into LAN or a tunnel explicitly; record the opt-in in `AGENTS.md`.
-- One browser for end-to-end tests. No Storybook, bundle analyzers or extra quality tools by default.
-- No per-package task overrides, and no hand-listed test files: test runners find tests by glob.
-- `verify` is the one command that matches CI, and the pre-push hook runs it.
-- The Convex local backend runs only on demand. Tests use convex-test, which needs no running backend.
+- **Capacity:** heavy parallelism capped at 2 (task runner and test workers); builds one at a time after checks; caps are machine-wide across worktrees. Lower when free memory is low.
+- Lint/compiler caches stay inside the worktree (see [Gitignore](#gitignore)).
+- Dev servers bind to loopback on the worktree’s ports. Physical-device Expo may opt into LAN/tunnel; record opt-in in `AGENTS.md`.
+- One browser for e2e when that recipe exists. No Storybook, bundle analyzers, or extra quality tools by default.
+- Local gate of record: `verify` / `verify:changed` before push and before `pr`. CI confirms via the same scripts + cache; it is not the first lint/type/test loop.
+- Convex local backend on demand only.
 
 ## Gitignore
 
@@ -182,7 +207,7 @@ Ignore dependencies, build and framework output, caches and test reports, compil
 1. The project name and one sentence on what it is.
 2. **Stack:** one row per surface with its path and technology; the package manager and Node version files; **Prereleases:** each exact prerelease with its reason, or "none".
 3. **Commands:** prerequisites (the secret scanner the pre-commit hook needs), install (which also installs the hooks), `dev`, `verify` (same as CI), `format`, and the [lifecycle scripts](lifecycle.md#lifecycle).
-4. **Constraints:** verify first; done means `pnpm verify` passed; strict TypeScript with no escape hatches or unexplained suppressions; no narrative comments (with the [upcoming rule](#no-comments-rule-upcoming) status); `@vllnt/logger` instead of `console`, never logging headers, cookies, tokens or identity; fail closed, with the failure path tested; backend rules, with components mounted only in `convex.config.ts`; `.env.example` holds names only and backend secrets live on the deployment; every user-visible string in every catalog; the 7-day release-age gate with `@vllnt/*` exempt and a reason for every exception; a changelog line for every user-visible change; branch, PR, merge, never pushing to the default branch or rewriting shared history; localhost dev servers unless an opt-in is recorded.
+4. **Constraints:** local verify first (pre-push / `pr`); done means the local gate passed — CI is not the first lint/type/test signal; tests per [Tests](#tests) (per-package setup, colocated examples, maximize owned coverage, failure paths required); strict TypeScript with no escape hatches or unexplained suppressions; no narrative comments (with the [upcoming rule](#no-comments-rule-upcoming) status); `@vllnt/logger` instead of `console`, never logging headers, cookies, tokens or identity; fail closed; backend rules, components only in `convex.config.ts`; `.env.example` names only; every user-visible string in every catalog; 7-day release-age gate with `@vllnt/*` exempt and reasons for exceptions; changelog line for every user-visible change; branch, PR, merge — never push default branch or rewrite shared history; localhost dev servers unless an opt-in is recorded.
 5. **Lifecycle:** the steps from [Lifecycle](lifecycle.md#lifecycle), one line each, with the run location.
 6. **Parallel work:** one agent per worktree; never edit the main checkout; create and remove worktrees only with `wt:new` and `wt:rm`; rebase on the default branch before opening a PR; remove the worktree after merge; heavy work stays under the shared machine-wide cap.
 7. **Convex rules:** the bullets of [Convex rules](backend-convex.md#convex-rules), verbatim.
@@ -211,6 +236,7 @@ Every package or app defines the same script names, so agents, hooks and CI neve
 | `test` | every workspace | the surface's test runner with at most 2 workers |
 | `format`, `format:check` | single-app root or monorepo root | Prettier write / check |
 | `verify` | single-app root or monorepo root | `format:check`, then lint, typecheck and test (and `check:expo` when mobile exists), then build |
+| `verify:changed` | monorepo root | same contract as `verify`, but Turbo-affected from merge-base (full graph on missing base or root-input change); used by pre-push |
 | `check:expo` | mobile app | Expo's dependency alignment check |
 | `codegen` | wherever `convex/` lives | one-shot Convex code generation |
 | `prepare` | single-app root or monorepo root | points git at `.githooks/` |
@@ -233,4 +259,4 @@ Each default below gives the reason for a rule in this file or in a surface refe
 - Secret split: backend secrets live on the backend deployment, the deploy key lives only in the hosting dashboard per environment, and the backend URL comes from `NEXT_PUBLIC_CONVEX_URL` or `EXPO_PUBLIC_CONVEX_URL`, never hard-coded.
 - No staging tier by default: the tiers are `dev`, `preview` and `production`, carried in `CONVEX_ENV`.
 - Nothing environment-specific in committed config: hostnames, project ids and analytics keys stay out of files such as `eas.json` and `.env.example` comments.
-- Every surface ships with passing tests of its generated behavior, including one failure path, so `pnpm test` is green on day one.
+- Tests follow [Tests](#tests): per-package setup, colocated examples, owned behavior + failure paths covered, `pnpm test` green on day one.

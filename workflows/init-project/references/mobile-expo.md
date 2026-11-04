@@ -25,10 +25,7 @@ Run in the app directory: the root for a single app, or `apps/mobile`.
 
 ### Source files
 
-- `app/_layout.tsx` is a `Stack` root.
-- `app/index.tsx` renders `greeting(name)` from `lib/greeting.ts`, a pure function the screen uses, and `lib/greeting.test.ts` tests it with jest.
-- `.env.example` holds `EXPO_PUBLIC_CONVEX_URL=` when the backend is selected.
-- Optional, on request: Maestro end-to-end flows in `.maestro/`.
+Meet [Tests](baseline.md#tests). Seed a root layout, one screen, and a pure helper with colocated success/failure examples (Expo’s test stack from `expo install`). `.env.example` names only when backend is selected. Maestro e2e only on request.
 
 ## Backend wiring
 
@@ -56,7 +53,7 @@ Offer `@vllnt/ui-native` only after an availability check:
 If either check fails, scaffold `plain` and add a "native UI library pending" line to `AGENTS.md`.
 
 When it is available:
-- Install it per [Resolve release](baseline.md#resolve-release) and mount its theme provider at the root, following the system color scheme.
+- Install it as in [Resolve release](baseline.md#resolve-release) and mount its theme provider at the root, following the system color scheme.
 - Satisfy the peers its installed version declares. It needs no Tailwind, NativeWind, Babel or Metro changes.
 - Take component names and props from its README and `exports`. Components take React Native styles and accessibility props, not class names.
 - Never use `@vllnt/ui` (web) or `@vllnt/analytics` in mobile.

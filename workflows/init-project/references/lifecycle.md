@@ -42,17 +42,19 @@ Surfaces without a step drop it: no `deploy` or `health` for a library, and `rel
 
 ## CI
 
-Applies to `cloud` and `hybrid`. CI runs on the Git host's CI; for GitHub, GitHub Actions and Dependabot. If the remote is on another host, generate nothing host-specific and report the skip.
+Applies to `cloud` and `hybrid`. Goal: extremely fast confirmation after a green local pre-push — not a second feedback loop. Local `verify` / `verify:changed` remains the gate of record ([hooks](baseline.md#git-hooks)).
 
-- Triggers: pull requests to the default branch and pushes to it. Least-privilege permissions (read-only contents unless a job needs more) and a timeout on every job.
-- Superseded runs of the same PR are cancelled. Default-branch runs are never cancelled. No workflow-level path filters: they leave required checks pending.
-- Each run checks formatting, then runs the same contract as `verify`. In a monorepo, task selection, caching, and concurrency follow the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md). A single app or single package runs everything.
-- With mobile, CI also runs `check:expo`.
-- With a backend, the job sets a non-secret loopback placeholder for each public backend URL, so builds that construct the client succeed without a backend.
-- Pin every action to the full commit SHA of its latest release, resolved through the Git host's API at scaffold time, with the tag as a trailing comment. Never guess a SHA.
-- Dependency updates for actions and npm run weekly through Dependabot (or Renovate), with a 7-day cooldown that matches the release-age gate and `@vllnt/*` exempt where the tool supports it.
-- Preview and production deploy keys live only in the host's settings, one per environment.
-- A release workflow runs only on release tags. Publishing never cancels midway.
+CI runs on the Git host; for GitHub, Actions + Dependabot. Other host → generate nothing host-specific and report the skip.
+
+- Triggers: PRs to the default branch and pushes to it. Least-privilege permissions; timeout on every job.
+- Cancel superseded runs of the same PR. Never cancel default-branch runs. No workflow-level path filters (they leave required checks pending).
+- One primary verify job: same scripts as local (`format:check` then lint/typecheck/test then build). Monorepo: affected-only + remote cache per [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md). Prefer cache hits after a green pre-push; do not add CI-only lint/type/test jobs that local does not run.
+- Do not use CI as the first place agents fix lint/types/tests. `pr` refuses a failing local verify.
+- Mobile: include `check:expo`. Backend: non-secret loopback placeholder for public backend URL env (no backend in CI; tests use convex-test).
+- Optional e2e stays a separate job only when the Playwright recipe is generated; it is not part of the default local pre-push gate.
+- Pin every action to the full commit SHA of its latest release (host API at scaffold); tag as trailing comment. Never guess a SHA.
+- Dependabot/Renovate weekly with 7-day cooldown (`@vllnt/*` exempt where supported).
+- Preview/production secrets only in host settings. Release workflow on tags only; publishing never cancels midway.
 
 ## Parallel worktrees
 

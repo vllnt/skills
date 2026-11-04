@@ -76,7 +76,7 @@ Generated code must follow these rules. Lint enforces them.
 
 ## Tests
 
-Use vitest with the environment and `convex-test` inline deps current Convex / convex-test docs require. Cap workers at 2. Single app with web unit tests: two projects (backend under `convex/**/*.test.ts`, web under `tests/unit/**`). Backend-only: one project. Test paths: `convex/<domain>/tests/<domain>.<kind>.<function>.test.ts`. Component helpers from `@vllnt/convex-<name>/test` — read the installed export name before generating imports.
+Meet [Tests](baseline.md#tests). Vitest + convex-test per current docs; ≤2 workers; no live backend. Colocate under `convex/<domain>/tests/`. Shared app with web: separate projects so discovery does not collide. Component test helpers: read installed `@vllnt/convex-<name>/test` exports before importing.
 
 ## Feature bundles
 

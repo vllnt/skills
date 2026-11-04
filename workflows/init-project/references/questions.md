@@ -65,29 +65,7 @@ When a monorepo has only `backend` and `mobile`, it still uses the [monorepo lay
 
 ## Non-interactive mode
 
-Accept a single object and go straight to the plan. Missing keys take the defaults above. `path` is required when it cannot be inferred. For `path: "other"`, set `otherStack` and omit vstack-only keys or leave them null.
-
-```json
-{
-  "path": "vstack",
-  "name": "my-app",
-  "surfaces": ["web", "backend"],
-  "layout": "single",
-  "shared": [],
-  "auth": "none",
-  "ui": { "web": "@vllnt/ui", "mobile": "plain" },
-  "i18n": { "enabled": false, "locales": ["en"] },
-  "analytics": "none",
-  "ai": [],
-  "backendFeatures": [],
-  "deploy": { "web": "vercel", "backend": "convex-cloud", "mobile": "eas", "library": "none", "cli": "none" },
-  "visibility": "private",
-  "license": "UNLICENSED",
-  "owner": "example",
-  "runs": "cloud",
-  "otherStack": null
-}
-```
+Accept one object of the keys below; go straight to the plan. Missing keys use defaults. `path` required when not inferable. For `path: "other"`, set `otherStack` and omit or null vstack-only keys.
 
 | Key | Allowed values |
 |---|---|

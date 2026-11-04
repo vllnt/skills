@@ -31,9 +31,7 @@ In a monorepo, take shared versions from `catalog:` (see [pnpm-workspace.yaml](l
 - `css.d.ts` contains `declare module "*.css";`. It is needed because `@vllnt/typescript` enables `noUncheckedSideEffectImports`.
 - `.env.example` lists names only, with no values. Start with `NEXT_PUBLIC_SITE_URL=` and `LOG_LEVEL=`, then add one entry per feature that needs one.
 
-Vitest: include `tests/unit/**/*.test.{ts,tsx}`, maxWorkers 2; when `convex/` is present, use the two-project form from [backend tests](backend-convex.md#tests).
-
-With a backend, add `tests/unit/environment.test.ts` for the `requireConvexUrl` failure path: stub the env var empty, dynamic-import the module, assert it throws. Reset env stubs and modules after each test (vitest APIs from the installed version).
+Meet [Tests](baseline.md#tests). Runner: Vitest per current docs (≤2 workers); separate projects if `convex/` shares the app. With backend, cover env helper failure (unset public Convex URL). Use import paths the runner resolves.
 
 ## Logging
 
@@ -91,10 +89,7 @@ Apply this section when the AI features include `llms.txt` (`@vllnt/next-llms`).
 
 ## End-to-end (optional)
 
-Apply this section only when the plan includes end-to-end tests. Add all of it or none, so no script or file points at something missing:
-- `pnpm add -D @playwright/test`.
-- The script `"test:e2e": "playwright test"` in `package.json`.
-- `playwright.config.ts` and `tests/e2e/home.spec.ts`, as set out in [End-to-end job](baseline.md#end-to-end-job), which also owns the CI `e2e` job.
+Only when selected. Add dependency, `test:e2e`, config, one smoke spec, and CI job together — or none. Follow [End-to-end job](baseline.md#end-to-end-job); take Playwright flags from current docs.
 
 ## Deploy
 

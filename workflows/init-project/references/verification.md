@@ -22,7 +22,7 @@ In a monorepo, run each check at the root unless it names a workspace; workspace
 | 7 | Format | `pnpm format:check` exits 0 |
 | 8 | Lint | `pnpm lint` exits 0 with zero warnings |
 | 9 | Typecheck | `pnpm typecheck` exits 0, backend included |
-| 10 | Test | Every surface and package tests its generated behavior, including one failure path (for example, a CLI bad flag exits 2, and `requireConvexUrl` throws when unset); all pass. Add no helper function only to have something to test |
+| 10 | Test | Meets [Tests](baseline.md#tests): each package has a working setup; examples sit with related code; seeded public behavior has success + failure coverage; `pnpm test` / turbo `test` exits 0. No helpers added only for coverage theater |
 | 11 | Build (web) | The web build exits 0. With `@vllnt/ui`, a class only the library uses appears in the emitted CSS, which proves Tailwind scans the library under pnpm's symlinked layout |
 | 12 | Build (mobile) | `check:expo` and the Expo export exit 0. If memory is short, report the export as skipped-for-capacity; `check:expo`, typecheck and test must still pass |
 | 13 | Build (library/CLI) | The build exits 0, and every `exports` and `bin` target in `package.json` exists in `dist/`, also after deleting `dist/` and building again. A CLI's `--help` exits 0 and an unknown flag exits 2 |

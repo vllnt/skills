@@ -56,8 +56,7 @@ Source-first: `exports` point at TypeScript source (no consumer build step). Web
 - Dev deps via `catalog:`: eslint, prettier, typescript, `@vllnt/eslint-config`, `@vllnt/typescript`, vitest.
 - `tsconfig` extends `@vllnt/typescript/base.json` with noEmit and `src` include; read current preset keys from the installed package.
 - ESLint: nodejs + turbo presets from `@vllnt/eslint-config`.
-- Vitest: unit tests under `src/**/*.test.ts`.
-- Seed: one pure export + tests (e.g. blank-string helper). Do not invent APIs beyond the seed.
+- Tests per [Tests](baseline.md#tests): colocated `*.test.ts` under `src/`; seed one pure export + success/failure examples. No APIs beyond the seed.
 
 ### packages/client
 
