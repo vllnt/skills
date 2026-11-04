@@ -14,7 +14,7 @@ Environment handoff (local only, never committed):
 
 - Codegen writes the deployment name and local URL into the backend directory's `.env.local`.
 - Copy that URL into each app's untracked `.env.local`, as `NEXT_PUBLIC_CONVEX_URL` (web) or `EXPO_PUBLIC_CONVEX_URL` (mobile). In a single app it is the same file: add the prefixed name only if it is missing.
-- CI has no backend. The workflow sets a non-secret loopback placeholder for the public backend URL at job level, so builds that construct the client succeed. Tests use convex-test and never connect.
+- The main CI job has no backend. It sets a non-secret loopback placeholder for the public backend URL at job level, so builds that construct the client succeed. Unit and backend tests use convex-test and never connect; only the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) uses a real backend.
 
 Install Convex's AI files with its `ai-files` command, then check their status and `git diff`. They write a managed block in `AGENTS.md` and `CLAUDE.md`, plus generated AI and skill files; list every path in the plan. In a monorepo these land in `packages/backend/`, which then has its own `AGENTS.md` and `CLAUDE.md`; the root ones stay human-owned. Never hand-edit the managed block. The [Prettier](baseline.md#prettier) ignore list covers these paths, or Prettier rewraps the block and the next update reverts it.
 
@@ -78,7 +78,7 @@ Review rules (not lint-checked yet; [check 21](verification.md#checks) reviews t
 ## Tests
 
 - Backend tests run under vitest in the edge runtime with convex-test, at most 2 workers. In a single app with web unit tests, one vitest config has two projects: backend (`convex/**/tests/**/*.test.ts`) and web (`tests/unit/**/*.test.ts`). A standalone backend package or a mobile plus backend app uses the backend project alone. Take the configuration from the convex-test and vitest docs.
-- Test files live only at `convex/<domain>/tests/<domain>.<kind>.<function>.test.ts`; vitest includes exactly that path, so a test placed anywhere else never runs ([check 10](verification.md#checks) counts them).
+- Test files live only at `convex/<domain>/tests/<domain>.<kind>.<function>.test.ts`; vitest includes exactly that path, so a test placed anywhere else never runs ([check 21](verification.md#checks) confirms every test file is collected).
 - The module map that convex-test needs is built inside each `*.test.ts` file, never in a shared non-test module: Convex deploys every other file under `convex/` and the bundler-only glob fails there. It excludes tests and declaration files and keeps `_generated/`.
 - Test helpers stay inside test files or outside `convex/`; do not create a `convex/testing/` folder, because it would deploy.
 - Component test helpers come from each component's test export; check its name in the installed version.
@@ -142,7 +142,7 @@ Add these auth checks to the [verification checks](verification.md#checks) when 
 Use this section when the backend runs self-hosted, which [local-only](lifecycle.md#run-location) mode forces.
 
 - `docker-compose.yml` runs the backend and dashboard images named in the Convex self-hosting guide. Write each image at its newest release tag at least 7 days old, as an explicit tag rather than the mutable `latest` tag, so restarts are reproducible.
-- Ports bind to `127.0.0.1` only, and each worktree uses its own ports and data volume (see [Parallel worktrees](lifecycle.md#parallel-worktrees)).
+- Each service declares a health check. Ports bind to `127.0.0.1` only, and each worktree uses its own ports and data volume (see [Parallel worktrees](lifecycle.md#parallel-worktrees)).
 - `.env.example` lists the self-hosted URL and admin key names, empty.
 - `docs/self-hosting.md` covers starting the stack, generating the admin key into the untracked `.env.local`, deploying code to it, and that production needs TLS and a real host in front, which the user provides. Take each command from the self-hosting guide.
 

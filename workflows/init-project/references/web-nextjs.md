@@ -41,7 +41,7 @@ Always apply this section.
 
 - Server request errors are logged through `@vllnt/logger` from the framework's request-error instrumentation hook.
 - Log the route template, never the concrete request path: the path can carry tokens or identifiers.
-- Never log headers, cookies, tokens, request bodies, or user identity. The logger has no redaction.
+- Never log headers, cookies, tokens, request bodies, or user identity. The logger has no redaction, so log through the allowlisting wrapper from [mandatory primitives](baseline.md#mandatory-primitives).
 - `LOG_LEVEL` in the host environment sets verbosity; without it, only warnings and errors print.
 
 ## UI library
@@ -97,9 +97,9 @@ Every web app ships a browser smoke test of its production build, under `tests/e
 - an unknown URL shows the not-found page, and a forced render error shows the error page;
 - the security headers above are present on the home page;
 - an automated accessibility check of the home page reports no critical violations;
-- with a backend, the health route or query answers.
+- with a backend, the health query answers from a real backend, never the CI placeholder URL: locally the worktree's backend, and in CI a local backend started in the job (the same anonymous local mode codegen uses) or the pull request's preview backend.
 
-Take the runner and accessibility-check setup from their official docs.
+The runner is Playwright and the accessibility check is axe through its Playwright integration (`@axe-core/playwright`); take their setup from the official docs.
 
 ## Deploy
 
@@ -107,4 +107,4 @@ Apply the requirements for the web deploy target. Take commands and file formats
 
 - `vercel` with a backend: the deploy build deploys the backend first, then builds the web app with the deployed backend URL. In a monorepo, the backend deploy runs in the backend package and the build targets the web app. The deploy key lives only in the hosting dashboard, one per environment (production, preview).
 - `vercel` without a backend: no host config file unless the build needs one.
-- `docker`: standalone output, a multi-stage image on the project's Node version that installs with the frozen lockfile, and a `.dockerignore`.
+- `docker`: standalone output, a multi-stage image on the project's Node version that installs with the frozen lockfile, declares a health check on the health route, and has a `.dockerignore`.

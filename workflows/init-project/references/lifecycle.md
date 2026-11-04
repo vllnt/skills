@@ -27,7 +27,7 @@ Every step has one script at the project root, so humans, agents, hooks, and CI 
 | Start a task | `task:start <slug>` | Creates a worktree and branch for the task from the up-to-date default branch, through `wt:new`; accepts an optional issue reference for the branch and PR | Creates the branch and worktree; refuses an existing slug or a dirty main checkout |
 | Develop | `dev` | Starts the dev servers on the worktree's ports, bound to localhost | Responds on the worktree's port |
 | Test | `test` | Runs the test suites (see [Baseline scripts](baseline.md#baseline-scripts)) | Exit 0 on the scaffold |
-| Verify | `verify` | The same contract CI runs | Exit 0 on the scaffold |
+| Verify | `verify` | The contract every CI run executes; CI adds only the CI-only gates listed in [CI](#ci) | Exit 0 on the scaffold |
 | Open a PR | `pr` | Runs `verify`, pushes the branch, and opens a draft PR from the PR template (what, why, verification), linking the issue. The PR template exists when the Git host supports one; issue forms are optional | Refuses on a failing `verify` or the default branch |
 | Preview | `preview` | Builds and serves a production build locally on the worktree's port. For a surface with a hosted target in `cloud`/`hybrid`, CI also deploys a preview per PR and reports its URL on the PR | Local preview serves; with a hosted target, the preview job exists in CI |
 | Review | none | Multi-angle review before merge: correctness, security, tests, and UX and accessibility when there is a UI, by reviewers independent of the author; findings are resolved or rejected with a reason | `AGENTS.md` states the rule |
@@ -47,7 +47,7 @@ Applies to `cloud` and `hybrid`. CI runs on the Git host's CI; for GitHub, GitHu
 
 - Triggers: pull requests to the default branch and pushes to it. Least-privilege permissions (read-only contents unless a job needs more) and a timeout on every job.
 - Superseded runs of the same PR are cancelled. Default-branch runs are never cancelled. No workflow-level path filters: they leave required checks pending.
-- Each run checks formatting, then runs the same contract as `verify`. It also scans the changes for secrets, fails on high-severity advisories in production dependencies, fails a source change that adds no changelog line, and rejects a committed env file other than `.env.example`. In a monorepo, task selection, caching, and concurrency follow the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md). A single app or single package runs everything.
+- Each run installs with the frozen lockfile and checks out without persisting credentials, then runs `verify`. CI-only gates, which need the pull request's base or the host: it also scans the changes for secrets, fails on high-severity advisories in production dependencies, fails a source change that adds no changelog line, and rejects a committed env file other than `.env.example`. In a monorepo, task selection, caching, and concurrency follow the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md). A single app or single package runs everything.
 - With mobile, CI also runs `check:expo`.
 - With a backend, the job sets a non-secret loopback placeholder for each public backend URL, so builds that construct the client succeed without a backend.
 - Pin every action to the full commit SHA of its latest release, resolved through the Git host's API at scaffold time, with the tag as a trailing comment. Never guess a SHA.

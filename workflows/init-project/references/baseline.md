@@ -23,7 +23,7 @@ No version is written in this skill. Every package defaults to its latest releas
 
 ### Check exports
 
-Before generating `import x from "@vllnt/<pkg>/<sub>"`, read the published `exports` map of the version you install and confirm `./<sub>` exists. The map proves only that the subpath exists: before generating a call, confirm each named export in the installed package's `.d.ts`. Published versions often lag the source repositories, and some subpaths shown in READMEs exist only on canary builds.
+Before generating an import from a package subpath, read the published `exports` map of the version you install and confirm `./<sub>` exists. The map proves only that the subpath exists: before generating a call, confirm each named export in the installed package's `.d.ts`. Published versions often lag the source repositories, and some subpaths shown in READMEs exist only on canary builds.
 
 ### Canary packages
 
@@ -71,7 +71,7 @@ Every ESLint config is `eslint.config.mjs`, spreads named preset arrays from `@v
 | Workspace | Presets |
 |---|---|
 | Next.js app | `nextjs` (+ `convex` and the backend override when it holds `convex/`) (+ `turbo` in a monorepo) |
-| Backend package | `base` + `convex` + the backend override (+ `turbo`) |
+| Backend package | `nodejs` + `convex` + the backend override (+ `turbo`); `base` wires no test relaxations |
 | Expo app | a React Native preset if exported, otherwise `react` |
 | React shared package | `react` |
 | Pure TS package / Node | `nodejs` |
@@ -144,14 +144,15 @@ Cheap at creation and costly later, so every project gets them. Each has an owne
 
 | Primitive | Requirement | Owner | Pass check |
 |---|---|---|---|
-| Typed configuration | Each app validates every variable it needs at start-up and names the first missing one; backend code reads variables inside handlers | [web](web-nextjs.md#files), [mobile](mobile-expo.md#backend-wiring), [Convex rules](backend-convex.md#convex-rules) | Starting with a required variable unset fails, naming it |
+| Typed configuration | Each app validates every variable it needs at start-up and names the first missing or invalid one. The backend reads variables through one typed module inside handlers, and `health` and `deploy` refuse when a required deployment variable is unset | [web](web-nextjs.md#files), [mobile](mobile-expo.md#backend-wiring), [Convex rules](backend-convex.md#convex-rules) | Starting an app, or running `deploy` or `health`, with a required variable unset fails and names it |
 | Input boundaries | Route handlers, server actions, and parsers of outside responses validate input with a schema; backend functions use Convex validators | [web](web-nextjs.md#files), [Convex rules](backend-convex.md#convex-rules) | A test sends invalid input and gets a client error |
-| Structured logging | `@vllnt/logger` everywhere and `console` banned by every workspace's lint config; never log headers, cookies, tokens, bodies, or identity | [web logging](web-nextjs.md#logging), [Convex rules](backend-convex.md#convex-rules) | Lint fails on `console`; a test shows a log line with level and fields and no secret values |
-| Error path | Error page, not-found page, global error boundary, and one pluggable error sink | [web](web-nextjs.md#files) | The [end-to-end smoke](web-nextjs.md#end-to-end-smoke) |
+| Structured logging | `@vllnt/logger` everywhere and `console` banned by every workspace's lint config. The logger does not redact, so one wrapper logs only allowlisted fields and drops headers, cookies, tokens, bodies, and identity | [web logging](web-nextjs.md#logging), [Convex rules](backend-convex.md#convex-rules) | Lint fails on `console`; a test logs an event carrying a fake token and cookie and shows a line with level and fields but neither value |
+| Error path | Error page, not-found page, global error boundary, and one pluggable error sink for each deployed surface | [web](web-nextjs.md#files) | A test forces an error and asserts a fake sink received it; the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) shows the pages |
 | Security headers | CSP, framing restriction, `nosniff`, referrer policy on every web response | [web](web-nextjs.md#files) | The end-to-end smoke |
+| Health | A health query and route; a container image declares a health check on it, and the self-hosted stack declares one per service | [Lifecycle](lifecycle.md#lifecycle), [web deploy](web-nextjs.md#deploy), [self-hosted](backend-convex.md#self-hosted-backend) | `health` exits 0 against the running stack; the image and compose file declare the checks |
 | Accessibility | The presets' accessibility lint in UI workspaces, plus an automated page check | [web](web-nextjs.md#end-to-end-smoke) | The end-to-end smoke reports no critical violations |
-| Secret scanning | Pre-commit scan, a CI scan, and the host's push protection when it offers one | [Git hooks](#git-hooks), [CI](lifecycle.md#ci) | The hook rejects a planted inert credential |
-| Vulnerability gate | CI fails on high-severity advisories in production dependencies | [CI](lifecycle.md#ci) | The gate step exists and passes on the scaffold |
+| Secret scanning | Pre-commit scan, a CI scan with the same scanner and rules, and the host's push protection when it offers one | [Git hooks](#git-hooks), [CI](lifecycle.md#ci) | The hook rejects a planted inert credential ([check 15](verification.md#checks)), and the CI step runs that scanner and configuration |
+| Vulnerability gate | CI fails on high-severity advisories in production dependencies, and fails when the audit cannot run | [CI](lifecycle.md#ci) | Locally the gate exits 0 on the scaffold; in a scratch copy, a dependency release with a known high advisory makes it fail (capacity permitting, otherwise unverified) |
 | Change hygiene | PR template; changelog entry required by CI for source changes; branch protection with required review and checks | [Lifecycle](lifecycle.md#lifecycle), [CI](lifecycle.md#ci) | CI fails a source change without a changelog line; the host shows the protection once applied |
 | Community files | README, SECURITY.md, and CONTRIBUTING.md always; LICENSE when public; CODEOWNERS when there is more than one maintainer | [Root documents](#root-documents) | The files exist with the required content, and every command they name is a real script |
 | Schema migrations | Expand, migrate, contract, with a tested backfill | [Convex rules](backend-convex.md#convex-rules) | Review: no required field is added to an existing table in one release |
@@ -162,7 +163,7 @@ Cheap at creation and costly later, so every project gets them. Each has an owne
 
 ### End-to-end job
 
-With a web app, CI runs the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) against the production build: it repeats the setup steps (jobs do not share build output), uses the same placeholder environment as the main job, installs one browser, and runs `test:e2e`. The smoke's spec files are `tests/e2e/*.spec.ts` in both layouts, and the unit test runner never includes them.
+With a web app, CI runs the [end-to-end smoke](web-nextjs.md#end-to-end-smoke) against the production build: it repeats the setup steps (jobs do not share build output), uses the main job's placeholder environment except the backend URL, which points at the backend the [smoke](web-nextjs.md#end-to-end-smoke) requires, installs one browser, and runs `test:e2e`. The smoke's spec files are `tests/e2e/*.spec.ts` in both layouts, and the unit test runner never includes them.
 
 ## Changelog
 

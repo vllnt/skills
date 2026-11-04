@@ -4,10 +4,10 @@ The layout follows what `@vllnt/eslint-config` enforces. The installed preset is
 
 ## Naming
 
-- Files and folders outside `convex/` are kebab-case. The preset checks folder names too, so dynamic route segments are kebab-case (`[post-id]`, not `[postId]`). `.tsx` files may use any case; `index.*` is exempt.
-- Under `convex/`, files and folders are snake_case: lowercase letters, digits, and underscores, with no hyphens and no extra dots. `_generated/` is exempt, and so are `convex.config.ts`, `auth.ts`, and `auth.config.ts`.
+- Files and folders outside `convex/` are kebab-case. The preset checks the folders of non-`.tsx` files, so a dynamic route segment that holds a `.ts` file (such as a route handler) is kebab-case (`[post-id]`, not `[postId]`). `.tsx` files may use any case, and a folder that holds only `.tsx` files is not checked, so keep it kebab-case by review ([check 21](verification.md#checks)).
+- Under `convex/`, files and folders are snake_case: lowercase letters, digits, and underscores, with no hyphens and no extra dots. `_generated/` is exempt, and so are `convex.config.ts`, `auth.ts`, and `auth.config.ts`. `*.test.ts` files skip the Convex rules, so the dotted [backend test names](backend-convex.md#tests) pass; their part before the first dot is still snake_case.
 - Names are not abbreviated (`environment.ts`, not `env.ts`); the preset lists the allowed short forms.
-- Only `*.test.ts` (unit and backend) and `*.spec.ts` (end-to-end) count as test files and get the preset's test relaxations. Helpers, fixtures, page objects, and setup files get production rules, so keep test helpers inside test files until a second consumer exists.
+- Test files are `*.test.ts` (unit and backend) and `*.spec.ts` (end-to-end). Only the presets that wire the test relaxations (Next.js and Node.js) relax them; `react` and `base` do not, and no preset relaxes `.test.tsx`. Write tests as `.ts` and confirm the effective config of one test file per workspace ([check 5](verification.md#checks)). Helpers, fixtures, page objects, and setup files get production rules, so keep test helpers inside test files until a second consumer exists. A missing relaxation is fixed upstream, not by a local override.
 - Every linted file belongs to a tsconfig; config files and JavaScript outside every tsconfig are ignored by the workspace's ESLint config.
 
 ## Single app
@@ -57,7 +57,7 @@ Rules:
 - Turbo runs every task; the [task graph target](vstack/capabilities/workspace-turborepo/references/task-graph-target.md) owns the graph, caching, and CI selection, and `turbo.json` declares every environment variable a task reads (the preset's turbo rules fail on an undeclared one).
 - No root ESLint config and no root tsconfig: each workspace owns its own, so the root runs Turbo only.
 
-Pass checks: the task graph has no cycles and no package depends on an app ([check 18](verification.md#checks)); a search finds no deep import into another workspace's `src/` or `convex/`, and no web-only package in mobile's dependency closure ([check 21](verification.md#checks)). The preset's `boundaries` option stays off until it ships element definitions upstream.
+Pass checks: the task graph has no cycles and no package depends on an app ([check 18](verification.md#checks)); every internal dependency edge follows the allowed directions above, a search finds no deep import into another workspace's `src/` or `convex/`, and no web-only package is in mobile's dependency closure ([check 21](verification.md#checks)). The preset's `boundaries` option stays off until it ships element definitions upstream.
 
 ## Shared packages
 

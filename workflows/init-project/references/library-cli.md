@@ -21,7 +21,7 @@ Run in the package directory. Add by name, without versions (see [Resolve versio
 - The preset uses Node's ESM resolution, so relative imports carry the `.js` extension.
 - `eslint.config.mjs` spreads the `@vllnt/eslint-config` Node.js preset and ignores coverage, `dist`, and config files.
 - `vitest.config.ts` includes `src/**/*.test.ts` with at most 2 workers.
-- `src/index.ts` exports one pure function, `isBlank(value: string): boolean`. `src/index.test.ts` asserts that `isBlank("  ")` is `true` and `isBlank("a")` is `false`.
+- `src/index.ts` exports one small pure function, and `src/index.test.ts` covers one passing and one failing input.
 
 ## CLI
 
