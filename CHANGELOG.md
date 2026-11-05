@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(workflows): planning baselines carry scope tags and traced topologies; init-project checks combined compatibility; deliver-pull-request passes accepted findings and splits candidate vs release-readiness verdicts; release-readiness defines the ready rule once, freezes ready items, and binds proof to the candidate
 ## [0.2.0] - 2026-11-04
 
 - refactor(workflows): merge build-project into init-project (`vstack` + `other`); retire build-project

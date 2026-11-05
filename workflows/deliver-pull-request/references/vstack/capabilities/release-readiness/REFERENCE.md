@@ -13,7 +13,7 @@
 
 ## Procedure
 
-1. Read consumer instructions, candidate revision, distribution method, documentation, manifests, release automation, and applicable checks. Reuse established owners and workflows, including changelog evidence.
+1. Define the ready rule once: what ready means and which items only the owner can clear. Freeze items already ready unless their inputs changed; note repos whose main branch publishes automatically. Read consumer instructions, candidate revision, distribution method, documentation, manifests, release automation, and applicable checks. Reuse established owners and workflows, including changelog evidence.
 2. Classify each applicable requirement as pass, gap, unverified, or not applicable with evidence and impact. Use the [checklist](references/checklist.md); load [CI validation](references/ci-validation.md), [version sync](references/version-sync.md), [LLM catalogs](references/llms-generation.md), or [release messaging](references/release-messaging.md) only when relevant.
 3. For authorized repairs, update the owning local artifact with truthful public-safe content. Preserve history and unrelated work; do not invent contacts, compatibility, tests, or project facts.
 4. Verify changed artifacts and affected checks. Reclassify changed requirements, repair authorized gaps, and rerun affected checks. Send material unresolved questions and proof to the caller's Quality Validation pool. Return the next check for missing evidence, access, or authority.
@@ -21,4 +21,5 @@
 ## Pitfalls
 
 - Tool or remote-access absence is an evidence gap, not a pass or a reason to stop unaffected assessment.
+- Bind each ready verdict to proof on the exact candidate. In long runs, wait on task ids, check free inodes on scratch filesystems, and keep compiler failures in status.
 - Inspect content before exposing it in public documentation or catalogs.
