@@ -1,6 +1,6 @@
 # Coordination
 
-Use [Quality Validation](../../../../references/protocols/quality-validation.md) when available for the shared proof, triage, and capped repair loop; otherwise perform that cycle directly with the perspectives below. The collection-specific perspectives below supply its scope; they do not start a second pool.
+Use [Quality Validation](../../../../references/protocols/quality-validation.md) for the shared proof, triage, and capped repair loop. The collection-specific perspectives below supply its scope; they do not start a second pool.
 
 1. Define the candidate, mode, criteria, and required proof before editing. Select contract, composition, behavior, ownership, simplicity, and resilience perspectives by impact; cover all six for broad collection changes.
 2. Keep mechanical checks direct. Assign bounded read-only perspectives to available subagents only for high-tier changes or on request; report missing independence.

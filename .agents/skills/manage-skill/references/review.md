@@ -5,7 +5,7 @@ Verify the result and completion criteria. Use independent subagents only for hi
 | Perspective | Check |
 |---|---|
 | Contract | Trigger, family structure, inputs, effects, acceptance evidence, and consumer-policy ownership. |
-| Composition | Callers, links, fallback, cycles, duplicate responsibilities, and deletion compatibility. |
+| Composition | Callers, links, sibling fallbacks, cycles, duplicate responsibilities, and deletion compatibility. |
 | Behavior | Success/failure, missing or contradictory evidence, unavailable tools, unintended writes, stale proof, and blocked completion. |
 
 1. Identify the candidate and assigned scope.

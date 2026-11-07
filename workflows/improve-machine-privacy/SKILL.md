@@ -1,6 +1,6 @@
 ---
 name: improve-machine-privacy
-description: Audit the current machine on any OS for privacy leaks in identifiers, network traffic, telemetry, permissions, sharing, browsers, and file metadata, list every recommendation with its benefit, risk, and undo, then apply and verify only user-selected changes.
+description: Audit this machine on any OS for privacy leaks in identifiers, traffic, telemetry, permissions, sharing, browsers, and metadata; list fixes with benefit, risk, and undo; apply and verify chosen ones.
 ---
 
 ## Goal

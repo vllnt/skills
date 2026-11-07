@@ -21,5 +21,5 @@ Turn a bounded issue backlog into a traceable, actionable queue without implemen
 1. Resolve repository, scope, current inventory, permitted effects, applicable instructions, and the triage validation contract.
 2. Classify evidence-backed keep, refine, split, duplicate, realign, stale, close, and blocked decisions. Record canonical links, owner, blocker, intended effect, and next action.
 3. Recommend the first coherent slice with outcome and dependencies. Decide reversible triage details from evidence; ask only for missing authority or access, an irreversible or high-risk choice, or a preference evidence cannot settle, with a recommended answer.
-4. For substantive triage, use [Quality validation](references/vstack/protocols/quality-validation.md) with the mode, scope, candidate, and evidence; if unavailable, self-assess against evidence, settle open questions with a permitted discriminating check, and report missing independence before hosted writes.
+4. For substantive triage, use [Quality validation](references/vstack/protocols/quality-validation.md) before hosted writes.
 5. Apply only the authorized validated subset, preserve context and recoverable closure, then read back changed fields. On unchanged evidence, change approach or return the open criterion and next action.

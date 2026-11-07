@@ -77,7 +77,7 @@ description: [Activation condition and cross-task behavior.]
 ## Authoring checks
 
 1. Separate identity/trigger, outcome/contract, acceptance, and procedure; remove repeated titles and semantic duplication.
-2. Keep decisive evidence checks in the owning skill. A missing mandatory skill or procedure reference must not silently remove a necessary check.
+2. Keep decisive evidence checks in the owning skill. A missing mandatory skill or non-bundled sibling must not silently remove a necessary check; bundled references need no fallback.
 3. Describe specific failures and alternatives instead of generic warnings. Project permissions stay in consumer instructions; loading a skill grants no authority.
 4. Exercise success, missing evidence, contradictory sources, unavailable tools, and assessment-only requests. Inspect actions as well as the answer; tests and sources must exist, not be invented.
 5. Link workflow dependencies to packaged `references/vstack/...` paths with a loading condition. Canonical procedures live under `references/`; regenerate distribution copies instead of editing them.

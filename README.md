@@ -43,7 +43,7 @@ Package inventories and versions are discovered at execution time. This collecti
 
 ## Composition
 
-The workflow owns the requested result. It loads a canonical procedure only when its condition applies, passing mode, scope, candidate, and evidence. Useful independent work runs in parallel; another reference does not automatically trigger another complete review team. Missing optional guidance falls back to the underlying procedure.
+The workflow owns the requested result. It loads a canonical procedure only when its condition applies. Useful independent work runs in parallel; another reference does not automatically trigger another complete review team. Absent sibling workflows or optional tools fall back to the underlying procedure.
 
 Finish at the requested endpoint. A bounded report can finish with explicit gaps; missing required verification cannot become a pass. A blocker returns its cause, options, recommendation, consequences, and next action.
 
@@ -64,8 +64,8 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments while preserving observable contracts and affected consumers. |
 | [improve-codebase](workflows/improve-codebase/SKILL.md) | Directly refactor source code and data paths toward measured reduction and efficiency while preserving behavior. |
 | [improve-dx](workflows/improve-dx/SKILL.md) | Speed up verified work for developers and agents by improving native build, lint, script, and CI workflows without weakening checks. |
-| [improve-machine-privacy](workflows/improve-machine-privacy/SKILL.md) | Audit the current machine on any OS for privacy leaks in identifiers, network traffic, telemetry, permissions, sharing, browsers, and file metadata, list every recommendation with its benefit, risk, and undo, then apply and verify only user-selected changes. |
-| [improve-machine-security](workflows/improve-machine-security/SKILL.md) | Audit the current machine on any OS for weak security settings, hidden or dormant processes, network exposure, and account risks, offer an approved local network check, then apply and verify only user-selected fixes. |
+| [improve-machine-privacy](workflows/improve-machine-privacy/SKILL.md) | Audit this machine on any OS for privacy leaks in identifiers, traffic, telemetry, permissions, sharing, browsers, and metadata; list fixes with benefit, risk, and undo; apply and verify chosen ones. |
+| [improve-machine-security](workflows/improve-machine-security/SKILL.md) | Audit this machine on any OS for weak security settings, hidden processes, network exposure, and account risks, offer an approved local network check, then apply and verify only user-selected fixes. |
 | [improve-project](workflows/improve-project/SKILL.md) | Adapt an existing repository to applicable stack preferences through small verified stages. |
 | [improve-session](workflows/improve-session/SKILL.md) | Refocus a session at any point on its requested outcome, grounded decisions, simplicity, required quality, and efficient execution. |
 | [improve-tests](workflows/improve-tests/SKILL.md) | Improve a whole test suite by consolidating cross-file duplication and reducing execution cost while preserving coverage and defect detection. |
