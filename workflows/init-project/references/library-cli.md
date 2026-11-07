@@ -44,7 +44,7 @@ The stack profile prefers Effect for CLIs. Start with Node's built-in argument p
 
 Only when Q11 is `npm`, which requires `public`:
 
-- Ask for the npm package name. It must be a name or scope the user controls on npm; `@<name>/` is only a workspace scope.
+- Take the npm package name from the request; otherwise ask for it in the question batch. It must be a name or scope the user controls on npm; `@<name>/` is only a workspace scope.
 - Remove `private` from the published package, and keep `files` limited to `dist`.
 - Add a publish workflow triggered only by release tags (see [Release](lifecycle.md#lifecycle)): npm trusted publishing with provenance and no token secret, publishing never cancelled midway, and actions pinned as in [CI](baseline.md#ci). Take the steps from npm's current trusted-publishing documentation; do not invent them.
 - Tell the user to register the repository as a trusted publisher on npm before the first tag.

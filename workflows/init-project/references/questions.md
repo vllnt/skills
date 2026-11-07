@@ -2,17 +2,16 @@ Load this file at the start of `init-project`, before asking anything.
 
 ## Asking
 
-- Infer every answer you can from the request first: "a Next.js site with a Convex backend" answers Q0 (`vstack`) and Q2. A named other framework answers Q0 (`other`). Ask only what is still open.
-- Ask in stages: Q0 when the path is unknown; then, for `vstack`, Q2 alone when surfaces are unknown, then every other relevant question, grouped by topic. For `other`, skip Q2–Q13 and ask Q14. Within a stage, make as many tool calls as the tool's limits require. Ask a dependent follow-up when an answer changes which questions apply. Every `vstack` question has a default, and the answer "defaults" accepts all of them. Q14 has no default.
-- Ask a question only when earlier answers make it relevant; the [forcing rules](#forcing-rules) skip or force answers.
-- Use the harness's structured question tool when it has one, for example `AskUserQuestion` in Claude Code, or the equivalent in Codex or Cursor. Put the default first in each option list and mark it as the default. Respect the tool's current limits on questions per call and options per question. Split a long list into related topic groups, or ask it in chat.
-- Without such a tool, ask plain numbered questions in chat, each with its options and default, and accept answers such as `0: vstack, 1: my-app, 2: web+backend` or "defaults".
+- Infer every answer you can from the request first: "a Next.js site with a Convex backend" answers Q0 (`vstack`) and Q2. A named other framework answers Q0 (`other`). Fill every other answer with its default; the answer "defaults" accepts all of them. Q14 has no default.
+- Ask only a question with no safe default or an irreversible answer: Q14 when the request does not state it, the npm package name for a published library or CLI when the request does not state it, a conflict only the user can resolve (such as Q11 `npm` with `private`), or a path that writes outside the target. Ask once, in one batch, each with a recommended answer. Ask a dependent follow-up only when an answer changes which questions apply; the [forcing rules](#forcing-rules) skip or force the rest. For `other`, skip Q2–Q13.
+- Use the harness's structured question tool when it has one, for example `AskUserQuestion` in Claude Code, or the equivalent in Codex or Cursor. Put the recommended default first in each option list and mark it. Respect the tool's current limits on questions per call and options per question; split the one batch across calls only as the limits require, or ask it in chat.
+- Without such a tool, ask plain numbered questions in chat, each with its options and recommended default, and accept answers such as `0: vstack, 1: my-app, 2: web+backend` or "defaults".
 - When the harness cannot ask at all, or the user already gave every answer, use the [non-interactive mode](#non-interactive-mode).
-- After the answers, print the plan before writing anything: path, surfaces, layout, run location, package manager, packages (latest releases, resolved at install), any prereleases, the lifecycle scripts, and the files to create (the record used for any cleanup). When the user answered "defaults" or gave every answer up front, the plan is informational; otherwise wait for one confirmation. On `vstack`, state that the package manager is pnpm. On `other`, state the package manager recorded from Q14.
+- After the answers, print the plan before writing anything: path, surfaces, layout, run location, package manager, packages (latest releases, resolved at install), any prereleases, the lifecycle scripts, and the files to create (the record used for any cleanup), with each inferred or default answer marked so the user can correct it. When the user answered "defaults" or gave every answer up front, the plan is informational; otherwise wait for one confirmation, with defaults filled in. On `vstack`, state that the package manager is pnpm. On `other`, state the package manager recorded from Q14.
 
 ## Questions
 
-| # | Question | Options (first = default) | Asked when |
+| # | Question | Options (first = default) | Relevant when |
 |---|---|---|---|
 | Q0 | Path | `vstack` (@vllnt Next.js / Convex / Expo / library / CLI), `other` (any other stack; minimal baseline) | when unknown. Infer `vstack` from those surfaces; infer `other` from a named other framework or npm/yarn/bun |
 | Q1 | Project name | free text; default = target directory name | always |
@@ -36,7 +35,7 @@ Validate Q1:
 - Not a reserved word: `node_modules`, `src`, `dist`, `build`, `public`, `test`, `tests`.
 - For mobile, derive the store id `com.<owner>.<app>`:
   - `<app>` is the name with every non-alphanumeric character removed, prefixed with `app` when it starts with a digit (`my-app` -> `myapp`, `2048` -> `app2048`).
-  - Ask for `<owner>` once; the default is `example`. Validate it against `^[a-z][a-z0-9]*$`, which is valid for both iOS and Android.
+  - Take `<owner>` from the request; otherwise use the default `example` and note in the plan, the generated `AGENTS.md`, and the report's remaining work that it must change before store publishing. Validate it against `^[a-z][a-z0-9]*$`, which is valid for both iOS and Android.
   - Every Android segment must match `[A-Za-z][A-Za-z0-9_]*`.
   - Use `<app>`, never the raw name, for the mobile `scheme`: it always starts with a letter.
 

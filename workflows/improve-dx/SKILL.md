@@ -5,14 +5,14 @@ description: Speed up verified work for developers and agents by improving nativ
 
 ## Goal
 
-Help developers and agents finish work faster in authorized change mode by selecting the highest-supported gain and changing one bounded scope at a time. Optimize time to a verified result, not command duration alone. Preserve outputs, diagnostics, required checks, and trusted execution.
+Help developers and agents finish work faster in authorized change mode by selecting the highest-supported gain and changing one bounded scope at a time. Optimize time to a verified result, not command duration alone. Agent experience (AX) means one discoverable command per task, fast deterministic checks, clear machine-readable errors, and small context. Preserve outputs, diagnostics, required checks, and trusted execution.
 
 ### Definition of Done
 
 - The revision, native tools, representative developer and agent tasks, required checks, baseline time to verified results, and requested targets are recorded.
 - The selected scope has the strongest evidenced gain relative to effort and risk; each authorized change and verification finish before the next.
 - Changed builds, lint rules, scripts, or CI still produce supported artifacts and diagnostics, propagate failures, and respect cache and permission boundaries.
-- Representative developer and agent workflows reach verified results faster under comparable conditions, including setup, waiting, retries, and manual steps; neither shifts work to the other. Unmeasured workflows remain unverified.
+- Representative developer and agent workflows reach verified results faster under comparable conditions, including setup, waiting, retries, and manual steps; neither shifts work to the other, and agent tasks keep AX. Unmeasured workflows remain unverified.
 - Quality validation accepts the selected mode; achieved gain, tradeoffs, shortfall, and unverified gaps are explicit. An assessment makes no changes or test runs.
 
 ## Boundaries

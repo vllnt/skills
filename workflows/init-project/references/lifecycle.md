@@ -4,7 +4,7 @@ This file states requirements and pass checks. Generate scripts and workflow fil
 
 ## Run location
 
-Detect the setup before asking [Q13](questions.md#questions), and offer the detected mode as the default. Probe only what the selected surfaces need:
+Detect the setup first and use the detected mode as the [Q13](questions.md#questions) default. Probe only what the selected surfaces need:
 
 - Git: an existing remote and its host, and whether the host's CLI is authenticated.
 - Docker, when a backend is selected (self-hosted backend in local-only mode).

@@ -129,7 +129,7 @@ Requirements:
 - Install `better-auth` at the newest version inside the adapter's published peer range, in every workspace that uses it (via `catalog:` in a monorepo). Do not pre-seed patches.
 - Web proxies auth requests same-origin to the backend, and its backend client provider becomes the adapter's auth provider. Mobile uses the same server plus Better Auth's Expo client with secure storage, installed through `expo install` where it has native peers.
 - Session initialization (the anonymous sign-in on first load) comes from the installed README for web and Expo.
-- Trusted origins, cookie settings, and user rows come from `@vllnt/convex-helpers` subpaths when the installed version exports them. Check its exports (see [Check exports](baseline.md#check-exports)). If the subpaths are missing, ask the user: try another published helpers release that exports them ([Resolve release](baseline.md#resolve-release)), or use the adapter's own defaults.
+- Trusted origins, cookie settings, and user rows come from `@vllnt/convex-helpers` subpaths when the installed version exports them. Check its exports (see [Check exports](baseline.md#check-exports)). If the subpaths are missing, decide without asking: take another published helpers release in the same major that exports them when one passes [Resolve release](baseline.md#resolve-release), otherwise use the adapter's own defaults. Record the choice, and any prerelease with its reason, in the plan and `AGENTS.md`.
 - Deployment env (set on the deployment, never in files): the auth secret, trusted origins, and site URL. Apps read the public backend and site URLs.
 
 Add these auth checks to the [verification checks](verification.md#checks) when auth is selected:
