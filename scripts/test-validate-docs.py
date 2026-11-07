@@ -258,15 +258,6 @@ def main() -> int:
         run(root, "Principles exceeds 150 words (152)")
         skill(root, "mandatory", "vllnt-thinking-principles", entries[1][2])
 
-        # A temporary cap allows growth to the cap only while the file is over budget.
-        capped = ("workflows", "improve-codebase", "A sufficiently specific capped workflow description.")
-        catalogs(root, entries + [capped])
-        capped_file = root / "workflows/improve-codebase/SKILL.md"
-        for size, message in ((4500, "stale temporary cap"), (5829, None), (5830, "5830 B exceeds 5829 B")):
-            skill(root, *capped)
-            pad(capped_file, capped_file.read_text(encoding="utf-8"), size)
-            run(root, message)
-
     print("PASS catalog coverage, links, templates, contracts, criteria, budgets, local maintenance, and recovery")
     return 0
 

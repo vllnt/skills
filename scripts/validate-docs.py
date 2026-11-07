@@ -24,11 +24,6 @@ BUDGETS = {  # glob -> max bytes
     "references/capabilities/*/REFERENCE.md": 3600, "AGENTS.md": 9500,
 }
 MAX_DESCRIPTION_CHARS, MAX_PRINCIPLE_WORDS = 200, 150
-# TEMPORARY caps (path -> current size) stop not-yet-trimmed files from growing.
-# Remove an entry once its file fits its budget or is merged; a stale entry fails.
-TEMPORARY_CAPS = {
-    "workflows/improve-codebase/SKILL.md": 5829, "workflows/improve-machine-privacy/SKILL.md": 4871,
-}
 
 
 def fail(errors: list[str], message: str) -> None:
@@ -301,12 +296,8 @@ def validate_canonical_references(root: Path, errors: list[str]) -> None:
 def validate_budgets(root: Path, skills: dict[str, tuple[str, str]], errors: list[str]) -> None:
     for pattern, budget in BUDGETS.items():
         for path in sorted(root.glob(pattern)):
-            relative, size = path.relative_to(root).as_posix(), path.stat().st_size
-            limit = TEMPORARY_CAPS.get(relative, budget)
-            if size > limit:
-                fail(errors, f"{relative}: {size} B exceeds {limit} B")
-            elif limit != budget and size <= budget:
-                fail(errors, f"{relative}: stale temporary cap; within its {budget} B budget")
+            if (size := path.stat().st_size) > budget:
+                fail(errors, f"{path.relative_to(root).as_posix()}: {size} B exceeds {budget} B")
     for relative, (_, description) in skills.items():
         if len(description) > MAX_DESCRIPTION_CHARS:
             fail(errors, f"{relative}: description exceeds {MAX_DESCRIPTION_CHARS} characters ({len(description)})")
