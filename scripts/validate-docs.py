@@ -18,6 +18,18 @@ FIELD = re.compile(r"^(name|description):\s*(.+?)\s*$", re.M)
 LIST_ITEM = re.compile(r"^-\s+\S")
 FLAT_FIELD = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$")
 
+# Size budgets: stay under them rather than raising them.
+BUDGETS = {  # glob -> max bytes
+    "workflows/*/SKILL.md": 4500, "references/protocols/*.md": 3500,
+    "references/capabilities/*/REFERENCE.md": 3600, "AGENTS.md": 9500,
+}
+MAX_DESCRIPTION_CHARS, MAX_PRINCIPLE_WORDS = 200, 150
+# TEMPORARY caps (path -> current size) stop not-yet-trimmed files from growing.
+# Remove an entry once its file fits its budget or is merged; a stale entry fails.
+TEMPORARY_CAPS = {
+    "workflows/improve-codebase/SKILL.md": 5829, "workflows/improve-machine-privacy/SKILL.md": 4871,
+}
+
 
 def fail(errors: list[str], message: str) -> None:
     errors.append(message)
@@ -286,6 +298,23 @@ def validate_canonical_references(root: Path, errors: list[str]) -> None:
             fail(errors, f"{relative}: 'Acceptance' needs 3-5 criteria, found {count}")
 
 
+def validate_budgets(root: Path, skills: dict[str, tuple[str, str]], errors: list[str]) -> None:
+    for pattern, budget in BUDGETS.items():
+        for path in sorted(root.glob(pattern)):
+            relative, size = path.relative_to(root).as_posix(), path.stat().st_size
+            limit = TEMPORARY_CAPS.get(relative, budget)
+            if size > limit:
+                fail(errors, f"{relative}: {size} B exceeds {limit} B")
+            elif limit != budget and size <= budget:
+                fail(errors, f"{relative}: stale temporary cap; within its {budget} B budget")
+    for relative, (_, description) in skills.items():
+        if len(description) > MAX_DESCRIPTION_CHARS:
+            fail(errors, f"{relative}: description exceeds {MAX_DESCRIPTION_CHARS} characters ({len(description)})")
+        words = sum(len(line.split()) for _, line in skill_body(root / relative) if not HEADING.match(line))
+        if relative.startswith("mandatory/") and words > MAX_PRINCIPLE_WORDS:
+            fail(errors, f"{relative}: Principles exceeds {MAX_PRINCIPLE_WORDS} words ({words})")
+
+
 def slug(value: str) -> str:
     value = re.sub(r"[`*_~]", "", value).lower()
     value = re.sub(r"[^\w\s-]", "", value, flags=re.UNICODE)
@@ -411,6 +440,7 @@ def main() -> int:
     validate_links(root, errors)
     validate_skill_structure(root, errors)
     validate_canonical_references(root, errors)
+    validate_budgets(root, skills, errors)
 
     if errors:
         for error in errors:

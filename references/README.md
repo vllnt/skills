@@ -1,6 +1,6 @@
 # Repository references
 
-Canonical procedures are on-demand guidance, not discoverable skills. A workflow loads only the procedure relevant to its condition, passing its mode, scope, candidate, and evidence. Planning and assessment use effectful procedures only for their read-only criteria and proposed checks.
+Canonical procedures are on-demand guidance, not discoverable skills. A workflow loads only the procedure relevant to its condition. Planning and assessment use effectful procedures only for their read-only criteria and proposed checks.
 
 ## Procedures
 

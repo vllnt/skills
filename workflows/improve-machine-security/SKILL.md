@@ -1,6 +1,6 @@
 ---
 name: improve-machine-security
-description: Audit the current machine on any OS for weak security settings, hidden or dormant processes, network exposure, and account risks, offer an approved local network check, then apply and verify only user-selected fixes.
+description: Audit this machine on any OS for weak security settings, hidden processes, network exposure, and account risks, offer an approved local network check, then apply and verify only user-selected fixes.
 ---
 
 ## Goal
