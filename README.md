@@ -24,7 +24,7 @@ Distribution synchronization is separate from marketplace publication and host r
 
 | Folder | Purpose |
 |---|---|
-| `workflows/` | User tasks such as Init Project, Plan Issues, Improve UI, and Deliver Issue. |
+| `workflows/` | User tasks such as Init Project, Plan Work, Improve UI, and Deliver Issue. |
 | `references/` | On-demand procedures and supporting guidance; workflows load only the references relevant to the request. |
 | `mandatory/` | Lightweight session principles: [Thinking](mandatory/vllnt-thinking-principles/SKILL.md), [Orchestration](mandatory/vllnt-orchestration-principles/SKILL.md), [Collaboration](mandatory/vllnt-collaboration-principles/SKILL.md). |
 
@@ -51,7 +51,7 @@ Finish at the requested endpoint. A bounded report can finish with explicit gaps
 
 ### User workflows
 
-For broad improvement requests, compare the evidenced impact, effort, and risk across `improve-codebase`, `improve-tests`, and `improve-dx`; choose the owner of the strongest supported gain, verify one scope, then re-rank. Do not run all three at once.
+For broad improvement requests, compare the evidenced impact, effort, and risk across `improve-code`, `improve-tests`, and `improve-dx`; choose the owner of the strongest supported gain, verify one scope, then re-rank. Do not run all three at once.
 
 | Skill | Result |
 |---|---|
@@ -60,27 +60,21 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | [deliver-issue](workflows/deliver-issue/SKILL.md) | Deliver a scoped issue through a verified pull request and authorized merge to its target branch. |
 | [deliver-pull-request](workflows/deliver-pull-request/SKILL.md) | Review a pull request, coordinate authorized repairs and verification, then merge it when permitted. |
 | [explain-subject](workflows/explain-subject/SKILL.md) | Explain a real subject with a simple verified mental model and clear limits. |
-| [explore-decisions](workflows/explore-decisions/SKILL.md) | Sharpen an artifact or decision with an evidenced recommendation, concrete alternatives, and only the questions evidence cannot settle. |
-| [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments while preserving observable contracts and affected consumers. |
-| [improve-codebase](workflows/improve-codebase/SKILL.md) | Directly refactor source code and data paths toward measured reduction and efficiency while preserving behavior. |
+| [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments and refactor source and data paths for measured reduction and efficiency while preserving observable contracts and affected consumers. |
 | [improve-dx](workflows/improve-dx/SKILL.md) | Speed up verified work for developers and agents by improving native build, lint, script, and CI workflows without weakening checks. |
-| [improve-machine-privacy](workflows/improve-machine-privacy/SKILL.md) | Audit this machine on any OS for privacy leaks in identifiers, traffic, telemetry, permissions, sharing, browsers, and metadata; list fixes with benefit, risk, and undo; apply and verify chosen ones. |
-| [improve-machine-security](workflows/improve-machine-security/SKILL.md) | Audit this machine on any OS for weak security settings, hidden processes, network exposure, and account risks, offer an approved local network check, then apply and verify only user-selected fixes. |
+| [improve-machine](workflows/improve-machine/SKILL.md) | Audit this machine on any OS for privacy leaks, security weaknesses, or both; list fixes with benefit, risk, and undo, offer an approved local network check, and apply only chosen fixes. |
 | [improve-project](workflows/improve-project/SKILL.md) | Adapt an existing repository to applicable stack preferences through small verified stages. |
 | [improve-session](workflows/improve-session/SKILL.md) | Refocus a session at any point on its requested outcome, grounded decisions, simplicity, required quality, and efficient execution. |
 | [improve-tests](workflows/improve-tests/SKILL.md) | Improve a whole test suite by consolidating cross-file duplication and reducing execution cost while preserving coverage and defect detection. |
-| [improve-ui](workflows/improve-ui/SKILL.md) | Improve an interface’s hierarchy, consistency, responsiveness, and accessibility while preserving journeys. |
+| [improve-ui](workflows/improve-ui/SKILL.md) | Improve an interface’s hierarchy, consistency, responsiveness, and accessibility while preserving journeys, or assess it read-only for evidence-backed findings. |
 | [init-project](workflows/init-project/SKILL.md) | Start a new project from answers, then install and verify it (@vllnt stack or a minimal baseline on another stack). |
 | [manage-defects](workflows/manage-defects/SKILL.md) | Diagnose a reported failure, isolate its cause, and apply authorized repairs with regression evidence. |
-| [manage-issues](workflows/manage-issues/SKILL.md) | Triage GitHub issues into an evidence-backed, atomic, actionable backlog and apply authorized changes. |
-| [manage-roadmap](workflows/manage-roadmap/SKILL.md) | Create, maintain, synchronize, or report a traceable roadmap that preserves direction and history. |
+| [manage-issues](workflows/manage-issues/SKILL.md) | Triage GitHub issues into an evidence-backed, atomic, actionable backlog, or plan source-backed issue drafts from a codebase assessment; apply only authorized changes. |
+| [manage-roadmap](workflows/manage-roadmap/SKILL.md) | Create, maintain, synchronize, or report a traceable roadmap and the vision anchor and decision test behind it, preserving direction and history. |
 | [manage-rules](workflows/manage-rules/SKILL.md) | Manage user, project, and nested instructions while preserving scope, precedence, and effective behavior. |
 | [manage-skills](workflows/manage-skills/SKILL.md) | Create, review, update, organize, or retire portable agent skills around a clear outcome and evidence. |
-| [manage-vision](workflows/manage-vision/SKILL.md) | Create, update, locate, or audit an evidence-backed project vision anchor and decision test. |
-| [plan-issues](workflows/plan-issues/SKILL.md) | Assess a codebase and prepare a source-backed, deduplicated issue backlog for human review. |
-| [plan-work](workflows/plan-work/SKILL.md) | Maintain a read-only planning session that returns an actionable plan without local or remote side effects. |
+| [plan-work](workflows/plan-work/SKILL.md) | Return an actionable plan, or sharpen an artifact or decision with an evidenced recommendation, without local or remote side effects; ask only what evidence cannot settle. |
 | [review-pull-request-qa](workflows/review-pull-request-qa/SKILL.md) | Test a pull request in a full local or preview environment and return candidate-bound backend, frontend, and end-to-end QA evidence. |
-| [review-ui](workflows/review-ui/SKILL.md) | Assess an interface for evidence-backed usability, responsiveness, consistency, and accessibility findings without changing it. |
 
 ## On-demand procedures
 
