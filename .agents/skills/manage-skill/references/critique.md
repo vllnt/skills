@@ -1,6 +1,6 @@
 # Critique
 
-Challenge necessity and instruction cost. Use independent subagents when available, following [coordination](coordination.md).
+Challenge necessity and instruction cost. Use independent subagents only for high-tier changes or on request, following [coordination](coordination.md).
 
 | Perspective | Check |
 |---|---|

@@ -13,6 +13,7 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Current update
 
+- Verifier-first validation: quality validation tiers risk (low, medium, high) and scales independence to it: producer proof, then a non-producer rerun plus a quick advisory diff review (medium), then targeted Code review in its new `review` mode (high). Producers prove applicable perspectives and add the smallest missing proof check; a finding blocks only if reproduced, a violated explicit requirement, or a concrete scenario a second agent confirms; ledger rules name the bug class, never repeat findings, tag Pre-existing defects as non-blocking, and require a disposition; repair rounds cap at 3 (5 for security or data loss). Runtime speed gains are unmeasured; a before/after comparison on 3–5 real tasks is pending.
 - Version-pin sweep: capability references resolve `@vllnt/typescript` / `@vllnt/eslint-config` / `@vllnt/next-llms` from the registry at execution (annex lists packages only); browser audit steps defer to installed tool docs. Age gate owned by default packages / `init-project`. Runtime loading remains unverified.
 - Delivery handoff and deletion-first assessment: carry accepted scope, proof, and gaps into landing without restarting valid review; preserve every required local pre-push check. Refactoring proposals account for operational consumers and validate a ranked shortlist before handoff. C49 and C79–C82 cover validity, applicability, assertion strength, and retained evidence. Integrated current review and test-management rules, including explicit checks for unevidenced review perspectives. Candidate-bound validation belongs in the PR; consumer runtime and model-speed gains remain unmeasured.
 - Portability cleanup: remove historical candidate evidence and file-hash inventories from the evaluation reference, retaining reusable scenarios. Workflow checks and optional stack procedures derive their applicability from the consumer project.
@@ -58,7 +59,7 @@ Current work and proposed extensions. The [catalog](llms.txt) owns the skill inv
 
 ## Quality feedback loop
 
-The shared [quality validation protocol](references/protocols/quality-validation.md) owns criteria, self-assessment, review/critique, triage, and renewed acceptance. Workflows supply domain criteria from the request, applicable rules, and principles before work. Planning validates a plan; assessment validates a report; implementation validates the changed artifact. Direct checks remain sufficient for mechanical changes.
+The shared [quality validation protocol](references/protocols/quality-validation.md) owns criteria, risk tiers, proof, tier-matched independent verification, finding triage, and capped repair rounds. Workflows supply domain criteria from the request, applicable rules, and principles before work. Planning validates a plan; assessment validates a report; implementation validates the changed artifact. Direct checks remain sufficient for mechanical changes.
 
 | ID | State | Result / remaining evidence |
 |---|---|---|

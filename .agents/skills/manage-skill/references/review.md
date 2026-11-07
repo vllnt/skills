@@ -1,6 +1,6 @@
 # Review
 
-Verify the result and completion criteria. Use independent subagents when available, following [coordination](coordination.md).
+Verify the result and completion criteria. Use independent subagents only for high-tier changes or on request, following [coordination](coordination.md).
 
 | Perspective | Check |
 |---|---|

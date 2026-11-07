@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(validation): verifier-first risk-tiered validation; producers prove applicable perspectives and add missing proof checks; medium risk adds a quick advisory review; findings block only when reproduced, independently confirmed, or a violated explicit requirement; ledger rules and capped repair rounds
 - fix(workflows): planning baselines carry scope tags and traced topologies; init-project checks combined compatibility; deliver-pull-request passes accepted findings and splits candidate vs release-readiness verdicts; release-readiness defines the ready rule once, freezes ready items, and binds proof to the candidate
 ## [0.2.0] - 2026-11-04
 
