@@ -39,5 +39,5 @@ Vstack includes the reusable packages, skills, methods, and project rules used a
 
 1. Make this profile available through a user-selected document or applicable user/project instruction reference. Installing an individual skill does not install or activate this profile.
 2. Record the selected surfaces, package sources, resolved releases, data/service owners, environments, verification commands, and justified exceptions in the consumer's owning instructions/configuration.
-3. Use `init-project` to start a new project (`vstack` scaffold or `other` minimal baseline) and `improve-project` to adapt an existing project. Both may use [Project alignment](capabilities/project-alignment/REFERENCE.md) and [Stack packages](capabilities/stack-packages/REFERENCE.md) when those references apply, with standalone fallbacks.
+3. Use `init-project` to start a new project (`vstack` scaffold or `other` minimal baseline) and `improve-project` to adapt an existing project. Both may use [Project alignment](capabilities/project-alignment/REFERENCE.md) and [Stack packages](capabilities/stack-packages/REFERENCE.md) when those references apply.
 4. A preferred target does not authorize destructive migration, production cutover, or overwriting existing work. Follow established scope and preserve a viable staged path.

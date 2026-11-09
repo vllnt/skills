@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- refactor(workflows): merge improve-codebase into improve-code, review-ui into improve-ui, plan-issues into manage-issues, machine privacy and security into improve-machine, explore-decisions into plan-work, manage-vision into manage-roadmap
+- perf(skills): cut bundled and always-loaded context; drop fallbacks for bundled references; prune duplicate evaluation cases; enforce size budgets
 - feat(workflows): proportional planning, ask only when necessary with recommended answers, lifetime-cost decisions for speed, maintenance, DX and AX
 - feat(validation): verifier-first risk-tiered validation; producers prove applicable perspectives and add missing proof checks; medium risk adds a quick advisory review; findings block only when reproduced, independently confirmed, or a violated explicit requirement; ledger rules and capped repair rounds
 - fix(workflows): planning baselines carry scope tags and traced topologies; init-project checks combined compatibility; deliver-pull-request passes accepted findings and splits candidate vs release-readiness verdicts; release-readiness defines the ready rule once, freezes ready items, and binds proof to the candidate

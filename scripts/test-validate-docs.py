@@ -78,6 +78,11 @@ def catalogs(root: Path, skills: list[tuple[str, str, str]]) -> None:
     write(root / "guide.md", "# Guide\n")
 
 
+def pad(path: Path, original: str, size: int) -> None:
+    """Rewrite `path` as `original` plus filler so it is exactly `size` bytes."""
+    write(path, original + "\n" + "x" * (size - len(original.encode()) - 1))
+
+
 def run(root: Path, expected: str | None = None) -> None:
     result = subprocess.run([sys.executable, str(SCRIPT), "--root", str(root)], text=True, capture_output=True)
     if expected is None:
@@ -235,8 +240,25 @@ def main() -> int:
         stale = "- [stale](mandatory/stale/SKILL.md)\n"
         (root / "llms.txt").write_text((root / "llms.txt").read_text(encoding="utf-8") + stale, encoding="utf-8")
         run(root, "stale public skill entry 'mandatory/stale/SKILL.md'")
+        entries.append(("mandatory", "vllnt-collaboration-principles", "A sufficiently specific collaboration principle description."))
+        catalogs(root, entries)
 
-    print("PASS catalog coverage, links, templates, contracts, criteria, local maintenance, and recovery")
+        # Size budgets: each limit passes at the limit and fails one byte over.
+        for path, limit in ((workflow, 4500), (capability, 3600), (quality, 3500), (root / "AGENTS.md", 9500)):
+            original = path.read_text(encoding="utf-8") if path.exists() else ""
+            for size, message in ((limit, None), (limit + 1, f"{path.relative_to(root)}: {limit + 1} B exceeds {limit} B")):
+                pad(path, original, size)
+                run(root, message)
+            write(path, original)
+
+        skill(root, "workflows", "plan-work", "A sufficiently specific description. " + "x" * 164)
+        run(root, "description exceeds 200 characters (201)")
+        skill(root, "workflows", "plan-work", entries[0][2])
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[1][2], "## Principles\n\n- " + "word " * 151 + "\n")
+        run(root, "Principles exceeds 150 words (152)")
+        skill(root, "mandatory", "vllnt-thinking-principles", entries[1][2])
+
+    print("PASS catalog coverage, links, templates, contracts, criteria, budgets, local maintenance, and recovery")
     return 0
 
 
