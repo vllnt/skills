@@ -60,7 +60,7 @@ For broad improvement requests, compare the evidenced impact, effort, and risk a
 | [deliver-issue](workflows/deliver-issue/SKILL.md) | Deliver a scoped issue through a verified pull request and authorized merge to its target branch. |
 | [deliver-pull-request](workflows/deliver-pull-request/SKILL.md) | Review a pull request, coordinate authorized repairs and verification, then merge it when permitted. |
 | [explain-subject](workflows/explain-subject/SKILL.md) | Explain a real subject with a simple verified mental model and clear limits. |
-| [explore-decisions](workflows/explore-decisions/SKILL.md) | Sharpen an artifact or decision through focused evidence-based questions and concrete alternatives. |
+| [explore-decisions](workflows/explore-decisions/SKILL.md) | Sharpen an artifact or decision with an evidenced recommendation, concrete alternatives, and only the questions evidence cannot settle. |
 | [improve-code](workflows/improve-code/SKILL.md) | Simplify code and comments while preserving observable contracts and affected consumers. |
 | [improve-codebase](workflows/improve-codebase/SKILL.md) | Directly refactor source code and data paths toward measured reduction and efficiency while preserving behavior. |
 | [improve-dx](workflows/improve-dx/SKILL.md) | Speed up verified work for developers and agents by improving native build, lint, script, and CI workflows without weakening checks. |

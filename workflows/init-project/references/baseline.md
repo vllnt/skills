@@ -232,7 +232,7 @@ When a framework writes its own managed block into `AGENTS.md`, commit it once a
 - `README.md`: the project name, its one-sentence purpose, and setup, run, verify, and deploy sections whose commands are real scripts.
 - `SECURITY.md`: a private reporting channel (the host's private vulnerability reporting when public; the owner's chosen contact when private) and a response time. Tell the user to enable private reporting in the repository settings.
 - `CONTRIBUTING.md`: the verify command, the lifecycle from task start to merge, and the review rule.
-- `LICENSE` when public: the SPDX license text for the chosen id, with the current year and the copyright holder, matching the manifest's license field. Ask for the holder; default to the owner.
+- `LICENSE` when public: the SPDX license text for the chosen id, with the current year and the copyright holder, matching the manifest's license field. Default the holder to the owner and note it in the plan.
 - `CODEOWNERS` when the user names more than one maintainer, covering at least the workflow and security files.
 
 ## Baseline scripts
