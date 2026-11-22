@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- fix(ci): use synthetic, heavily fragmented Privacy Guard test fixtures so extra denylist patterns cannot match the test files
 - feat(release-readiness): required Privacy Guard checks commit emails and trailers, and ships a copyable workflow
 - feat(release-readiness): block public packages and repos on a dirty git history
 - refactor(workflows): merge improve-codebase into improve-code, review-ui into improve-ui, plan-issues into manage-issues, machine privacy and security into improve-machine, explore-decisions into plan-work, manage-vision into manage-roadmap

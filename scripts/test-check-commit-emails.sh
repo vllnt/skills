@@ -22,11 +22,14 @@ failures=0
 LAST_OUTPUT=""
 LAST_STATUS=0
 
-# Fragmented fixtures (adjacent quoted strings).
-ICLOUD_ADDR="someone@""icloud.com"
-OVH_HOST="vps-abc123fe"".vps.ovh.net"
+# Fixtures are assembled from fragments so this file never contains a
+# contiguous real provider suffix, personal mailbox domain, or private
+# address — including extra denylist patterns that may be loaded in CI.
+# Assembled values stay valid for the checks below.
+DISALLOWED_ADDR="someone@""example.invalid"
+OVH_HOST="v""ps-abc123fe.v""ps.ov""h.net"
 OVH_EMAIL="ubuntu@${OVH_HOST}"
-TS_HOST="box.example-net"".ts.net"
+TS_HOST="box.example-tailnet"".ts.net"
 PRIV_IP="192.168"."0.42"
 NOREPLY="123+tester@users.noreply.github.com"
 WEB_FLOW="noreply@github.com"
@@ -90,31 +93,31 @@ commit "clean base"
 run "noreply history passes" 0 PRIVACY_COMMIT_RANGE=--all
 
 # 2. Personal author email fails; value withheld; sha and category reported.
-commit "personal author" GIT_AUTHOR_EMAIL="$ICLOUD_ADDR" GIT_AUTHOR_NAME=someone
+commit "personal author" GIT_AUTHOR_EMAIL="$DISALLOWED_ADDR" GIT_AUTHOR_NAME=someone
 personal_sha="$(git -C "$REPO" rev-parse --short HEAD)"
 run "personal author email fails" 1 PRIVACY_COMMIT_RANGE=--all
 expect "reports author field" "author"
 expect "reports disallowed-email" "disallowed-email"
 expect "reports short sha" "$personal_sha"
-refute "does not print personal address" "$ICLOUD_ADDR"
+refute "does not print personal address" "$DISALLOWED_ADDR"
 refute "does not print local-part" "someone@"
 
 # Reset to a clean line by going back? Keep going; later tests use ranges.
 
 # 3. Personal Co-authored-by trailer fails.
-commit "$(printf 'add collaborator\n\nCo-authored-by: Someone <%s>\n' "$ICLOUD_ADDR")"
+commit "$(printf 'add collaborator\n\nCo-authored-by: Someone <%s>\n' "$DISALLOWED_ADDR")"
 trailer_sha="$(git -C "$REPO" rev-parse --short HEAD)"
 run "personal Co-authored-by fails" 1 --range "$trailer_sha^..$trailer_sha"
 expect "reports Co-authored-by" "Co-authored-by"
 expect "reports disallowed-email for trailer" "disallowed-email"
-refute "trailer value withheld" "$ICLOUD_ADDR"
+refute "trailer value withheld" "$DISALLOWED_ADDR"
 
 # 4. Personal Signed-off-by trailer fails.
-commit "$(printf 'signoff\n\nSigned-off-by: Someone <%s>\n' "$ICLOUD_ADDR")"
+commit "$(printf 'signoff\n\nSigned-off-by: Someone <%s>\n' "$DISALLOWED_ADDR")"
 sign_sha="$(git -C "$REPO" rev-parse --short HEAD)"
 run "personal Signed-off-by fails" 1 --range "$sign_sha^..$sign_sha"
 expect "reports Signed-off-by" "Signed-off-by"
-refute "signoff value withheld" "$ICLOUD_ADDR"
+refute "signoff value withheld" "$DISALLOWED_ADDR"
 
 # 5. Provider VPS hostname as author email fails as private-hostname.
 commit "vps author" GIT_AUTHOR_EMAIL="$OVH_EMAIL" GIT_AUTHOR_NAME=ubuntu
