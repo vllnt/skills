@@ -5,6 +5,7 @@
 :[0-9]+:[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.(test|invalid|example)$
 :[0-9]+:[A-Za-z0-9._%+-]+@example\.(com|org|net)$
 :[0-9]+:[A-Za-z0-9._%+-]+@users\.noreply\.github\.com$
+:[0-9]+:noreply@github\.com$
 :[0-9]+:git@github\.com$
 
 # CI runner home directories
