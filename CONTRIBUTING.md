@@ -21,7 +21,7 @@ Follow [AGENTS.md](AGENTS.md) for naming, ownership, concise authoring, review, 
 3. Run `bash scripts/test-validate-frontmatter.sh`, `bash scripts/test-pre-commit.sh`, `python3 scripts/test-validate-docs.py`, `python3 scripts/validate-docs.py`, `python3 scripts/test-bundle-references.py`, `python3 scripts/bundle-references.py`, `python3 scripts/bundle-references.py --check`, and `git diff --check`.
 4. Exercise relevant success, failure, and standalone cases. State which checks were executed and which were source simulations.
 5. Add an entry to `CHANGELOG.md` under `Unreleased`.
-6. Review the diff for personal information, secrets, invented examples, and unnecessary private context. Open a PR against `main` with changes, evidence, and remaining limits.
+6. Review the diff for personal information, secrets, invented examples, and unnecessary private context. Before a public release or a visibility change to public, run the full-history clean-history gate in [clean-history.md](references/capabilities/release-readiness/references/clean-history.md). Open a PR against `main` with changes, evidence, and remaining limits.
 
 Markdown skills require no build step. Publication follows [RELEASING.md](RELEASING.md); a skill change does not automatically authorize a release.
 

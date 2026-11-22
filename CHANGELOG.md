@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(release-readiness): block public packages and repos on a dirty git history
 - refactor(workflows): merge improve-codebase into improve-code, review-ui into improve-ui, plan-issues into manage-issues, machine privacy and security into improve-machine, explore-decisions into plan-work, manage-vision into manage-roadmap
 - perf(skills): cut bundled and always-loaded context; drop fallbacks for bundled references; prune duplicate evaluation cases; enforce size budgets
 - feat(workflows): proportional planning, ask only when necessary with recommended answers, lifetime-cost decisions for speed, maintenance, DX and AX

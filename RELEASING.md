@@ -16,6 +16,7 @@ CI gates that block the merge:
 - `Validate Skill Frontmatter` — every discoverable `workflows/*/SKILL.md` and `mandatory/*/SKILL.md` has valid metadata
 - `Changelog Required` — `CHANGELOG.md` modified AND `[Unreleased]` has at least one bullet
 - `Sync Agent Docs` — public catalogs, descriptions, links, canonical procedures, and generated reference bundles are current
+- `Privacy Guard` — full-history gitleaks on all refs, plus the current-tree privacy denylist. A public release or visibility change also follows the clean-history gate in [clean-history.md](references/capabilities/release-readiness/references/clean-history.md) (pack and release assets included).
 
 ## At-a-glance
 
