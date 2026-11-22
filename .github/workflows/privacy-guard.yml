@@ -67,8 +67,16 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+          # Validate a committed .privacy-baseline whenever it is present.
+          # Pull requests: the commits this PR adds. Push: baseline..HEAD
+          # when a baseline exists, otherwise full history on the default
+          # branch, or the pushed range on other refs.
+          baseline="$(bash scripts/check-commit-emails.sh --print-baseline)"
           if [[ "$EVENT_NAME" == "pull_request" ]]; then
             export PRIVACY_COMMIT_RANGE="${PR_BASE}..${PR_HEAD}"
+          elif [[ -n "${baseline}" ]]; then
+            echo "commit-metadata range: ${baseline:0:12}..HEAD"
+            export PRIVACY_COMMIT_RANGE="${baseline}..HEAD"
           elif [[ "$EVENT_NAME" == "push" && "$REF_NAME" == "$DEFAULT_BRANCH" ]]; then
             export PRIVACY_COMMIT_RANGE="--all"
           elif [[ "$EVENT_NAME" == "push" && "${BEFORE:-}" != "" && "$BEFORE" != 0000000000000000000000000000000000000000 ]]; then

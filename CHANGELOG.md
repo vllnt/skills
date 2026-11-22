@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- feat(release-readiness): optional `.privacy-baseline` scopes the required commit-metadata check to `baseline..HEAD` on push, with a copyable weekly full-history audit job
 - fix(ci): use synthetic, heavily fragmented Privacy Guard test fixtures so extra denylist patterns cannot match the test files
 - feat(release-readiness): required Privacy Guard checks commit emails and trailers, and ships a copyable workflow
 - feat(release-readiness): block public packages and repos on a dirty git history
