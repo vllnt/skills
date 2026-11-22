@@ -47,6 +47,9 @@ refute() {
 }
 
 TAILNET="box.example-net.ts"".net"
+OVH_VPS="vps-abc123fe"".vps.ovh.net"
+HETZNER="node-1"".hetzner.cloud"
+HETZNER_DED="static.12.34.56.clients.your-server"".de"
 
 plant "Plain documentation."
 check "clean tree passes" 0 NOOP=1
@@ -55,6 +58,21 @@ plant "host: $TAILNET"
 check "tailnet hostname fails" 1 NOOP=1
 grep -q 'doc.md:1' <<< "$LAST_OUTPUT" || { echo "FAIL hit location not reported" >&2; failures=$((failures + 1)); }
 refute "matched content leaked to output" "example-net"
+
+plant "host: $OVH_VPS"
+check "ovh vps hostname fails" 1 NOOP=1
+refute "ovh hostname leaked to output" "abc123fe"
+
+plant "host: $HETZNER"
+check "hetzner cloud hostname fails" 1 NOOP=1
+refute "hetzner cloud leaked to output" "node-1"
+
+plant "host: $HETZNER_DED"
+check "hetzner dedicated hostname fails" 1 NOOP=1
+refute "hetzner dedicated leaked to output" "your-server"
+
+plant "The host is an OVH VPS (provider name only)."
+check "provider name without hostname passes" 0 NOOP=1
 
 plant "id 123e4567-e89b-12d3-a456-4266""14174000"
 check "uuid fails" 1 NOOP=1
